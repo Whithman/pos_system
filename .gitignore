@@ -1,0 +1,16 @@
+.env
+.env.*
+!.env.example
+
+# Render persistent-disk content and local uploads
+uploads/products/*
+uploads/shop/*
+!uploads/shop/.htaccess
+!uploads/shop/index.html
+!assets/pos-background.webp
+!assets/default-product.png
+
+# Local/editor/runtime files
+.phpunit.result.cache
+.vscode/
+*.log
