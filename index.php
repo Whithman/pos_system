@@ -1,9 +1,7 @@
 <?php
-// ═══════════════════════════════════════════════════
-//  CANTEEN POS — Single File Edition
+// ══════════════════════════════════════════════════
 //  Upload ONLY this one file. Visit it in browser.
-// Made by Arnolfo Reyes Asidoy Jr.
-//  Default login: admin / admin123
+//  Made by Arnolfo Reyes Asidoy Jr.
 // ═══════════════════════════════════════════════════
 
 // ── OUTPUT COMPRESSION ──
