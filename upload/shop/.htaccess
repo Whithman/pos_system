@@ -1,0 +1,3 @@
+php_flag engine off
+AddHandler cgi-script .php .phtml .php3 .php4 .php5 .pl .py .cgi
+Options -Indexes -ExecCGI
