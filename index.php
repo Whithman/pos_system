@@ -3520,7 +3520,7 @@ if (isset($_GET['api'])) {
                 $forceRefresh = !empty($_GET['refresh']);
                 $mlStores = mlApiGet(
                     $db,
-                    'https://pos-ml-api.onrender.com/stores',
+                    'https://pos-ml-api-johv.onrender.com/stores',
                     'ml_stores_list',
                     3600, // 1 hour cache — this list only changes when you retrain
                     $forceRefresh
@@ -3587,7 +3587,7 @@ if (isset($_GET['api'])) {
                 // includes store_id + forecast_days since that's what changes the result.
                 $mlResult = mlApiCall(
                     $db,
-                    'https://pos-ml-api.onrender.com/forecast',
+                    'https://pos-ml-api-johv.onrender.com/forecast',
                     ['store_id' => $storeId, 'forecast_days' => $forecastDays],
                     'forecast_' . $storeId . '_' . $forecastDays,
                     300 // 5 min cache
@@ -3696,7 +3696,7 @@ if (isset($_GET['api'])) {
 
                 $mlResult = mlApiCall(
                     $db,
-                    'https://pos-ml-api.onrender.com/forecast',
+                    'https://pos-ml-api-johv.onrender.com/forecast',
                     ['store_id' => $storeId, 'forecast_days' => 30],
                     'forecast_' . $storeId . '_30',
                     300
@@ -3776,7 +3776,7 @@ if (isset($_GET['api'])) {
                 // Call the new ML API — cached + fast-failing (see mlApiCall above).
                 $mlResult = mlApiCall(
                     $db,
-                    'https://pos-ml-api.onrender.com/forecast',
+                    'https://pos-ml-api-johv.onrender.com/forecast',
                     ['store_id' => $storeId, 'forecast_days' => $forecastDays],
                     'forecast_' . $storeId . '_' . $forecastDays,
                     300 // 5 min cache — forecasts don't need to be more real-time than this
@@ -3971,7 +3971,7 @@ if (isset($_GET['api'])) {
 
                 $result = mlApiCall(
                     $db,
-                    'https://pos-ml-api.onrender.com/recommend',
+                    'https://pos-ml-api-johv.onrender.com/recommend',
                     ['cart_items' => $cartItems, 'top_n' => $topN],
                     'basket_' . md5(implode(',', $cartItems)) . '_' . $topN,
                     300
@@ -4019,7 +4019,7 @@ if (isset($_GET['api'])) {
                 // Try the ML API — cached + fast-failing (see mlApiCall above).
                 $result = mlApiCall(
                     $db,
-                    'https://pos-ml-api.onrender.com/recommend',
+                    'https://pos-ml-api-johv.onrender.com/recommend',
                     ['cart_items' => $cartItems, 'top_n' => $topN],
                     'combo_' . md5(implode(',', $cartItems)) . '_' . $topN,
                     300
