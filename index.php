@@ -213,6 +213,8 @@ if ((isset($_GET['pwa']) && $_GET['pwa'] === 'sw') || str_ends_with($reqPathLowe
     header('Cache-Control: no-cache');
     if (file_exists(__DIR__ . '/sw.js')) {
         readfile(__DIR__ . '/sw.js');
+    } elseif (file_exists(__DIR__ . '/assets/sw.js')) {
+        readfile(__DIR__ . '/assets/sw.js');
     } elseif (file_exists(__DIR__ . '/sw.php')) {
         require __DIR__ . '/sw.php';
     }
@@ -7890,17 +7892,18 @@ $seoImage = (!empty($storeSettings['shop_logo']) && strpos($storeSettings['shop_
             border-bottom: 1.5px solid var(--border);
             display: flex;
             align-items: center;
-            padding: 0 20px;
-            gap: 10px;
+            padding: 0 16px;
+            gap: 8px;
+            overflow: hidden;
         }
 
         .nav-logo {
             font-family: 'Poppins', sans-serif;
-            font-size: 1.5rem;
+            font-size: 1.4rem;
             font-weight: 900;
             color: var(--accent);
             text-decoration: none;
-            flex: 1;
+            flex-shrink: 0;
             white-space: nowrap;
             letter-spacing: -0.5px;
         }
@@ -7922,23 +7925,33 @@ $seoImage = (!empty($storeSettings['shop_logo']) && strpos($storeSettings['shop_
         .nav-links {
             display: flex;
             gap: 2px;
+            align-items: center;
+            flex-shrink: 1;
+            overflow-x: auto;
+            scrollbar-width: none;
+            -ms-overflow-style: none;
+        }
+        .nav-links::-webkit-scrollbar {
+            display: none;
         }
 
         .nav-link {
-            padding: 7px 12px;
+            padding: 6px 11px;
             border-radius: 8px;
-            font-size: 1rem;
+            font-size: .95rem;
             font-weight: 800;
             color: var(--nav-ink-muted);
             text-decoration: none;
             transition: all .2s;
             display: flex;
             align-items: center;
-            gap: 5px;
+            gap: 4px;
             background: none;
             border: none;
             cursor: pointer;
             font-family: 'Inter', sans-serif;
+            white-space: nowrap;
+            flex-shrink: 0;
         }
 
         .nav-link:hover,
@@ -7947,11 +7960,27 @@ $seoImage = (!empty($storeSettings['shop_logo']) && strpos($storeSettings['shop_
             color: #fff;
         }
 
+        .nav-right {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-left: auto;
+            flex-shrink: 0;
+        }
+
         .nav-user-name {
-            font-size: .9rem;
+            font-size: .88rem;
             font-weight: 700;
             color: var(--nav-ink-muted);
             white-space: nowrap;
+            max-width: 140px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .nav-logout-btn {
+            white-space: nowrap;
+            flex-shrink: 0;
         }
 
         /* ── MOBILE NAV ── */
@@ -9942,6 +9971,48 @@ $seoImage = (!empty($storeSettings['shop_logo']) && strpos($storeSettings['shop_
         }
 
         /* ── RESPONSIVE ── */
+        @media(max-width:1180px) {
+            .nav {
+                padding: 0 10px;
+                gap: 6px;
+            }
+            .nav-logo {
+                font-size: 1.15rem;
+                max-width: 140px;
+                overflow: hidden;
+                text-overflow: ellipsis;
+            }
+            .nav-links {
+                gap: 1px;
+            }
+            .nav-link {
+                padding: 5px 7px;
+                font-size: .84rem;
+                gap: 3px;
+            }
+            .nav-right {
+                gap: 6px;
+            }
+            .nav-user-name {
+                max-width: 90px;
+                font-size: .8rem;
+            }
+            .nav-logout-btn {
+                padding: 4px 9px;
+                font-size: .82rem;
+            }
+        }
+
+        @media(max-width:920px) {
+            .nav-user-name {
+                display: none;
+            }
+            .nav-link {
+                padding: 4px 6px;
+                font-size: .8rem;
+            }
+        }
+
         @media(max-width:1024px) {
             .dash-layout {
                 grid-template-columns: 1fr !important;
@@ -10395,19 +10466,21 @@ $seoImage = (!empty($storeSettings['shop_logo']) && strpos($storeSettings['shop_
      script block. Icon flips between 🌙 (currently dark, click for
      light) and ☀️ (currently light, click for dark); state also
      controllable from Settings → Appearance. -->
-            <button type="button" id="theme-toggle-btn" class="nav-link" style="padding:7px 10px;" title="Switch to light mode" onclick="toggleTheme()">🌙</button>
-            <button type="button" id="pwa-install-btn" class="btn btn-secondary btn-sm" style="display:none;margin-left:6px;gap:5px;align-items:center;" onclick="promptInstallPwa()" title="Install POS as Native App">📲 Install App</button>
-            <span class="nav-user-name"><?= htmlspecialchars($currentUser['full_name']) ?></span>
-            <?php if ($isCashierRole): ?>
-                <!-- Cashiers have no direct Logout link — the only way out is completing
-       the mandatory closing cash count via End Shift, which then redirects
-       to ?page=logout itself once the drawer count is submitted
-       (see submitShiftModal()'s close-shift branch). This keeps "No Count,
-       No Transaction" from being bypassed by simply logging out mid-shift. -->
-                <button class="btn btn-secondary btn-sm" style="margin-left:8px;" onclick="requestEndShift()">🔚 End Shift</button>
-            <?php else: ?>
-                <a href="?page=logout" class="btn btn-secondary btn-sm" style="margin-left:8px;" onclick="return attemptLogout(event)">Logout</a>
-            <?php endif; ?>
+            <div class="nav-right">
+                <button type="button" id="theme-toggle-btn" class="nav-link" style="padding:6px 9px;" title="Switch to light mode" onclick="toggleTheme()">🌙</button>
+                <button type="button" id="pwa-install-btn" class="btn btn-secondary btn-sm" style="display:none;gap:5px;align-items:center;" onclick="promptInstallPwa()" title="Install POS as Native App">📲 Install</button>
+                <span class="nav-user-name" title="<?= htmlspecialchars($currentUser['full_name']) ?>"><?= htmlspecialchars($currentUser['full_name']) ?></span>
+                <?php if ($isCashierRole): ?>
+                    <!-- Cashiers have no direct Logout link — the only way out is completing
+           the mandatory closing cash count via End Shift, which then redirects
+           to ?page=logout itself once the drawer count is submitted
+           (see submitShiftModal()'s close-shift branch). This keeps "No Count,
+           No Transaction" from being bypassed by simply logging out mid-shift. -->
+                    <button class="btn btn-secondary btn-sm nav-logout-btn" onclick="requestEndShift()">🔚 End Shift</button>
+                <?php else: ?>
+                    <a href="?page=logout" class="btn btn-secondary btn-sm nav-logout-btn" onclick="return attemptLogout(event)">Logout</a>
+                <?php endif; ?>
+            </div>
         </nav>
         <!-- ── MOBILE NAV ── -->
         <nav class="mob-nav">
@@ -13523,7 +13596,50 @@ $seoImage = (!empty($storeSettings['shop_logo']) && strpos($storeSettings['shop_
                 if (navigator.onLine === false) return '📶 You appear to be offline — check your connection and try again.';
                 return '⚠️ Could not reach the server — check your connection and try again.';
             }
+            // ── FAST SESSION CACHE FOR STATIC/NEAR-STATIC LOOKUPS ──
+            // Caches get_settings and get_categories in sessionStorage for 60 seconds
+            // so page transitions don't make redundant HTTP round-trips.
+            const _FAST_CACHE = {
+                'get_settings': { key: 'pos_cache_settings', ttl: 60000 },
+                'get_categories': { key: 'pos_cache_categories', ttl: 60000 }
+            };
+
+            function _readFastCache(action) {
+                const conf = _FAST_CACHE[action];
+                if (!conf) return null;
+                try {
+                    const raw = sessionStorage.getItem(conf.key);
+                    if (raw) {
+                        const parsed = JSON.parse(raw);
+                        if (parsed && parsed.data && (Date.now() - (parsed.ts || 0)) < conf.ttl) {
+                            return parsed.data;
+                        }
+                    }
+                } catch (e) {}
+                return null;
+            }
+
+            function _writeFastCache(action, data) {
+                const conf = _FAST_CACHE[action];
+                if (!conf || !data?.success) return;
+                try {
+                    sessionStorage.setItem(conf.key, JSON.stringify({ data, ts: Date.now() }));
+                } catch (e) {}
+            }
+
+            function invalidateFastCache(action) {
+                const conf = _FAST_CACHE[action];
+                if (conf) {
+                    try { sessionStorage.removeItem(conf.key); } catch (e) {}
+                }
+            }
+
             async function apiGet(action, params = {}) {
+                const noParams = !params || Object.keys(params).length === 0;
+                if (noParams) {
+                    const cached = _readFastCache(action);
+                    if (cached) return cached;
+                }
                 const qs = new URLSearchParams(params).toString();
                 const url = API_BASE + action + (qs ? '&' + qs : '');
                 try {
@@ -13536,33 +13652,81 @@ $seoImage = (!empty($storeSettings['shop_logo']) && strpos($storeSettings['shop_
                         toast('⚠️ Server error (' + r.status + ') — please try again', 'error');
                         return null;
                     }
-                    return await r.json(); // must await inside try/catch, or a malformed response silently fails with no toast at all
+                    const json = await r.json(); // must await inside try/catch, or a malformed response silently fails with no toast at all
+                    if (noParams && json?.success) {
+                        _writeFastCache(action, json);
+                    }
+                    return json;
                 } catch (e) {
                     toast(apiErrorMessage(e), 'error');
                     return null;
                 }
             }
 
-            // ── get_products CLIENT-SIDE CACHE (30 s TTL) ────────────────────────
-            // get_products is called from 7+ places in the app. Each call hits the DB
-            // for a potentially heavy CTE query. A 30-second in-memory cache means
-            // any page-section that opens within the same half-minute gets instant
-            // data without a network round-trip, while still feeling "live" to the
-            // cashier who typically switches pages in bursts.
-            // The cache is invalidated immediately on any product mutation so stale
-            // data can never be shown after a save or delete.
+            // ── get_products PERSISTENT CACHE (sessionStorage + Stale-While-Revalidate) ──
+            // Stored in sessionStorage so page navigations (?page=dashboard -> ?page=products -> ?page=warehouse)
+            // load products INSTANTLY (0 ms) from local cache instead of hitting the database on every page click.
+            // When stale (> 30s), it returns the cached data immediately so the page is responsive with zero delay,
+            // while silently revalidating with the server in the background.
             const _prodCache = { data: null, ts: 0 };
-            const _PROD_CACHE_TTL = 30000; // 30 seconds
+            const _PROD_CACHE_TTL = 30000; // 30 seconds fresh
 
-            async function apiGetProducts(force = false) {
+            function _readProdSessionCache() {
+                try {
+                    const raw = sessionStorage.getItem('pos_cache_prods');
+                    if (raw) {
+                        const parsed = JSON.parse(raw);
+                        if (parsed && parsed.data && Array.isArray(parsed.data.data)) {
+                            _prodCache.data = parsed.data;
+                            _prodCache.ts = parsed.ts || 0;
+                            return _prodCache.data;
+                        }
+                    }
+                } catch (e) {}
+                return null;
+            }
+
+            function _writeProdSessionCache(data, ts) {
+                try {
+                    sessionStorage.setItem('pos_cache_prods', JSON.stringify({ data, ts }));
+                } catch (e) {}
+            }
+
+            async function apiGetProducts(force = false, onBackgroundUpdate = null) {
                 const now = Date.now();
-                if (!force && _prodCache.data && (now - _prodCache.ts) < _PROD_CACHE_TTL) {
+                if (!_prodCache.data) {
+                    _readProdSessionCache();
+                }
+
+                // If we have cached data and force is false:
+                if (!force && _prodCache.data) {
+                    const age = now - _prodCache.ts;
+                    if (age < _PROD_CACHE_TTL) {
+                        return _prodCache.data; // Fully fresh, return immediately
+                    }
+                    // Stale-While-Revalidate: return stale data immediately so UI doesn't hang!
+                    // Then quietly fetch fresh data in background.
+                    setTimeout(async () => {
+                        try {
+                            const fresh = await apiGet('get_products');
+                            if (fresh?.success && Array.isArray(fresh.data)) {
+                                _prodCache.data = fresh;
+                                _prodCache.ts = Date.now();
+                                _writeProdSessionCache(fresh, _prodCache.ts);
+                                if (typeof onBackgroundUpdate === 'function') {
+                                    onBackgroundUpdate(fresh);
+                                }
+                            }
+                        } catch (e) {}
+                    }, 50);
                     return _prodCache.data;
                 }
+
                 const result = await apiGet('get_products');
                 if (result?.success) {
                     _prodCache.data = result;
                     _prodCache.ts   = now;
+                    _writeProdSessionCache(result, now);
                 }
                 return result;
             }
@@ -13570,6 +13734,9 @@ $seoImage = (!empty($storeSettings['shop_logo']) && strpos($storeSettings['shop_
             function invalidateProdCache() {
                 _prodCache.data = null;
                 _prodCache.ts   = 0;
+                try {
+                    sessionStorage.removeItem('pos_cache_prods');
+                } catch (e) {}
             }
 
             async function apiPost(action, body = {}) {
@@ -13590,7 +13757,21 @@ $seoImage = (!empty($storeSettings['shop_logo']) && strpos($storeSettings['shop_
                         toast('⚠️ Server error (' + r.status + ') — please try again', 'error');
                         return null;
                     }
-                    return await r.json();
+                    const json = await r.json();
+                    if (json?.success) {
+                        const PROD_MUTATIONS = [
+                            'add_product', 'update_product', 'delete_product', 
+                            'add_transaction', 'void_order_items', 'delete_transaction', 'delete_all_transactions',
+                            'quick_restock', 'adjust_stock_pullout', 'add_warehouse_movement', 'add_delivery', 'transfer_to_store'
+                        ];
+                        const SETTINGS_MUTATIONS = ['save_settings', 'upload_shop_logo', 'remove_shop_logo'];
+                        const CATEGORY_MUTATIONS = ['add_category', 'delete_category'];
+
+                        if (PROD_MUTATIONS.includes(action)) invalidateProdCache();
+                        if (SETTINGS_MUTATIONS.includes(action)) invalidateFastCache('get_settings');
+                        if (CATEGORY_MUTATIONS.includes(action)) invalidateFastCache('get_categories');
+                    }
+                    return json;
                 } catch (e) {
                     toast(apiErrorMessage(e), 'error');
                     return null;
@@ -14732,11 +14913,31 @@ $seoImage = (!empty($storeSettings['shop_logo']) && strpos($storeSettings['shop_
 
             function loadAllProds(force = false) {
                 if (force) invalidateProdCache();
-                Promise.all([apiGetProducts(force), apiGet('get_categories')]).then(([pr, cr]) => {
-                    if (pr?.success) allProds = pr.data;
-                    if (cr?.success) allCats = cr.data;
+
+                // Instant paint from memory or session cache!
+                if (!force && _prodCache.data?.data && Array.isArray(_prodCache.data.data) && _prodCache.data.data.length > 0) {
+                    allProds = _prodCache.data.data;
+                    renderGrid(true);
+                }
+
+                Promise.all([
+                    apiGetProducts(force, (fresh) => {
+                        if (fresh?.success && Array.isArray(fresh.data)) {
+                            allProds = fresh.data;
+                            renderGrid();
+                        }
+                    }),
+                    apiGet('get_categories')
+                ]).then(([pr, cr]) => {
+                    if (pr?.success && Array.isArray(pr.data)) allProds = pr.data;
+                    if (cr?.success && Array.isArray(cr.data)) allCats = cr.data;
                     renderCatPills();
                     renderGrid(true);
+                }).catch(() => {
+                    if (!allProds || !allProds.length) {
+                        const pg = document.getElementById('prods-grid');
+                        if (pg) pg.innerHTML = '<div style="grid-column:1/-1;text-align:center;padding:30px;"><div style="color:var(--text);font-weight:700;margin-bottom:6px;">⚠️ Could not load products</div><button type="button" class="btn btn-primary btn-sm" onclick="loadAllProds(true)">🔄 Tap to Retry</button></div>';
+                    }
                 });
             }
 
@@ -15796,10 +15997,36 @@ $seoImage = (!empty($storeSettings['shop_logo']) && strpos($storeSettings['shop_
 
             function loadInvProds(force = false) {
                 if (force) invalidateProdCache();
-                apiGetProducts(force).then(r => {
-                    if (r?.success) {
+                const countEl = document.getElementById('prod-count');
+                const grid = document.getElementById('prod-grid');
+
+                // Instant Paint: check if we already have products in memory or session cache!
+                if (!force && _prodCache.data?.data && Array.isArray(_prodCache.data.data) && _prodCache.data.data.length > 0) {
+                    invProds = _prodCache.data.data;
+                    renderProds();
+                } else if (!invProds || !invProds.length) {
+                    if (countEl) countEl.textContent = 'Loading products…';
+                    if (grid) grid.innerHTML = '<div style="grid-column:1/-1;text-align:center;padding:50px;color:var(--text3);"><div style="font-size:2rem;margin-bottom:8px;">⏳</div>Loading product catalog…</div>';
+                }
+
+                apiGetProducts(force, (fresh) => {
+                    // Background sync callback if server had fresh updates
+                    if (fresh?.success && Array.isArray(fresh.data)) {
+                        invProds = fresh.data;
+                        renderProds();
+                    }
+                }).then(r => {
+                    if (r?.success && Array.isArray(r.data)) {
                         invProds = r.data;
                         renderProds();
+                    } else if (!invProds || !invProds.length) {
+                        if (countEl) countEl.textContent = 'Failed to load';
+                        if (grid) grid.innerHTML = '<div style="grid-column:1/-1;text-align:center;padding:40px;"><div style="font-size:2rem;margin-bottom:8px;">⚠️</div><div style="color:var(--text);font-weight:700;margin-bottom:6px;">Could not load products</div><div style="color:var(--text3);font-size:.85rem;margin-bottom:14px;">The server took too long to respond. Tap to retry.</div><button type="button" class="btn btn-primary btn-sm" onclick="loadInvProds(true)">🔄 Retry Now</button></div>';
+                    }
+                }).catch(err => {
+                    if (!invProds || !invProds.length) {
+                        if (countEl) countEl.textContent = 'Failed to load';
+                        if (grid) grid.innerHTML = '<div style="grid-column:1/-1;text-align:center;padding:40px;"><div style="font-size:2rem;margin-bottom:8px;">⚠️</div><div style="color:var(--text);font-weight:700;margin-bottom:6px;">Could not reach server</div><div style="color:var(--text3);font-size:.85rem;margin-bottom:14px;">' + (err?.message || 'Connection timeout') + '</div><button type="button" class="btn btn-primary btn-sm" onclick="loadInvProds(true)">🔄 Retry Now</button></div>';
                     }
                 });
             }
@@ -20098,8 +20325,22 @@ $seoImage = (!empty($storeSettings['shop_logo']) && strpos($storeSettings['shop_
 
             function loadWhProducts(force = false) {
                 if (force) invalidateProdCache();
-                apiGetProducts(force).then(r => {
-                    if (!r?.success) return;
+
+                // Instant paint from cache!
+                if (!force && _prodCache.data?.data && Array.isArray(_prodCache.data.data) && _prodCache.data.data.length > 0) {
+                    whProds = _prodCache.data.data;
+                    updateWhStats();
+                    renderWhProducts();
+                }
+
+                apiGetProducts(force, (fresh) => {
+                    if (fresh?.success && Array.isArray(fresh.data)) {
+                        whProds = fresh.data;
+                        updateWhStats();
+                        renderWhProducts();
+                    }
+                }).then(r => {
+                    if (!r?.success || !Array.isArray(r.data)) return;
                     whProds = r.data;
                     updateWhStats();
                     renderWhProducts();
