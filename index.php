@@ -81,7 +81,104 @@ define('BREVO_SENDER_NAME', trim((string)(getenv('BREVO_SENDER_NAME') ?: 'Pos Sy
 // restart) — the DB-backed remember token below rebuilds it automatically.
 // ── PWA MANIFEST, SERVICE WORKER & ICON ROUTING ──
 $reqPath = strtok($_SERVER['REQUEST_URI'] ?? '', '?');
-if ((isset($_GET['pwa']) && $_GET['pwa'] === 'manifest') || str_ends_with($reqPath, '/manifest.json') || str_ends_with($reqPath, '/manifest.webmanifest')) {
+$reqPathLower = strtolower($reqPath);
+
+$servePwaIcon = function($type) {
+    while (ob_get_level() > 0) {
+        @ob_end_clean();
+    }
+    header('Content-Type: image/png');
+    header('Cache-Control: public, max-age=604800');
+    header('Accept-Ranges: bytes');
+
+    $isMaskable = str_contains($type, 'maskable');
+    $is192 = str_contains($type, '192') || str_contains($type, 'apple');
+    $targetSize = $is192 ? 192 : 512;
+    $targetFile = $targetSize . ($isMaskable ? '-maskable' : '');
+
+    // 1. Direct file match
+    $checkPaths = [
+        __DIR__ . '/assets/icon-' . $targetFile . '.png',
+        __DIR__ . '/icon-' . $targetFile . '.png',
+        __DIR__ . '/icons/icon-' . $targetFile . '.png',
+        __DIR__ . '/assets/icons/icon-' . $targetFile . '.png',
+        __DIR__ . '/assets/icon-' . $targetSize . '.png',
+        __DIR__ . '/icon-' . $targetSize . '.png',
+        __DIR__ . '/icons/icon-' . $targetSize . '.png',
+    ];
+    if (str_contains($type, 'apple')) {
+        array_unshift($checkPaths, __DIR__ . '/assets/apple-touch-icon.png', __DIR__ . '/apple-touch-icon.png', __DIR__ . '/icons/apple-touch-icon.png');
+    }
+
+    foreach ($checkPaths as $p) {
+        if (file_exists($p) && filesize($p) > 0) {
+            header('Content-Length: ' . filesize($p));
+            readfile($p);
+            exit;
+        }
+    }
+
+    // 2. Fallback to assets/default-logo.png
+    $srcLogo = __DIR__ . '/assets/default-logo.png';
+    if (!file_exists($srcLogo)) {
+        $srcLogo = __DIR__ . '/assets/pos_system-main/pos_system-main/assets/default-logo.png';
+    }
+
+    if (file_exists($srcLogo) && filesize($srcLogo) > 0) {
+        if ($targetSize === 512 && !$isMaskable) {
+            header('Content-Length: ' . filesize($srcLogo));
+            readfile($srcLogo);
+            exit;
+        }
+
+        // Resize / pad dynamically with GD if available
+        if (function_exists('imagecreatefromstring') && function_exists('imagecreatetruecolor')) {
+            $raw = @file_get_contents($srcLogo);
+            if ($raw) {
+                $im = @imagecreatefromstring($raw);
+                if ($im) {
+                    $sw = imagesx($im);
+                    $sh = imagesy($im);
+                    $dst = imagecreatetruecolor($targetSize, $targetSize);
+
+                    if ($isMaskable) {
+                        $bg = imagecolorallocate($dst, 10, 22, 40); // #0a1628
+                        imagefilledrectangle($dst, 0, 0, $targetSize, $targetSize, $bg);
+                        $scale = 0.78;
+                        $dw = (int)($targetSize * $scale);
+                        $dh = (int)($targetSize * $scale);
+                        $dx = (int)(($targetSize - $dw) / 2);
+                        $dy = (int)(($targetSize - $dh) / 2);
+                        imagealphablending($dst, true);
+                        imagecopyresampled($dst, $im, $dx, $dy, 0, 0, $dw, $dh, $sw, $sh);
+                    } else {
+                        imagealphablending($dst, false);
+                        imagesavealpha($dst, true);
+                        $trans = imagecolorallocatealpha($dst, 255, 255, 255, 127);
+                        imagefilledrectangle($dst, 0, 0, $targetSize, $targetSize, $trans);
+                        imagealphablending($dst, true);
+                        imagecopyresampled($dst, $im, 0, 0, 0, 0, $targetSize, $targetSize, $sw, $sh);
+                    }
+
+                    imagedestroy($im);
+                    imagepng($dst);
+                    imagedestroy($dst);
+                    exit;
+                }
+            }
+        }
+
+        header('Content-Length: ' . filesize($srcLogo));
+        readfile($srcLogo);
+        exit;
+    }
+
+    // 3. Fallback transparent pixel
+    echo base64_decode('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=');
+    exit;
+};
+
+if ((isset($_GET['pwa']) && $_GET['pwa'] === 'manifest') || str_ends_with($reqPathLower, '/manifest.json') || str_ends_with($reqPathLower, '/manifest.webmanifest')) {
     header('Content-Type: application/manifest+json; charset=utf-8');
     header('Cache-Control: public, max-age=86400');
     if (file_exists(__DIR__ . '/manifest.json')) {
@@ -99,17 +196,18 @@ if ((isset($_GET['pwa']) && $_GET['pwa'] === 'manifest') || str_ends_with($reqPa
             "background_color" => "#0a1628",
             "theme_color" => "#0a1628",
             "icons" => [
-                ["src" => "icons/icon-192.png", "sizes" => "192x192", "type" => "image/png", "purpose" => "any"],
-                ["src" => "icons/icon-192-maskable.png", "sizes" => "192x192", "type" => "image/png", "purpose" => "maskable"],
-                ["src" => "icons/icon-512.png", "sizes" => "512x512", "type" => "image/png", "purpose" => "any"],
-                ["src" => "icons/icon-512-maskable.png", "sizes" => "512x512", "type" => "image/png", "purpose" => "maskable"]
+                ["src" => "icon-192.png", "sizes" => "192x192", "type" => "image/png", "purpose" => "any"],
+                ["src" => "icon-192-maskable.png", "sizes" => "192x192", "type" => "image/png", "purpose" => "maskable"],
+                ["src" => "icon-512.png", "sizes" => "512x512", "type" => "image/png", "purpose" => "any"],
+                ["src" => "icon-512-maskable.png", "sizes" => "512x512", "type" => "image/png", "purpose" => "maskable"],
+                ["src" => "assets/default-logo.png", "sizes" => "512x512", "type" => "image/png", "purpose" => "any"]
             ]
         ], JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES);
     }
     exit;
 }
 
-if ((isset($_GET['pwa']) && $_GET['pwa'] === 'sw') || str_ends_with($reqPath, '/sw.js')) {
+if ((isset($_GET['pwa']) && $_GET['pwa'] === 'sw') || str_ends_with($reqPathLower, '/sw.js')) {
     header('Content-Type: application/javascript; charset=utf-8');
     header('Service-Worker-Allowed: /');
     header('Cache-Control: no-cache');
@@ -121,23 +219,29 @@ if ((isset($_GET['pwa']) && $_GET['pwa'] === 'sw') || str_ends_with($reqPath, '/
     exit;
 }
 
-if (str_ends_with($reqPath, '/icons/icon-192.png') || str_ends_with($reqPath, '/icons/icon-192-maskable.png')) {
-    $p = __DIR__ . '/icons/' . basename($reqPath);
-    if (file_exists($p)) {
-        header('Content-Type: image/png');
-        header('Cache-Control: public, max-age=604800');
-        readfile($p);
-        exit;
-    }
+if (isset($_GET['pwa_icon'])) {
+    $servePwaIcon((string)$_GET['pwa_icon']);
 }
-if (str_ends_with($reqPath, '/icons/icon-512.png') || str_ends_with($reqPath, '/icons/icon-512-maskable.png')) {
-    $p = __DIR__ . '/icons/' . basename($reqPath);
-    if (file_exists($p)) {
-        header('Content-Type: image/png');
-        header('Cache-Control: public, max-age=604800');
-        readfile($p);
-        exit;
-    }
+if (isset($_GET['pwa_icon_file'])) {
+    $servePwaIcon((string)$_GET['pwa_icon_file']);
+}
+if (str_ends_with($reqPathLower, 'icon-192-maskable.png')) {
+    $servePwaIcon('192-maskable');
+}
+if (str_ends_with($reqPathLower, 'icon-192.png')) {
+    $servePwaIcon('192');
+}
+if (str_ends_with($reqPathLower, 'icon-512-maskable.png')) {
+    $servePwaIcon('512-maskable');
+}
+if (str_ends_with($reqPathLower, 'icon-512.png')) {
+    $servePwaIcon('512');
+}
+if (str_ends_with($reqPathLower, 'apple-touch-icon.png') || str_ends_with($reqPathLower, 'apple-touch-icon-precomposed.png')) {
+    $servePwaIcon('apple');
+}
+if (str_ends_with($reqPathLower, 'favicon.ico')) {
+    $servePwaIcon('192');
 }
 
 $__isHttps = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') || (($_SERVER['HTTP_X_FORWARDED_PROTO'] ?? '') === 'https');
@@ -5118,11 +5222,13 @@ $seoImage = (!empty($storeSettings['shop_logo']) && strpos($storeSettings['shop_
     <meta name="msapplication-TileColor" content="#0a1628" />
     <meta name="msapplication-navbutton-color" content="#0a1628" />
     <link rel="manifest" href="manifest.json" />
-    <link rel="apple-touch-icon" href="icons/icon-192.png" />
-    <link rel="apple-touch-icon" sizes="192x192" href="icons/icon-192.png" />
-    <link rel="apple-touch-icon" sizes="512x512" href="icons/icon-512.png" />
-    <link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png" />
-    <link rel="icon" type="image/png" sizes="512x512" href="icons/icon-512.png" />
+    <link rel="apple-touch-icon" href="assets/apple-touch-icon.png" />
+    <link rel="apple-touch-icon" sizes="180x180" href="assets/apple-touch-icon.png" />
+    <link rel="apple-touch-icon" sizes="192x192" href="assets/icon-192.png" />
+    <link rel="apple-touch-icon" sizes="512x512" href="assets/icon-512.png" />
+    <link rel="icon" type="image/png" sizes="192x192" href="assets/icon-192.png" />
+    <link rel="icon" type="image/png" sizes="512x512" href="assets/icon-512.png" />
+    <link rel="shortcut icon" href="assets/icon-192.png" />
     <!-- Applies the saved Light/Dark app theme (see toggleTheme() further
      down) before first paint, so the page never flashes dark-then-light
      or vice versa on load. Runs only for the logged-in app pages — the
@@ -9696,8 +9802,8 @@ $seoImage = (!empty($storeSettings['shop_logo']) && strpos($storeSettings['shop_
         .login-logo-img {
             width: 64px;
             height: 64px;
-            object-fit: contain;
-            border-radius: 14px;
+            object-fit: cover;
+            border-radius: 50%;
             margin-bottom: 6px;
         }
 
@@ -9749,7 +9855,8 @@ $seoImage = (!empty($storeSettings['shop_logo']) && strpos($storeSettings['shop_
             .login-logo-img {
                 width: 112px;
                 height: 112px;
-                border-radius: 22px;
+                object-fit: cover;
+                border-radius: 50%;
                 margin-bottom: 14px;
             }
 
@@ -10376,7 +10483,7 @@ $seoImage = (!empty($storeSettings['shop_logo']) && strpos($storeSettings['shop_
     <!-- ── PWA FLOATING INSTALL PROMPT (shown on mobile when installable) ── -->
     <div id="pwa-install-banner" style="display:none;position:fixed;bottom:70px;left:14px;right:14px;max-width:420px;margin:0 auto;background:var(--surface2,#1e293b);border:1.5px solid var(--accent,#2563eb);border-radius:12px;padding:12px 14px;box-shadow:0 10px 25px rgba(0,0,0,0.5);z-index:99999;align-items:center;justify-content:space-between;gap:10px;">
         <div style="display:flex;align-items:center;gap:10px;">
-            <img src="icons/icon-192.png" style="width:34px;height:34px;border-radius:8px;" alt="POS App"/>
+            <img src="assets/icon-192.png" style="width:34px;height:34px;border-radius:50%;object-fit:cover;" alt="POS App" onerror="this.src='assets/default-logo.png'"/>
             <div>
                 <div style="font-weight:700;font-size:.85rem;color:var(--text,#f8fafc);">Install POS App</div>
                 <div style="font-size:.72rem;color:var(--text3,#94a3b8);">Add to home screen for fullscreen checkout</div>

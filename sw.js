@@ -1,13 +1,18 @@
-const SHELL = 'pos-shell-v2';
-const IMGS = 'pos-img-v1';
+const SHELL = 'pos-shell-v4';
+const IMGS = 'pos-img-v2';
 const IMG_LIMIT = 400; // ~a few hundred photos max on the device
 
 self.addEventListener('install', e => {
     e.waitUntil(caches.open(SHELL).then(c => c.addAll([
         self.location.origin + '/',
+        self.location.origin + '/manifest.json',
+        self.location.origin + '/assets/icon-192.png',
+        self.location.origin + '/assets/icon-512.png',
+        self.location.origin + '/icon-192.png',
+        self.location.origin + '/icon-512.png',
         'https://cdn.jsdelivr.net/npm/jsbarcode@3.11.6/dist/JsBarcode.all.min.js',
         'https://cdn.jsdelivr.net/npm/jsqr@1.4.0/dist/jsQR.min.js'
-    ]).catch(() => {})));
+    ]).catch(() => { })));
     self.skipWaiting();
 });
 
