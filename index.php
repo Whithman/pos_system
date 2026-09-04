@@ -6980,7 +6980,7 @@ $seoImage = (!empty($storeSettings['shop_logo']) && strpos($storeSettings['shop_
     <script src="https://cdn.jsdelivr.net/npm/jsqr@1.4.0/dist/jsQR.min.js"></script>
     <!-- SheetJS — builds .xlsx files client-side for the Warehouse/History Excel export buttons -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
-    <!-- QZ Tray — local desktop bridge that lets this page send raw ESC/POS
+    <!-- QZ Tray — local desktop bridge that lets this page send raw ESC/POS -->
     <script src="https://cdn.jsdelivr.net/npm/qz-tray@2.2.6/qz-tray.js"></script>
     <style>
         :root {
