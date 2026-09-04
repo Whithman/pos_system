@@ -19,31 +19,6 @@
 // needed on this host — do not re-add it here unless you've confirmed the
 // host does NOT already compress responses itself.
 
-// ── LOCAL ENVIRONMENT LOADER (.env.local / .env) ──
-(function () {
-    foreach ([__DIR__ . '/.env.local', __DIR__ . '/.env'] as $f) {
-        if (is_file($f) && is_readable($f)) {
-            $lines = file($f, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
-            foreach ($lines as $line) {
-                $line = trim($line);
-                if ($line === '' || str_starts_with($line, '#') || !str_contains($line, '=')) continue;
-                [$k, $v] = explode('=', $line, 2);
-                $k = trim($k);
-                $v = trim($v);
-                if ((str_starts_with($v, '"') && str_ends_with($v, '"')) || (str_starts_with($v, "'") && str_ends_with($v, "'"))) {
-                    $v = substr($v, 1, -1);
-                }
-                if ($k !== '' && (getenv($k) === false || getenv($k) === '')) {
-                    putenv("{$k}={$v}");
-                    $_ENV[$k] = $v;
-                    $_SERVER[$k] = $v;
-                }
-            }
-            break;
-        }
-    }
-})();
-
 // ── DATABASE CONFIG (edit these 4 lines) ──
 define('DATABASE_URL', getenv('DATABASE_URL') ?: '');
 define('DB_HOST', getenv('DB_HOST') ?: '');
@@ -57,13 +32,13 @@ define('DB_PASS', getenv('DB_PASS') ?: '');
 // installDB()'s ~100 statements need to actually run again. Forgetting to
 // bump this after adding new schema changes means those changes won't take
 // effect on an already-deployed database until this number goes up.
-define('SCHEMA_VERSION', 6);
+define('SCHEMA_VERSION', 5);
 
 // ── BREVO CONFIG (for Forgot Password emails) ──
-// Reads from server environment variables (Render Dashboard -> Environment) or local .env
-define('BREVO_API_KEY', trim((string)getenv('BREVO_API_KEY')));
-define('BREVO_SENDER_EMAIL', trim((string)(getenv('BREVO_SENDER_EMAIL') ?: 'arnolfoasidoy93@gmail.com')));
-define('BREVO_SENDER_NAME', trim((string)(getenv('BREVO_SENDER_NAME') ?: 'Pos System')));
+// trim() guards against stray spaces/quotes accidentally pasted into Render env vars
+define('BREVO_API_KEY', trim(getenv('BREVO_API_KEY') ?: ''));
+define('BREVO_SENDER_EMAIL', trim(getenv('BREVO_SENDER_EMAIL') ?: ''));
+define('BREVO_SENDER_NAME', trim(getenv('BREVO_SENDER_NAME') ?: 'Pos_System'));
 
 // ── SESSION HARDENING ──
 // HttpOnly stops any injected/third-party JS from ever reading the session
@@ -79,173 +54,6 @@ define('BREVO_SENDER_NAME', trim((string)(getenv('BREVO_SENDER_NAME') ?: 'Pos Sy
 // browser close, or device power-off used to throw the login away. The
 // session itself can still be lost server-side (Render wipes disk on
 // restart) — the DB-backed remember token below rebuilds it automatically.
-// ── PWA MANIFEST, SERVICE WORKER & ICON ROUTING ──
-$reqPath = strtok($_SERVER['REQUEST_URI'] ?? '', '?');
-$reqPathLower = strtolower($reqPath);
-
-$servePwaIcon = function($type) {
-    while (ob_get_level() > 0) {
-        @ob_end_clean();
-    }
-    header('Content-Type: image/png');
-    header('Cache-Control: public, max-age=604800');
-    header('Accept-Ranges: bytes');
-
-    $isMaskable = str_contains($type, 'maskable');
-    $is192 = str_contains($type, '192') || str_contains($type, 'apple');
-    $targetSize = $is192 ? 192 : 512;
-    $targetFile = $targetSize . ($isMaskable ? '-maskable' : '');
-
-    // 1. Direct file match
-    $checkPaths = [
-        __DIR__ . '/assets/icon-' . $targetFile . '.png',
-        __DIR__ . '/icon-' . $targetFile . '.png',
-        __DIR__ . '/icons/icon-' . $targetFile . '.png',
-        __DIR__ . '/assets/icons/icon-' . $targetFile . '.png',
-        __DIR__ . '/assets/icon-' . $targetSize . '.png',
-        __DIR__ . '/icon-' . $targetSize . '.png',
-        __DIR__ . '/icons/icon-' . $targetSize . '.png',
-    ];
-    if (str_contains($type, 'apple')) {
-        array_unshift($checkPaths, __DIR__ . '/assets/apple-touch-icon.png', __DIR__ . '/apple-touch-icon.png', __DIR__ . '/icons/apple-touch-icon.png');
-    }
-
-    foreach ($checkPaths as $p) {
-        if (file_exists($p) && filesize($p) > 0) {
-            header('Content-Length: ' . filesize($p));
-            readfile($p);
-            exit;
-        }
-    }
-
-    // 2. Fallback to assets/default-logo.png
-    $srcLogo = __DIR__ . '/assets/default-logo.png';
-    if (!file_exists($srcLogo)) {
-        $srcLogo = __DIR__ . '/assets/pos_system-main/pos_system-main/assets/default-logo.png';
-    }
-
-    if (file_exists($srcLogo) && filesize($srcLogo) > 0) {
-        if ($targetSize === 512 && !$isMaskable) {
-            header('Content-Length: ' . filesize($srcLogo));
-            readfile($srcLogo);
-            exit;
-        }
-
-        // Resize / pad dynamically with GD if available
-        if (function_exists('imagecreatefromstring') && function_exists('imagecreatetruecolor')) {
-            $raw = @file_get_contents($srcLogo);
-            if ($raw) {
-                $im = @imagecreatefromstring($raw);
-                if ($im) {
-                    $sw = imagesx($im);
-                    $sh = imagesy($im);
-                    $dst = imagecreatetruecolor($targetSize, $targetSize);
-
-                    if ($isMaskable) {
-                        $bg = imagecolorallocate($dst, 10, 22, 40); // #0a1628
-                        imagefilledrectangle($dst, 0, 0, $targetSize, $targetSize, $bg);
-                        $scale = 0.78;
-                        $dw = (int)($targetSize * $scale);
-                        $dh = (int)($targetSize * $scale);
-                        $dx = (int)(($targetSize - $dw) / 2);
-                        $dy = (int)(($targetSize - $dh) / 2);
-                        imagealphablending($dst, true);
-                        imagecopyresampled($dst, $im, $dx, $dy, 0, 0, $dw, $dh, $sw, $sh);
-                    } else {
-                        imagealphablending($dst, false);
-                        imagesavealpha($dst, true);
-                        $trans = imagecolorallocatealpha($dst, 255, 255, 255, 127);
-                        imagefilledrectangle($dst, 0, 0, $targetSize, $targetSize, $trans);
-                        imagealphablending($dst, true);
-                        imagecopyresampled($dst, $im, 0, 0, 0, 0, $targetSize, $targetSize, $sw, $sh);
-                    }
-
-                    imagedestroy($im);
-                    imagepng($dst);
-                    imagedestroy($dst);
-                    exit;
-                }
-            }
-        }
-
-        header('Content-Length: ' . filesize($srcLogo));
-        readfile($srcLogo);
-        exit;
-    }
-
-    // 3. Fallback transparent pixel
-    echo base64_decode('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=');
-    exit;
-};
-
-if ((isset($_GET['pwa']) && $_GET['pwa'] === 'manifest') || str_ends_with($reqPathLower, '/manifest.json') || str_ends_with($reqPathLower, '/manifest.webmanifest')) {
-    header('Content-Type: application/manifest+json; charset=utf-8');
-    header('Cache-Control: public, max-age=86400');
-    if (file_exists(__DIR__ . '/manifest.json')) {
-        readfile(__DIR__ . '/manifest.json');
-    } else {
-        echo json_encode([
-            "id" => "/?source=pwa",
-            "name" => "POS & Inventory System",
-            "short_name" => "POS System",
-            "start_url" => "./?source=pwa",
-            "scope" => "./",
-            "display" => "standalone",
-            "display_override" => ["standalone", "minimal-ui"],
-            "orientation" => "any",
-            "background_color" => "#0a1628",
-            "theme_color" => "#0a1628",
-            "icons" => [
-                ["src" => "icon-192.png", "sizes" => "192x192", "type" => "image/png", "purpose" => "any"],
-                ["src" => "icon-192-maskable.png", "sizes" => "192x192", "type" => "image/png", "purpose" => "maskable"],
-                ["src" => "icon-512.png", "sizes" => "512x512", "type" => "image/png", "purpose" => "any"],
-                ["src" => "icon-512-maskable.png", "sizes" => "512x512", "type" => "image/png", "purpose" => "maskable"],
-                ["src" => "assets/default-logo.png", "sizes" => "512x512", "type" => "image/png", "purpose" => "any"]
-            ]
-        ], JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES);
-    }
-    exit;
-}
-
-if ((isset($_GET['pwa']) && $_GET['pwa'] === 'sw') || str_ends_with($reqPathLower, '/sw.js')) {
-    header('Content-Type: application/javascript; charset=utf-8');
-    header('Service-Worker-Allowed: /');
-    header('Cache-Control: no-cache');
-    if (file_exists(__DIR__ . '/sw.js')) {
-        readfile(__DIR__ . '/sw.js');
-    } elseif (file_exists(__DIR__ . '/assets/sw.js')) {
-        readfile(__DIR__ . '/assets/sw.js');
-    } elseif (file_exists(__DIR__ . '/sw.php')) {
-        require __DIR__ . '/sw.php';
-    }
-    exit;
-}
-
-if (isset($_GET['pwa_icon'])) {
-    $servePwaIcon((string)$_GET['pwa_icon']);
-}
-if (isset($_GET['pwa_icon_file'])) {
-    $servePwaIcon((string)$_GET['pwa_icon_file']);
-}
-if (str_ends_with($reqPathLower, 'icon-192-maskable.png')) {
-    $servePwaIcon('192-maskable');
-}
-if (str_ends_with($reqPathLower, 'icon-192.png')) {
-    $servePwaIcon('192');
-}
-if (str_ends_with($reqPathLower, 'icon-512-maskable.png')) {
-    $servePwaIcon('512-maskable');
-}
-if (str_ends_with($reqPathLower, 'icon-512.png')) {
-    $servePwaIcon('512');
-}
-if (str_ends_with($reqPathLower, 'apple-touch-icon.png') || str_ends_with($reqPathLower, 'apple-touch-icon-precomposed.png')) {
-    $servePwaIcon('apple');
-}
-if (str_ends_with($reqPathLower, 'favicon.ico')) {
-    $servePwaIcon('192');
-}
-
 $__isHttps = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') || (($_SERVER['HTTP_X_FORWARDED_PROTO'] ?? '') === 'https');
 session_set_cookie_params([
     'lifetime' => 30 * 24 * 3600,
@@ -672,14 +480,7 @@ function sendResetEmail(string $toEmail, string $toName, string $resetLink): arr
     $curlErr  = curl_error($ch);
     curl_close($ch);
     if ($httpCode === 201) return [true, ''];
-    $brevoMsg = '';
-    if ($response) {
-        $json = @json_decode($response, true);
-        if (!empty($json['message'])) {
-            $brevoMsg = $json['message'];
-        }
-    }
-    return [false, $brevoMsg ?: ($curlErr ?: ('Brevo error (HTTP ' . $httpCode . '): ' . $response))];
+    return [false, $curlErr ?: ('Brevo error (HTTP ' . $httpCode . '): ' . $response)];
 }
 
 // ── INSTALL TABLES ON FIRST RUN ──
@@ -1442,12 +1243,7 @@ function installDB(): void
     $count = $db->query("SELECT COUNT(*) FROM users WHERE username='admin'")->fetchColumn();
     if (!$count) {
         $hash = password_hash('admin123', PASSWORD_DEFAULT);
-        $db->prepare("INSERT INTO users (username,password,full_name,role,email,store_id) VALUES ('admin',?,'Admin','owner',?,1)")->execute([$hash, BREVO_SENDER_EMAIL ?: null]);
-    } elseif (BREVO_SENDER_EMAIL !== '') {
-        try {
-            $db->prepare("UPDATE users SET email=? WHERE username='admin' AND (email IS NULL OR email='')")->execute([BREVO_SENDER_EMAIL]);
-        } catch (Exception $e) {
-        }
+        $db->prepare("INSERT INTO users (username,password,full_name,role,store_id) VALUES ('admin',?,'Admin','owner',1)")->execute([$hash]);
     }
     // Mark this version as successfully installed — the caller compares
     // this against SCHEMA_VERSION and only invokes installDB() again once
@@ -1555,14 +1351,7 @@ function clearAuthToken(): void
             db()->prepare("DELETE FROM auth_tokens WHERE token_hash=?")->execute([hash('sha256', $token)]);
         } catch (Exception $e) { /* ignore — logout must always succeed */ }
     }
-    $isHttps = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') || (($_SERVER['HTTP_X_FORWARDED_PROTO'] ?? '') === 'https');
-    setcookie(AUTH_COOKIE, '', [
-        'expires'  => time() - 3600,
-        'path'     => '/',
-        'secure'   => $isHttps,
-        'httponly' => true,
-        'samesite' => 'Lax'
-    ]);
+    setcookie(AUTH_COOKIE, '', ['expires' => time() - 3600, 'path' => '/', 'httponly' => true, 'samesite' => 'Lax']);
     unset($_COOKIE[AUTH_COOKIE]);
 }
 // Every data query in the app is scoped by this — the logged-in user's
@@ -1917,49 +1706,20 @@ function logBatchOutMovements(PDO $db, int $productId, int $totalQty, array $con
 // location) so the existing Low Stock/Expiring/Expired alert banner and
 // Warehouse table — which both key off this one column — stay accurate
 // without needing to be rewritten to understand batches directly. Only
-// Parses various date input formats (YYYY-MM-DD, MM/DD/YYYY, etc.) into ISO Y-m-d for DB storage
-function cleanDateForDb($str): ?string
-{
-    if (!$str) return null;
-    $str = trim((string)$str);
-    if (preg_match('/^\d{4}-\d{2}-\d{2}$/', $str)) return $str;
-    $parts = preg_split('/[\/\-\.]/', $str);
-    if (count($parts) === 3) {
-        [$p1, $p2, $p3] = $parts;
-        if (strlen($p3) === 2) $p3 = '20' . $p3;
-        if (strlen($p1) === 4) {
-            return sprintf('%04d-%02d-%02d', (int)$p1, (int)$p2, (int)$p3);
-        }
-        if (strlen($p3) === 4) {
-            $n1 = (int)$p1;
-            $n2 = (int)$p2;
-            if ($n1 > 12 && $n2 <= 12) {
-                return sprintf('%04d-%02d-%02d', (int)$p3, $n2, $n1);
-            }
-            return sprintf('%04d-%02d-%02d', (int)$p3, $n1, $n2);
-        }
-    }
-    $ts = strtotime($str);
-    if ($ts !== false && $ts > 0) {
-        return date('Y-m-d', $ts);
-    }
-    return null;
-}
-
-// Recomputes a product's single expiry_date field from its still-open
-// batches (soonest expiry among batches that still have stock in either
-// location) so the existing Low Stock/Expiring/Expired alert banner and
-// Warehouse table — which both key off this one column — stay accurate.
-// Only updates if there is an active batch with a non-null expiry date.
+// touches products that actually have at least one batch on record; a
+// product with no batches yet keeps whatever expiry_date was set manually.
 function refreshProductExpiryFromBatches(PDO $db, int $productId): void
 {
+    // PERFORMANCE FIX: this used to be 3 separate DB round-trips (COUNT check,
+    // then MIN(expiry_date), then the UPDATE) called once per cart item on
+    // EVERY sale — a real contributor to "payment processing" feeling slow,
+    // since each round-trip pays real network latency to Supabase. Same
+    // result, one round-trip: the EXISTS clause reproduces the original
+    // "only touch products that actually have a batch on record" guard.
     $db->prepare("UPDATE products SET expiry_date = (
             SELECT MIN(b.expiry_date) FROM batches b
             WHERE b.product_id = ? AND (b.qty_warehouse + b.qty_store) > 0 AND b.expiry_date IS NOT NULL
-        ) WHERE id = ? AND EXISTS (
-            SELECT 1 FROM batches b
-            WHERE b.product_id = ? AND (b.qty_warehouse + b.qty_store) > 0 AND b.expiry_date IS NOT NULL
-        )")
+        ) WHERE id = ? AND EXISTS (SELECT 1 FROM batches WHERE product_id = ?)")
         ->execute([$productId, $productId, $productId]);
 }
 
@@ -2326,8 +2086,8 @@ if (isset($_GET['api'])) {
                 if ($role !== 'owner') json(false, null, 'Unauthorized');
                 $name = trim($body['name'] ?? '');
                 if (!$name) json(false, null, 'Name required');
-                $expiry = cleanDateForDb($body['expiry_date'] ?? null);
-                $deliveryDate = cleanDateForDb($body['delivery_date'] ?? null);
+                $expiry = $body['expiry_date'] ?? null ?: null;
+                $deliveryDate = $body['delivery_date'] ?? null ?: null;
                 $barcode = trim($body['barcode'] ?? '');
                 $barcodeWasProvided = $barcode !== '';
                 if (!$barcodeWasProvided) $barcode = 'BC-' . strtoupper(substr(md5(uniqid('', true)), 0, 10));
@@ -2455,8 +2215,8 @@ if (isset($_GET['api'])) {
                 $ownCheck = $db->prepare("SELECT id FROM products WHERE id=? AND store_id=?");
                 $ownCheck->execute([$id, currentStoreId()]);
                 if (!$ownCheck->fetch()) json(false, null, 'Product not found');
-                $expiry = cleanDateForDb($body['expiry_date'] ?? null);
-                $deliveryDate = cleanDateForDb($body['delivery_date'] ?? null);
+                $expiry = $body['expiry_date'] ?? null ?: null;
+                $deliveryDate = $body['delivery_date'] ?? null ?: null;
                 $barcode = trim($body['barcode'] ?? '') ?: null;
                 $newStoreQty = (int)($body['store_quantity'] ?? $body['quantity'] ?? 0);
                 $newWhQty    = (int)($body['warehouse_quantity'] ?? -1);
@@ -2542,10 +2302,6 @@ if (isset($_GET['api'])) {
                         $db->prepare("INSERT INTO warehouse (product_id,qty_out,note,created_by) VALUES (?,?,?,?)")
                             ->execute([$id, abs($diff), 'Store adjustment', $uid]);
                     }
-                    if ($expiry) {
-                        $db->prepare("UPDATE batches SET expiry_date = ? WHERE product_id = ?")
-                            ->execute([$expiry, $id]);
-                    }
                     json(true, ['ok' => true]);
                 } catch (PDOException $e) {
                     $isDupeBarcode = $e->getCode() === '23505' && str_contains($e->getMessage(), 'uniq_product_store_barcode');
@@ -2611,7 +2367,7 @@ if (isset($_GET['api'])) {
                 // Only meaningful when $type==='in' — turns this stock-in into a
                 // proper FEFO batch instead of an untracked aggregate-only bump.
                 $costPrice = ($body['cost_price'] ?? '') !== '' ? (float)$body['cost_price'] : null;
-                $expiryDate = cleanDateForDb($body['expiry_date'] ?? null);
+                $expiryDate = trim($body['expiry_date'] ?? '') ?: null;
                 if (!$pid || !$qty) json(false, null, 'Invalid data');
                 $ownCheck = $db->prepare("SELECT id FROM products WHERE id=? AND store_id=?");
                 $ownCheck->execute([$pid, currentStoreId()]);
@@ -2668,7 +2424,7 @@ if (isset($_GET['api'])) {
                             'qty_warehouse' => $qWh,
                             'qty_store' => $qSt,
                             'cost_price' => $it['cost_price'] ?? '',
-                            'expiry_date' => cleanDateForDb($it['expiry_date'] ?? null),
+                            'expiry_date' => trim($it['expiry_date'] ?? '') ?: null,
                         ];
                     }
                 }
@@ -2747,7 +2503,7 @@ if (isset($_GET['api'])) {
                 $qty = abs((int)($body['qty'] ?? 0));
                 $supplierRef = trim($body['supplier_ref'] ?? '');
                 $restockDate = trim($body['restock_date'] ?? '') ?: date('Y-m-d');
-                $newExpiry = cleanDateForDb($body['expiry_date'] ?? null);
+                $newExpiry = trim($body['expiry_date'] ?? '') ?: null;
                 $costPrice = ($body['cost_price'] ?? '') !== '' ? (float)$body['cost_price'] : null;
                 // Where this restock lands — Store shelf or Warehouse. Defaults to
                 // 'store' to match the original behavior for any older client that
@@ -4892,8 +4648,10 @@ if ($page === 'login' && $_SERVER['REQUEST_METHOD'] === 'POST') {
                 $user = $stmt->fetch();
                 if ($user && password_verify($password, $user['password'])) {
                     recordLoginAttempt($db, $username, true);
-                    // Clear previous session memory and regenerate ID on login
-                    $_SESSION = [];
+                    // Regenerate the session ID on privilege change (login) —
+                    // standard defense against session fixation, where an
+                    // attacker plants a known session ID in a victim's
+                    // browser before they log in and hijacks it afterward.
                     session_regenerate_id(true);
                     $_SESSION['uid'] = $user['id'];
                     $_SESSION['username'] = $user['username'];
@@ -4929,7 +4687,6 @@ if ($page === 'login' && $_SERVER['REQUEST_METHOD'] === 'POST') {
 // FORGOT PASSWORD — request reset link
 $forgotMsg = '';
 $forgotError = '';
-$localResetLink = '';
 if ($page === 'forgot' && $_SERVER['REQUEST_METHOD'] === 'POST') {
     $identifier = trim($_POST['identifier'] ?? '');
     if (!csrfValid($_POST['csrf_token'] ?? null)) {
@@ -4944,7 +4701,7 @@ if ($page === 'forgot' && $_SERVER['REQUEST_METHOD'] === 'POST') {
                 $stmt = db()->prepare("SELECT id,username,full_name,email FROM users WHERE username=? OR email=? LIMIT 1");
                 $stmt->execute([$identifier, $identifier]);
                 $user = $stmt->fetch();
-                if ($user) {
+                if ($user && !empty($user['email'])) {
                     $token = bin2hex(random_bytes(32));
                     $expires = date('Y-m-d H:i:s', strtotime('+1 hour'));
                     db()->prepare("UPDATE users SET reset_token=?, reset_expires=? WHERE id=?")->execute([$token, $expires, $user['id']]);
@@ -4955,32 +4712,20 @@ if ($page === 'forgot' && $_SERVER['REQUEST_METHOD'] === 'POST') {
                     $__fwdProto = strtolower($_SERVER['HTTP_X_FORWARDED_PROTO'] ?? '');
                     $scheme = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') || $__fwdProto === 'https' ? 'https://' : 'http://';
                     $resetLink = $scheme . $_SERVER['HTTP_HOST'] . $_SERVER['PHP_SELF'] . '?page=reset&token=' . $token;
-
-                    $host = strtolower($_SERVER['HTTP_HOST'] ?? '');
-                    $isLocal = str_contains($host, 'localhost') || str_contains($host, '127.0.0.1');
-
-                    if (empty($user['email'])) {
-                        $forgotError = "The account '" . htmlspecialchars($user['username']) . "' has no email address configured in the system. Please sign in as owner/admin to set an email in Settings > Users.";
-                        if ($isLocal) {
-                            $localResetLink = $resetLink;
-                        }
-                    } else {
-                        [$sent, $mailErr] = sendResetEmail($user['email'], $user['full_name'], $resetLink);
-                        if ($sent) {
-                            $forgotMsg = 'A password reset link has been sent to ' . htmlspecialchars($user['email']) . '. Please check your inbox and spam folder.';
-                        } else {
-                            error_log('Password-reset email FAILED for ' . $user['username'] . ': ' . $mailErr);
-                            $forgotError = 'The reset email could not be sent: ' . $mailErr;
-                            if (str_contains($mailErr, 'unrecognised IP') || str_contains($mailErr, 'authorised_ips')) {
-                                $forgotError .= ' (Brevo blocked this request because your IP address is not authorized. Visit https://app.brevo.com/security/authorised_ips to authorize it or disable IP restriction.)';
-                            }
-                            if ($isLocal) {
-                                $localResetLink = $resetLink;
-                            }
-                        }
+                    [$sent, $mailErr] = sendResetEmail($user['email'], $user['full_name'], $resetLink);
+                    if (!$sent) {
+                        // Surface the real reason (bad API key, unverified sender,
+                        // Brevo daily limit, …) instead of silently claiming the
+                        // email went out — previously this failure was swallowed
+                        // and the user was told a link was sent when none was.
+                        error_log('Password-reset email FAILED for ' . $user['username'] . ': ' . $mailErr);
+                        $forgotError = 'The reset email could not be sent: ' . $mailErr . ' (The server admin should check the BREVO_API_KEY / sender settings.)';
                     }
-                } else {
-                    // Account not found - generic message for security
+                }
+                // Same message whether or not the account/email was found, to avoid
+                // leaking which usernames exist (skipped when sending failed so the
+                // real error above stays visible).
+                if (empty($forgotError)) {
                     $forgotMsg = 'If that account has an email on file, a password reset link has been sent to it.';
                 }
             } catch (Exception $e) {
@@ -5097,14 +4842,6 @@ if ($page === 'signup' && $_SERVER['REQUEST_METHOD'] === 'POST') {
 if ($page === 'logout') {
     clearAuthToken(); // kill the remember token + cookie — Logout is the ONE
                       // thing that should end a session for real
-    $_SESSION = [];
-    if (ini_get("session.use_cookies")) {
-        $params = session_get_cookie_params();
-        setcookie(session_name(), '', time() - 42000,
-            $params["path"] ?? '/', $params["domain"] ?? '',
-            $params["secure"] ?? false, $params["httponly"] ?? true
-        );
-    }
     session_destroy();
     header('Location: ?page=login');
     exit;
@@ -5199,7 +4936,7 @@ $seoImage = (!empty($storeSettings['shop_logo']) && strpos($storeSettings['shop_
 
 <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
     <!-- Tells the browser this page manages its own light/dark colors, so
          Android Chrome's "Force dark mode for web contents" (and similar
          browser/OS-level auto-dark features) stops trying to auto-invert
@@ -5227,23 +4964,10 @@ $seoImage = (!empty($storeSettings['shop_logo']) && strpos($storeSettings['shop_
     <meta name="twitter:description" content="<?= htmlspecialchars($seoDesc) ?>" />
     <meta name="twitter:image" content="<?= htmlspecialchars($seoImage) ?>" />
 
-    <!-- Mobile App / PWA Meta -->
+    <!-- Mobile App / Theme Meta -->
     <meta name="application-name" content="<?= htmlspecialchars($siteShopName) ?>" />
     <meta name="apple-mobile-web-app-title" content="<?= htmlspecialchars($siteShopName) ?>" />
-    <meta name="apple-mobile-web-app-capable" content="yes" />
-    <meta name="mobile-web-app-capable" content="yes" />
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-    <meta name="theme-color" content="#0a1628" />
-    <meta name="msapplication-TileColor" content="#0a1628" />
-    <meta name="msapplication-navbutton-color" content="#0a1628" />
-    <link rel="manifest" href="manifest.json" />
-    <link rel="apple-touch-icon" href="assets/apple-touch-icon.png" />
-    <link rel="apple-touch-icon" sizes="180x180" href="assets/apple-touch-icon.png" />
-    <link rel="apple-touch-icon" sizes="192x192" href="assets/icon-192.png" />
-    <link rel="apple-touch-icon" sizes="512x512" href="assets/icon-512.png" />
-    <link rel="icon" type="image/png" sizes="192x192" href="assets/icon-192.png" />
-    <link rel="icon" type="image/png" sizes="512x512" href="assets/icon-512.png" />
-    <link rel="shortcut icon" href="assets/icon-192.png" />
+    <meta name="theme-color" content="#121824" />
     <!-- Applies the saved Light/Dark app theme (see toggleTheme() further
      down) before first paint, so the page never flashes dark-then-light
      or vice versa on load. Runs only for the logged-in app pages — the
@@ -7876,8 +7600,6 @@ $seoImage = (!empty($storeSettings['shop_logo']) && strpos($storeSettings['shop_
 
         html {
             scroll-behavior: smooth;
-            max-width: 100%;
-            overflow-x: clip;
         }
 
         body {
@@ -7888,8 +7610,6 @@ $seoImage = (!empty($storeSettings['shop_logo']) && strpos($storeSettings['shop_
             -webkit-font-smoothing: antialiased;
             font-size: 15px;
             font-weight: 500;
-            max-width: 100%;
-            overflow-x: clip;
         }
 
         /* ── NAV ── */
@@ -7905,22 +7625,18 @@ $seoImage = (!empty($storeSettings['shop_logo']) && strpos($storeSettings['shop_
             border-bottom: 1.5px solid var(--border);
             display: flex;
             align-items: center;
-            padding: 0 16px;
-            gap: 8px;
-            box-sizing: border-box;
+            padding: 0 20px;
+            gap: 10px;
         }
 
         .nav-logo {
             font-family: 'Poppins', sans-serif;
-            font-size: 1.4rem;
+            font-size: 1.5rem;
             font-weight: 900;
             color: var(--accent);
             text-decoration: none;
-            flex-shrink: 1;
-            min-width: 0;
+            flex: 1;
             white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
             letter-spacing: -0.5px;
         }
 
@@ -7941,33 +7657,23 @@ $seoImage = (!empty($storeSettings['shop_logo']) && strpos($storeSettings['shop_
         .nav-links {
             display: flex;
             gap: 2px;
-            align-items: center;
-            flex-shrink: 1;
-            overflow-x: auto;
-            scrollbar-width: none;
-            -ms-overflow-style: none;
-        }
-        .nav-links::-webkit-scrollbar {
-            display: none;
         }
 
         .nav-link {
-            padding: 6px 11px;
+            padding: 7px 12px;
             border-radius: 8px;
-            font-size: .95rem;
+            font-size: 1rem;
             font-weight: 800;
             color: var(--nav-ink-muted);
             text-decoration: none;
             transition: all .2s;
             display: flex;
             align-items: center;
-            gap: 4px;
+            gap: 5px;
             background: none;
             border: none;
             cursor: pointer;
             font-family: 'Inter', sans-serif;
-            white-space: nowrap;
-            flex-shrink: 0;
         }
 
         .nav-link:hover,
@@ -7976,32 +7682,11 @@ $seoImage = (!empty($storeSettings['shop_logo']) && strpos($storeSettings['shop_
             color: #fff;
         }
 
-        .nav-right {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            margin-left: auto;
-            flex-shrink: 0;
-            min-width: max-content;
-            z-index: 2;
-        }
-
         .nav-user-name {
-            font-size: .88rem;
+            font-size: .9rem;
             font-weight: 700;
             color: var(--nav-ink-muted);
             white-space: nowrap;
-            max-width: 140px;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
-
-        .nav-logout-btn {
-            white-space: nowrap;
-            flex-shrink: 0;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
         }
 
         /* ── MOBILE NAV ── */
@@ -8011,56 +7696,36 @@ $seoImage = (!empty($storeSettings['shop_logo']) && strpos($storeSettings['shop_
             bottom: 0;
             left: 0;
             right: 0;
-            width: 100%;
-            max-width: 100vw;
             z-index: 999;
-            background: rgba(251, 247, 240, .98);
+            background: rgba(251, 247, 240, .97);
             backdrop-filter: blur(12px);
             border-top: 1.5px solid var(--border);
-            padding: 4px 0 env(safe-area-inset-bottom, 6px);
-            box-sizing: border-box;
+            padding: 6px 0 8px;
         }
 
         .mob-nav-inner {
             display: flex;
             justify-content: space-around;
-            align-items: center;
-            width: 100%;
-            max-width: 100%;
-            box-sizing: border-box;
-            overflow-x: auto;
-            scrollbar-width: none;
-        }
-
-        .mob-nav-inner::-webkit-scrollbar {
-            display: none;
         }
 
         .mob-btn {
             display: flex;
             flex-direction: column;
             align-items: center;
-            justify-content: center;
             gap: 2px;
-            padding: 4px 1px;
-            flex: 1 1 0;
-            min-width: 42px;
-            border-radius: 8px;
+            padding: 6px 12px;
+            border-radius: 10px;
             /* Same fix as the desktop nav — dark ink instead of the pale
                --text3 tone, so labels are readable on the light bottom bar. */
             color: var(--nav-ink-muted);
-            font-size: .58rem;
+            font-size: .65rem;
             font-weight: 700;
-            letter-spacing: -0.01em;
             text-decoration: none;
             border: none;
             background: none;
             cursor: pointer;
             font-family: 'Inter', sans-serif;
             transition: color .2s;
-            text-align: center;
-            white-space: nowrap;
-            box-sizing: border-box;
         }
 
         .mob-btn.active,
@@ -8069,9 +7734,8 @@ $seoImage = (!empty($storeSettings['shop_logo']) && strpos($storeSettings['shop_
         }
 
         .mob-btn svg {
-            width: 18px;
-            height: 18px;
-            flex-shrink: 0;
+            width: 20px;
+            height: 20px;
         }
 
         /* ── LAYOUT ── */
@@ -8079,16 +7743,12 @@ $seoImage = (!empty($storeSettings['shop_logo']) && strpos($storeSettings['shop_
             padding-top: calc(var(--nav) + 20px);
             padding-bottom: 40px;
             min-height: 100vh;
-            width: 100%;
-            box-sizing: border-box;
         }
 
         .container {
-            width: 100%;
             max-width: 1200px;
             margin: 0 auto;
             padding: 0 18px;
-            box-sizing: border-box;
         }
 
         /* ── BUTTONS ── */
@@ -8339,17 +7999,7 @@ $seoImage = (!empty($storeSettings['shop_logo']) && strpos($storeSettings['shop_
 
         .stat-period-group {
             display: inline-flex;
-            gap: 2px;
-            flex-wrap: wrap;
-            justify-content: flex-end;
-        }
-
-        .stat-period-group .period-btn {
-            font-size: .58rem !important;
-            padding: 2px 4px !important;
-            min-width: 0 !important;
-            border-radius: 4px !important;
-            line-height: 1.2 !important;
+            gap: 4px;
         }
 
         .stat-label {
@@ -8603,12 +8253,8 @@ $seoImage = (!empty($storeSettings['shop_logo']) && strpos($storeSettings['shop_
             display: flex;
             gap: 7px;
             overflow-x: auto;
-            -webkit-overflow-scrolling: touch;
-            padding: 2px 2px 8px;
+            padding-bottom: 4px;
             scrollbar-width: none;
-            max-width: 100%;
-            min-width: 0;
-            box-sizing: border-box;
         }
 
         .cat-scroll::-webkit-scrollbar {
@@ -8616,7 +8262,7 @@ $seoImage = (!empty($storeSettings['shop_logo']) && strpos($storeSettings['shop_
         }
 
         .cat-pill {
-            padding: 6px 14px;
+            padding: 7px 16px;
             border-radius: 99px;
             border: 1.5px solid var(--border);
             font-size: .8rem;
@@ -8627,8 +8273,6 @@ $seoImage = (!empty($storeSettings['shop_logo']) && strpos($storeSettings['shop_
             color: var(--text2);
             white-space: nowrap;
             font-family: 'Inter', sans-serif;
-            flex-shrink: 0;
-            user-select: none;
         }
 
         .cat-pill:hover,
@@ -9199,48 +8843,25 @@ $seoImage = (!empty($storeSettings['shop_logo']) && strpos($storeSettings['shop_
             gap: 14px;
         }
 
-        .dash-layout {
-            display: grid;
-            grid-template-columns: 1fr;
-            gap: 18px;
-            align-items: start;
-            width: 100%;
-            min-width: 0;
-            box-sizing: border-box;
-        }
-
-        .dash-layout > div {
-            min-width: 0;
-            width: 100%;
-            max-width: 100%;
-            box-sizing: border-box;
-        }
-
         .grid-4 {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
             gap: 14px;
-            width: 100%;
-            box-sizing: border-box;
         }
 
         /* Product grids get their own auto-fill layout (overrides .grid-4 via higher ID
-           specificity) so the column count adapts smoothly to ANY screen width — phone,
-           tablet, laptop, or ultrawide — instead of jumping between fixed 1/2/4 columns. */
+   specificity) so the column count adapts smoothly to ANY screen width — phone,
+   tablet, laptop, or ultrawide — instead of jumping between fixed 1/2/4 columns. */
         #prod-grid,
         #prods-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
-            gap: 12px;
-            width: 100%;
-            box-sizing: border-box;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
         }
 
         @media(max-width:480px) {
 
             #prod-grid,
             #prods-grid {
-                grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+                grid-template-columns: repeat(auto-fill, minmax(128px, 1fr));
                 gap: 9px;
             }
         }
@@ -9852,8 +9473,8 @@ $seoImage = (!empty($storeSettings['shop_logo']) && strpos($storeSettings['shop_
         .login-logo-img {
             width: 64px;
             height: 64px;
-            object-fit: cover;
-            border-radius: 50%;
+            object-fit: contain;
+            border-radius: 14px;
             margin-bottom: 6px;
         }
 
@@ -9905,8 +9526,7 @@ $seoImage = (!empty($storeSettings['shop_logo']) && strpos($storeSettings['shop_
             .login-logo-img {
                 width: 112px;
                 height: 112px;
-                object-fit: cover;
-                border-radius: 50%;
+                border-radius: 22px;
                 margin-bottom: 14px;
             }
 
@@ -9992,62 +9612,9 @@ $seoImage = (!empty($storeSettings['shop_logo']) && strpos($storeSettings['shop_
         }
 
         /* ── RESPONSIVE ── */
-        @media(max-width:1180px) {
-            .nav {
-                padding: 0 10px;
-                gap: 6px;
-            }
-            .nav-logo {
-                font-size: 1.15rem;
-                max-width: 140px;
-                overflow: hidden;
-                text-overflow: ellipsis;
-            }
-            .nav-links {
-                gap: 1px;
-            }
-            .nav-link {
-                padding: 5px 7px;
-                font-size: .84rem;
-                gap: 3px;
-            }
-            .nav-right {
-                gap: 6px;
-                flex-shrink: 0;
-            }
-            .nav-user-name {
-                max-width: 90px;
-                font-size: .8rem;
-            }
-            .nav-logout-btn {
-                padding: 4px 9px;
-                font-size: .82rem;
-                flex-shrink: 0;
-            }
-        }
-
         @media(max-width:1024px) {
-            .nav-logo {
-                font-size: 1.1rem;
-                max-width: 130px;
-            }
-            .nav-links {
-                overflow-x: auto;
-                flex-shrink: 1;
-                scrollbar-width: none;
-            }
             .dash-layout {
                 grid-template-columns: 1fr !important;
-            }
-        }
-
-        @media(max-width:920px) {
-            .nav-user-name {
-                display: none;
-            }
-            .nav-link {
-                padding: 4px 6px;
-                font-size: .8rem;
             }
         }
 
@@ -10068,8 +9635,8 @@ $seoImage = (!empty($storeSettings['shop_logo']) && strpos($storeSettings['shop_
                 padding-bottom: 85px;
             }
 
-            .grid-4:not(#prods-grid):not(#prod-grid) {
-                grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            .grid-4 {
+                grid-template-columns: repeat(2, 1fr);
             }
 
             .grid-3 {
@@ -10086,12 +9653,10 @@ $seoImage = (!empty($storeSettings['shop_logo']) && strpos($storeSettings['shop_
 
             .container {
                 padding: 0 13px;
-                width: 100%;
             }
 
             .dash-layout {
                 grid-template-columns: 1fr !important;
-                width: 100%;
             }
 
             /* Warehouse table: with Store/Warehouse now split into Cases/Bundle/Pcs/
@@ -10112,29 +9677,13 @@ $seoImage = (!empty($storeSettings['shop_logo']) && strpos($storeSettings['shop_
         }
 
         @media(max-width:480px) {
-            .grid-4:not(#prods-grid):not(#prod-grid) {
-                grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            .grid-4 {
+                grid-template-columns: repeat(2, 1fr);
                 gap: 9px;
             }
 
             .grid-2 {
                 grid-template-columns: 1fr;
-            }
-
-            .stat-card .stat-label {
-                flex-wrap: wrap;
-                gap: 4px;
-            }
-
-            .stat-period-group {
-                width: 100%;
-                justify-content: flex-start;
-                margin-top: 3px;
-            }
-
-            .stat-period-group .period-btn {
-                font-size: .54rem !important;
-                padding: 2px 4px !important;
             }
 
             .stat-value {
@@ -10455,9 +10004,6 @@ $seoImage = (!empty($storeSettings['shop_logo']) && strpos($storeSettings['shop_
         * {
             font-family: var(--user-font-family, 'Inter', sans-serif) !important;
         }
-        /* PJAX page-swap fade animation */
-        @keyframes pjaxFadeIn { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: none; } }
-        main.page { transition: opacity .06s ease-out; }
     </style>
 <script>
     // ── SHOW/HIDE PASSWORD (👁️ eye button) — one global helper for every
@@ -10501,21 +10047,18 @@ $seoImage = (!empty($storeSettings['shop_logo']) && strpos($storeSettings['shop_
      script block. Icon flips between 🌙 (currently dark, click for
      light) and ☀️ (currently light, click for dark); state also
      controllable from Settings → Appearance. -->
-            <div class="nav-right">
-                <button type="button" id="theme-toggle-btn" class="nav-link" style="padding:6px 9px;" title="Switch to light mode" onclick="toggleTheme()">🌙</button>
-                <button type="button" id="pwa-install-btn" class="btn btn-secondary btn-sm" style="display:none;gap:5px;align-items:center;" onclick="promptInstallPwa()" title="Install POS as Native App">📲 Install</button>
-                <span class="nav-user-name" title="<?= htmlspecialchars($currentUser['full_name']) ?>"><?= htmlspecialchars($currentUser['full_name']) ?></span>
-                <?php if ($isCashierRole): ?>
-                    <!-- Cashiers have no direct Logout link — the only way out is completing
-           the mandatory closing cash count via End Shift, which then redirects
-           to ?page=logout itself once the drawer count is submitted
-           (see submitShiftModal()'s close-shift branch). This keeps "No Count,
-           No Transaction" from being bypassed by simply logging out mid-shift. -->
-                    <button class="btn btn-secondary btn-sm nav-logout-btn" onclick="requestEndShift()">🔚 End Shift</button>
-                <?php else: ?>
-                    <a href="?page=logout" class="btn btn-secondary btn-sm nav-logout-btn" onclick="return attemptLogout(event)">Logout</a>
-                <?php endif; ?>
-            </div>
+            <button type="button" id="theme-toggle-btn" class="nav-link" style="padding:7px 10px;" title="Switch to light mode" onclick="toggleTheme()">🌙</button>
+            <span class="nav-user-name"><?= htmlspecialchars($currentUser['full_name']) ?></span>
+            <?php if ($isCashierRole): ?>
+                <!-- Cashiers have no direct Logout link — the only way out is completing
+       the mandatory closing cash count via End Shift, which then redirects
+       to ?page=logout itself once the drawer count is submitted
+       (see submitShiftModal()'s close-shift branch). This keeps "No Count,
+       No Transaction" from being bypassed by simply logging out mid-shift. -->
+                <button class="btn btn-secondary btn-sm" style="margin-left:8px;" onclick="requestEndShift()">🔚 End Shift</button>
+            <?php else: ?>
+                <a href="?page=logout" class="btn btn-secondary btn-sm" style="margin-left:8px;" onclick="return attemptLogout(event)">Logout</a>
+            <?php endif; ?>
         </nav>
         <!-- ── MOBILE NAV ── -->
         <nav class="mob-nav">
@@ -10577,48 +10120,9 @@ $seoImage = (!empty($storeSettings['shop_logo']) && strpos($storeSettings['shop_
                         </svg>Config
                     </a>
                 <?php endif; ?>
-                <a href="javascript:void(0)" id="mob-pwa-install-btn" class="mob-btn" style="display:none;color:var(--accent);" onclick="promptInstallPwa()" title="Install App">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
-                        <polyline points="7 10 12 15 17 10" />
-                        <line x1="12" y1="15" x2="12" y2="3" />
-                    </svg>Install
-                </a>
-                <?php if ($isCashierRole): ?>
-                    <a href="javascript:void(0)" class="mob-btn" onclick="requestEndShift()" title="End Shift" style="color:var(--danger,#ef4444);">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
-                            <polyline points="16 17 21 12 16 7" />
-                            <line x1="21" y1="12" x2="9" y2="12" />
-                        </svg>End
-                    </a>
-                <?php else: ?>
-                    <a href="?page=logout" class="mob-btn" onclick="return attemptLogout(event)" title="Logout" style="color:var(--danger,#ef4444);">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
-                            <polyline points="16 17 21 12 16 7" />
-                            <line x1="21" y1="12" x2="9" y2="12" />
-                        </svg>Exit
-                    </a>
-                <?php endif; ?>
             </div>
         </nav>
     <?php endif; ?>
-
-    <!-- ── PWA FLOATING INSTALL PROMPT (shown on mobile when installable) ── -->
-    <div id="pwa-install-banner" style="display:none;position:fixed;bottom:70px;left:14px;right:14px;max-width:420px;margin:0 auto;background:var(--surface2,#1e293b);border:1.5px solid var(--accent,#2563eb);border-radius:12px;padding:12px 14px;box-shadow:0 10px 25px rgba(0,0,0,0.5);z-index:99999;align-items:center;justify-content:space-between;gap:10px;">
-        <div style="display:flex;align-items:center;gap:10px;">
-            <img src="assets/icon-192.png" style="width:34px;height:34px;border-radius:50%;object-fit:cover;" alt="POS App" onerror="this.src='assets/default-logo.png'"/>
-            <div>
-                <div style="font-weight:700;font-size:.85rem;color:var(--text,#f8fafc);">Install POS App</div>
-                <div style="font-size:.72rem;color:var(--text3,#94a3b8);">Add to home screen for fullscreen checkout</div>
-            </div>
-        </div>
-        <div style="display:flex;gap:6px;align-items:center;">
-            <button type="button" class="btn btn-primary btn-sm" style="padding:5px 12px;font-size:.8rem;" onclick="promptInstallPwa()">Install</button>
-            <button type="button" style="background:none;border:none;color:var(--text3,#94a3b8);font-size:1.1rem;cursor:pointer;padding:0 4px;" onclick="dismissInstallBanner()">✕</button>
-        </div>
-    </div>
 
     <!-- ══════════════════════════════════════════
      SHIFT LOCK MODAL — mandatory denomination count.
@@ -11580,14 +11084,7 @@ $seoImage = (!empty($storeSettings['shop_logo']) && strpos($storeSettings['shop_
                 <div class="login-card">
                     <h2 style="font-size:1.05rem;font-weight:600;margin-bottom:18px;">Forgot your password?</h2>
                     <?php if ($forgotError): ?>
-                        <div class="error-box" style="margin-bottom:12px;">⚠️ <?= htmlspecialchars($forgotError) ?></div>
-                    <?php endif; ?>
-                    <?php if (!empty($localResetLink)): ?>
-                        <div class="error-box" style="background:rgba(47,127,245,.08);border-color:rgba(47,127,245,.25);color:var(--accent);margin-bottom:12px;">
-                            💡 <strong>Local Development Reset Link:</strong><br>
-                            <span style="font-size:.82rem;">Since email was not delivered or you are testing locally, you can reset directly:</span><br>
-                            <a href="<?= htmlspecialchars($localResetLink) ?>" class="btn btn-primary btn-sm" style="display:inline-block;margin-top:8px;padding:6px 14px;text-decoration:none;">Click Here to Reset Password →</a>
-                        </div>
+                        <div class="error-box">⚠️ <?= htmlspecialchars($forgotError) ?></div>
                     <?php endif; ?>
                     <?php if ($forgotMsg): ?>
                         <div class="error-box" style="background:rgba(45,122,58,.08);border-color:rgba(45,122,58,.25);color:var(--green);">✅ <?= htmlspecialchars($forgotMsg) ?></div>
@@ -11843,7 +11340,7 @@ $seoImage = (!empty($storeSettings['shop_logo']) && strpos($storeSettings['shop_
        standalone smart-insights system, not a buried sub-tab.
        Owner-only — the cashier's dashboard is Sales-focused.
   ══════════════════════════════════════════ -->
-                    <div class="ai-highlights" style="display:grid;grid-template-columns:repeat(auto-fit, minmax(280px, 1fr));gap:16px;margin-bottom:26px;">
+                    <div class="ai-highlights" style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:26px;">
                         <a href="?page=forecast" class="ai-card ai-card-forecast">
                             <div class="ai-card-icon">🔮</div>
                             <div class="ai-card-body">
@@ -11874,7 +11371,9 @@ $seoImage = (!empty($storeSettings['shop_logo']) && strpos($storeSettings['shop_
                     </div>
                 <?php endif; ?>
 
-                <!-- Top Sellers — collapsible card -->
+                <!-- Top Sellers — moved up to sit directly under the AI Highlights cards,
+       full width, and made collapsible (closed by default) like the rest of
+       the app's summary cards. -->
                 <div class="card" style="margin-bottom:18px;">
                     <div class="card-title collapse-toggle" onclick="toggleCollapseCard('top-sellers-wrap', this)" style="cursor:pointer;display:flex;align-items:center;justify-content:space-between;">
                         <span>🏆 Top Sellers</span><span class="collapse-chevron">▾</span>
@@ -11887,7 +11386,7 @@ $seoImage = (!empty($storeSettings['shop_logo']) && strpos($storeSettings['shop_
                 </div>
 
                 <!-- Products -->
-                <div class="dash-layout" style="margin-bottom:24px;">
+                <div style="display:grid;grid-template-columns:1fr;gap:18px;align-items:start;" class="dash-layout">
                     <div>
                         <div style="display:flex;gap:8px;margin-bottom:12px;">
                             <div class="search-wrap" style="flex:1;">
@@ -12024,14 +11523,7 @@ $seoImage = (!empty($storeSettings['shop_logo']) && strpos($storeSettings['shop_
         <!-- DASH SCAN MODAL -->
         <div class="modal-overlay" id="dash-scan-modal">
             <div class="modal" style="max-width:420px;">
-                <div class="modal-header">
-                    <span class="modal-title">📷 Barcode Scanner</span>
-                    <div style="display:flex;align-items:center;gap:6px;">
-                        <button type="button" class="btn btn-secondary btn-sm" onclick="switchScannerCamera()" title="Switch Camera" style="padding:4px 8px;font-size:12px;">🔄 Switch</button>
-                        <button type="button" class="btn btn-secondary btn-sm" onclick="toggleScannerTorch()" title="Flashlight" style="padding:4px 8px;font-size:12px;">🔦 Light</button>
-                        <button class="modal-close" onclick="closeDashScan()">✕</button>
-                    </div>
-                </div>
+                <div class="modal-header"><span class="modal-title">📷 Barcode Scanner</span><button class="modal-close" onclick="closeDashScan()">✕</button></div>
                 <div style="background:#000;border-radius:12px;overflow:hidden;margin-bottom:14px;position:relative;">
                     <video id="dash-scan-video" style="width:100%;display:block;" autoplay playsinline></video>
                     <div style="position:absolute;inset:0;pointer-events:none;display:flex;align-items:center;justify-content:center;">
@@ -12137,8 +11629,8 @@ $seoImage = (!empty($storeSettings['shop_logo']) && strpos($storeSettings['shop_
                             <label class="form-label">Expiry Date</label>
                             <div style="display:flex;gap:6px;">
                                 <input type="text" class="form-input" id="p-expiry-display" placeholder="MM/DD/YYYY" inputmode="numeric" maxlength="10" oninput="formatExpiryInput(this)" />
-                                <button type="button" class="btn btn-secondary btn-sm" onclick="try{document.getElementById('p-expiry-native').showPicker();}catch(e){document.getElementById('p-expiry-native').click();}" title="Pick a date">📅</button>
-                                <input type="date" id="p-expiry-native" style="position:absolute;opacity:0;width:1px;height:1px;overflow:hidden;" onchange="syncExpiryFromNative()" />
+                                <button type="button" class="btn btn-secondary btn-sm" onclick="const n=document.getElementById('p-expiry-native');n.showPicker?n.showPicker():n.click();" title="Pick a date">📅</button>
+                                <input type="date" id="p-expiry-native" style="position:absolute;opacity:0;width:0;height:0;pointer-events:none;" onchange="syncExpiryFromNative()" />
                             </div>
                             <input type="hidden" id="p-expiry" />
                         </div>
@@ -12147,8 +11639,8 @@ $seoImage = (!empty($storeSettings['shop_logo']) && strpos($storeSettings['shop_
                         <label class="form-label">Delivery Date <span style="font-weight:400;color:var(--text3);">(batch received)</span></label>
                         <div style="display:flex;gap:6px;">
                             <input type="text" class="form-input" id="p-delivery-display" placeholder="MM/DD/YYYY" inputmode="numeric" maxlength="10" oninput="formatDeliveryInput(this)" />
-                            <button type="button" class="btn btn-secondary btn-sm" onclick="try{document.getElementById('p-delivery-native').showPicker();}catch(e){document.getElementById('p-delivery-native').click();}" title="Pick a date">📅</button>
-                            <input type="date" id="p-delivery-native" style="position:absolute;opacity:0;width:1px;height:1px;overflow:hidden;" onchange="syncDeliveryFromNative()" />
+                            <button type="button" class="btn btn-secondary btn-sm" onclick="const n=document.getElementById('p-delivery-native');n.showPicker?n.showPicker():n.click();" title="Pick a date">📅</button>
+                            <input type="date" id="p-delivery-native" style="position:absolute;opacity:0;width:0;height:0;pointer-events:none;" onchange="syncDeliveryFromNative()" />
                         </div>
                         <input type="hidden" id="p-delivery" />
                         <div style="font-size:.72rem;color:var(--text3);margin-top:3px;">Tag this batch so it's easy to find later in Warehouse, Product History, and Stock Movements.</div>
@@ -12430,14 +11922,7 @@ $seoImage = (!empty($storeSettings['shop_logo']) && strpos($storeSettings['shop_
      can't accidentally register the same barcode on two different products. -->
             <div class="modal-overlay" id="prod-scan-modal">
                 <div class="modal" style="max-width:420px;">
-                    <div class="modal-header">
-                        <span class="modal-title">📷 Scan Product Barcode</span>
-                        <div style="display:flex;align-items:center;gap:6px;">
-                            <button type="button" class="btn btn-secondary btn-sm" onclick="switchScannerCamera()" title="Switch Camera" style="padding:4px 8px;font-size:12px;">🔄 Switch</button>
-                            <button type="button" class="btn btn-secondary btn-sm" onclick="toggleScannerTorch()" title="Flashlight" style="padding:4px 8px;font-size:12px;">🔦 Light</button>
-                            <button class="modal-close" onclick="closeProductBarcodeScan()">✕</button>
-                        </div>
-                    </div>
+                    <div class="modal-header"><span class="modal-title">📷 Scan Product Barcode</span><button class="modal-close" onclick="closeProductBarcodeScan()">✕</button></div>
                     <div style="background:#000;border-radius:12px;overflow:hidden;margin-bottom:14px;position:relative;">
                         <video id="prod-scan-video" style="width:100%;display:block;" autoplay playsinline></video>
                         <div style="position:absolute;inset:0;pointer-events:none;display:flex;align-items:center;justify-content:center;">
@@ -13590,7 +13075,7 @@ $seoImage = (!empty($storeSettings['shop_logo']) && strpos($storeSettings['shop_
         <script>
             const API_BASE = '?api=';
             const CSRF_TOKEN = '<?= htmlspecialchars(CSRF_TOKEN, ENT_QUOTES) ?>';
-            let cur_page = '<?= $page ?>';
+            const cur_page = '<?= $page ?>';
             // Default product photo (no-photo placeholder + broken-photo fallback
             // everywhere a product image is rendered). Resolved server-side so the
             // cache-buster query string matches the actual file on disk.
@@ -13662,50 +13147,7 @@ $seoImage = (!empty($storeSettings['shop_logo']) && strpos($storeSettings['shop_
                 if (navigator.onLine === false) return '📶 You appear to be offline — check your connection and try again.';
                 return '⚠️ Could not reach the server — check your connection and try again.';
             }
-            // ── FAST SESSION CACHE FOR STATIC/NEAR-STATIC LOOKUPS ──
-            // Caches get_settings and get_categories in sessionStorage for 60 seconds
-            // so page transitions don't make redundant HTTP round-trips.
-            const _FAST_CACHE = {
-                'get_settings': { key: 'pos_cache_settings', ttl: 60000 },
-                'get_categories': { key: 'pos_cache_categories', ttl: 60000 }
-            };
-
-            function _readFastCache(action) {
-                const conf = _FAST_CACHE[action];
-                if (!conf) return null;
-                try {
-                    const raw = sessionStorage.getItem(conf.key);
-                    if (raw) {
-                        const parsed = JSON.parse(raw);
-                        if (parsed && parsed.data && (Date.now() - (parsed.ts || 0)) < conf.ttl) {
-                            return parsed.data;
-                        }
-                    }
-                } catch (e) {}
-                return null;
-            }
-
-            function _writeFastCache(action, data) {
-                const conf = _FAST_CACHE[action];
-                if (!conf || !data?.success) return;
-                try {
-                    sessionStorage.setItem(conf.key, JSON.stringify({ data, ts: Date.now() }));
-                } catch (e) {}
-            }
-
-            function invalidateFastCache(action) {
-                const conf = _FAST_CACHE[action];
-                if (conf) {
-                    try { sessionStorage.removeItem(conf.key); } catch (e) {}
-                }
-            }
-
             async function apiGet(action, params = {}) {
-                const noParams = !params || Object.keys(params).length === 0;
-                if (noParams) {
-                    const cached = _readFastCache(action);
-                    if (cached) return cached;
-                }
                 const qs = new URLSearchParams(params).toString();
                 const url = API_BASE + action + (qs ? '&' + qs : '');
                 try {
@@ -13718,81 +13160,33 @@ $seoImage = (!empty($storeSettings['shop_logo']) && strpos($storeSettings['shop_
                         toast('⚠️ Server error (' + r.status + ') — please try again', 'error');
                         return null;
                     }
-                    const json = await r.json(); // must await inside try/catch, or a malformed response silently fails with no toast at all
-                    if (noParams && json?.success) {
-                        _writeFastCache(action, json);
-                    }
-                    return json;
+                    return await r.json(); // must await inside try/catch, or a malformed response silently fails with no toast at all
                 } catch (e) {
                     toast(apiErrorMessage(e), 'error');
                     return null;
                 }
             }
 
-            // ── get_products PERSISTENT CACHE (sessionStorage + Stale-While-Revalidate) ──
-            // Stored in sessionStorage so page navigations (?page=dashboard -> ?page=products -> ?page=warehouse)
-            // load products INSTANTLY (0 ms) from local cache instead of hitting the database on every page click.
-            // When stale (> 30s), it returns the cached data immediately so the page is responsive with zero delay,
-            // while silently revalidating with the server in the background.
+            // ── get_products CLIENT-SIDE CACHE (30 s TTL) ────────────────────────
+            // get_products is called from 7+ places in the app. Each call hits the DB
+            // for a potentially heavy CTE query. A 30-second in-memory cache means
+            // any page-section that opens within the same half-minute gets instant
+            // data without a network round-trip, while still feeling "live" to the
+            // cashier who typically switches pages in bursts.
+            // The cache is invalidated immediately on any product mutation so stale
+            // data can never be shown after a save or delete.
             const _prodCache = { data: null, ts: 0 };
-            const _PROD_CACHE_TTL = 30000; // 30 seconds fresh
+            const _PROD_CACHE_TTL = 30000; // 30 seconds
 
-            function _readProdSessionCache() {
-                try {
-                    const raw = sessionStorage.getItem('pos_cache_prods');
-                    if (raw) {
-                        const parsed = JSON.parse(raw);
-                        if (parsed && parsed.data && Array.isArray(parsed.data.data)) {
-                            _prodCache.data = parsed.data;
-                            _prodCache.ts = parsed.ts || 0;
-                            return _prodCache.data;
-                        }
-                    }
-                } catch (e) {}
-                return null;
-            }
-
-            function _writeProdSessionCache(data, ts) {
-                try {
-                    sessionStorage.setItem('pos_cache_prods', JSON.stringify({ data, ts }));
-                } catch (e) {}
-            }
-
-            async function apiGetProducts(force = false, onBackgroundUpdate = null) {
+            async function apiGetProducts(force = false) {
                 const now = Date.now();
-                if (!_prodCache.data) {
-                    _readProdSessionCache();
-                }
-
-                // If we have cached data and force is false:
-                if (!force && _prodCache.data) {
-                    const age = now - _prodCache.ts;
-                    if (age < _PROD_CACHE_TTL) {
-                        return _prodCache.data; // Fully fresh, return immediately
-                    }
-                    // Stale-While-Revalidate: return stale data immediately so UI doesn't hang!
-                    // Then quietly fetch fresh data in background.
-                    setTimeout(async () => {
-                        try {
-                            const fresh = await apiGet('get_products');
-                            if (fresh?.success && Array.isArray(fresh.data)) {
-                                _prodCache.data = fresh;
-                                _prodCache.ts = Date.now();
-                                _writeProdSessionCache(fresh, _prodCache.ts);
-                                if (typeof onBackgroundUpdate === 'function') {
-                                    onBackgroundUpdate(fresh);
-                                }
-                            }
-                        } catch (e) {}
-                    }, 50);
+                if (!force && _prodCache.data && (now - _prodCache.ts) < _PROD_CACHE_TTL) {
                     return _prodCache.data;
                 }
-
                 const result = await apiGet('get_products');
                 if (result?.success) {
                     _prodCache.data = result;
                     _prodCache.ts   = now;
-                    _writeProdSessionCache(result, now);
                 }
                 return result;
             }
@@ -13800,9 +13194,6 @@ $seoImage = (!empty($storeSettings['shop_logo']) && strpos($storeSettings['shop_
             function invalidateProdCache() {
                 _prodCache.data = null;
                 _prodCache.ts   = 0;
-                try {
-                    sessionStorage.removeItem('pos_cache_prods');
-                } catch (e) {}
             }
 
             async function apiPost(action, body = {}) {
@@ -13823,21 +13214,7 @@ $seoImage = (!empty($storeSettings['shop_logo']) && strpos($storeSettings['shop_
                         toast('⚠️ Server error (' + r.status + ') — please try again', 'error');
                         return null;
                     }
-                    const json = await r.json();
-                    if (json?.success) {
-                        const PROD_MUTATIONS = [
-                            'add_product', 'update_product', 'delete_product', 
-                            'add_transaction', 'void_order_items', 'delete_transaction', 'delete_all_transactions',
-                            'quick_restock', 'adjust_stock_pullout', 'add_warehouse_movement', 'add_delivery', 'transfer_to_store'
-                        ];
-                        const SETTINGS_MUTATIONS = ['save_settings', 'upload_shop_logo', 'remove_shop_logo'];
-                        const CATEGORY_MUTATIONS = ['add_category', 'delete_category'];
-
-                        if (PROD_MUTATIONS.includes(action)) invalidateProdCache();
-                        if (SETTINGS_MUTATIONS.includes(action)) invalidateFastCache('get_settings');
-                        if (CATEGORY_MUTATIONS.includes(action)) invalidateFastCache('get_categories');
-                    }
-                    return json;
+                    return await r.json();
                 } catch (e) {
                     toast(apiErrorMessage(e), 'error');
                     return null;
@@ -13880,247 +13257,16 @@ $seoImage = (!empty($storeSettings['shop_logo']) && strpos($storeSettings['shop_
             applyTheme(document.documentElement.classList.contains('theme-light') ? 'light' : 'dark', false);
 
             // ── MODALS ──
-            // ══════════════════════════════════════════════════════════════════
-            // PJAX — Instant Client-Side Page Navigation
-            // Instead of full-page reloads, intercept nav-link clicks, swap
-            // the <main class="page"> content from a prefetch cache, update
-            // the URL via pushState, flip the active-nav classes, and call
-            // the matching pageInit(). Result: zero-wait page transitions.
-            // ══════════════════════════════════════════════════════════════════
-            (function initPjax() {
-                const PJAX_PAGES = ['dashboard','products','warehouse','sales','analytics','forecast','settings'];
-                const pageCache = new Map();   // pageName → innerHTML string
-                const PAGE_INIT = {
-                    dashboard:  () => dashInit(),
-                    products:   () => prodsInit(),
-                    warehouse:  () => warehouseInit(),
-                    sales:      () => salesInit(),
-                    analytics:  () => analyticsInit(),
-                    forecast:   () => forecastInit(),
-                    settings:   () => settingsInit(),
-                };
-
-                // ── Extract the page name from a URL / href string ──
-                function pageFromHref(href) {
-                    try {
-                        const u = new URL(href, location.origin);
-                        return u.searchParams.get('page') || '';
-                    } catch { return ''; }
-                }
-
-                // ── Fetch a page's <main class="page"> innerHTML ──
-                async function fetchPageHtml(pageName) {
-                    try {
-                        const resp = await fetch('?page=' + encodeURIComponent(pageName), {
-                            credentials: 'same-origin',
-                            headers: { 'X-PJAX': '1' }
-                        });
-                        if (!resp.ok) return null;
-                        const html = await resp.text();
-                        // Parse and extract the <main class="page"> content
-                        const doc = new DOMParser().parseFromString(html, 'text/html');
-                        const main = doc.querySelector('main.page');
-                        if (!main) return null;
-                        // Also grab any modals that sit OUTSIDE <main> but inside
-                        // the page-conditional PHP block (e.g. product/warehouse
-                        // shared modals, cart modal, pay modal, receipt modal etc.)
-                        // They are siblings of <main> inside the PHP conditional block.
-                        // Collect everything between the <main> closing tag and the
-                        // next page section or <script> by scanning all body children.
-                        let extra = '';
-                        const bodyKids = doc.body.children;
-                        let capture = false;
-                        for (let i = 0; i < bodyKids.length; i++) {
-                            const el = bodyKids[i];
-                            if (el.tagName === 'MAIN' && el.classList.contains('page')) {
-                                capture = true; continue;
-                            }
-                            if (capture) {
-                                // Stop at nav, script, toast-wrap, or next <main>
-                                if (el.tagName === 'SCRIPT' || el.tagName === 'NAV' ||
-                                    el.id === 'toast-wrap' || el.tagName === 'MAIN') break;
-                                // Only capture modal overlays that belong to this page
-                                if (el.classList.contains('modal-overlay')) {
-                                    extra += el.outerHTML;
-                                }
-                            }
-                        }
-                        return { mainHtml: main.innerHTML, extraHtml: extra };
-                    } catch { return null; }
-                }
-
-                // ── Prefetch all pages in background (low priority) ──
-                function prefetchAll() {
-                    PJAX_PAGES.forEach((pg, i) => {
-                        if (pg === cur_page) return; // already have current page in DOM
-                        setTimeout(() => {
-                            if (!pageCache.has(pg)) {
-                                fetchPageHtml(pg).then(data => {
-                                    if (data) pageCache.set(pg, data);
-                                });
-                            }
-                        }, 300 + i * 400); // stagger to avoid burst
-                    });
-                }
-
-                // ── The core page-swap function ──
-                async function navigateToPage(pageName, pushState = true) {
-                    if (!PJAX_PAGES.includes(pageName)) return false;
-                    if (pageName === cur_page) return true; // already there
-
-                    // Close any open modals first
-                    document.querySelectorAll('.modal-overlay.open').forEach(m => m.classList.remove('open'));
-
-                    let data = pageCache.get(pageName);
-                    if (!data) {
-                        // Not cached yet — fetch now (still faster than full reload)
-                        data = await fetchPageHtml(pageName);
-                        if (!data) {
-                            // Fallback: full navigation
-                            location.href = '?page=' + pageName;
-                            return true;
-                        }
-                        pageCache.set(pageName, data);
-                    }
-
-                    // ── Swap the <main> ──
-                    const currentMain = document.querySelector('main.page');
-                    if (!currentMain) {
-                        location.href = '?page=' + pageName;
-                        return true;
-                    }
-
-                    // Remove old page-specific modals (siblings of <main>)
-                    const oldModals = [];
-                    let sib = currentMain.nextElementSibling;
-                    while (sib) {
-                        if (sib.tagName === 'SCRIPT' || sib.id === 'toast-wrap' ||
-                            sib.tagName === 'NAV' || sib.tagName === 'MAIN') break;
-                        if (sib.classList.contains('modal-overlay') && !sib.id?.startsWith('shift-') &&
-                            sib.id !== 'transfer-modal' && sib.id !== 'void-order-modal') {
-                            oldModals.push(sib);
-                        }
-                        sib = sib.nextElementSibling;
-                    }
-                    oldModals.forEach(m => m.remove());
-
-                    // Swap main content with fade animation
-                    currentMain.style.opacity = '0';
-                    await new Promise(r => setTimeout(r, 60));
-                    currentMain.innerHTML = data.mainHtml;
-
-                    // Insert page-specific modals
-                    if (data.extraHtml) {
-                        currentMain.insertAdjacentHTML('afterend', data.extraHtml);
-                    }
-
-                    // Fade in
-                    requestAnimationFrame(() => {
-                        currentMain.style.opacity = '';
-                        currentMain.style.animation = 'pjaxFadeIn .15s ease-out';
-                        currentMain.addEventListener('animationend', function handler() {
-                            currentMain.style.animation = '';
-                            currentMain.removeEventListener('animationend', handler);
-                        });
-                    });
-
-                    // ── Update cur_page ──
-                    const oldPage = cur_page;
-                    cur_page = pageName;
-
-                    // ── Update URL ──
-                    if (pushState) {
-                        history.pushState({ pjaxPage: pageName }, '', '?page=' + pageName);
-                    }
-
-                    // ── Update document title ──
-                    document.title = pageName.charAt(0).toUpperCase() + pageName.slice(1) + ' — ' + (SHOP_NAME || 'POS System');
-
-                    // ── Update active nav classes ──
-                    document.querySelectorAll('.nav-link').forEach(a => {
-                        const pg = pageFromHref(a.href);
-                        a.classList.toggle('active', pg === pageName);
-                    });
-                    document.querySelectorAll('.mob-btn').forEach(a => {
-                        const pg = pageFromHref(a.href);
-                        if (pg) a.classList.toggle('active', pg === pageName);
-                    });
-
-                    // ── Show/hide dashboard scanner float ──
-                    const sf = document.getElementById('scanner-float');
-                    if (sf) sf.style.display = pageName === 'dashboard' ? 'block' : 'none';
-
-                    // ── Scroll to top ──
-                    window.scrollTo(0, 0);
-
-                    // ── Call page init ──
-                    const initFn = PAGE_INIT[pageName];
-                    if (initFn) initFn();
-
-                    // ── Refresh the old page's cache in background ──
-                    if (oldPage && oldPage !== pageName) {
-                        setTimeout(() => {
-                            fetchPageHtml(oldPage).then(d => {
-                                if (d) pageCache.set(oldPage, d);
-                            });
-                        }, 2000);
-                    }
-
-                    return true;
-                }
-
-                // ── Intercept clicks on nav links ──
-                document.addEventListener('click', function(e) {
-                    const link = e.target.closest('a[href*="?page="]');
-                    if (!link) return;
-
-                    const pg = pageFromHref(link.href);
-                    // Skip auth pages and non-PJAX pages
-                    if (!pg || !PJAX_PAGES.includes(pg)) return;
-
-                    // Don't intercept if modifier keys are held (open in new tab etc.)
-                    if (e.ctrlKey || e.metaKey || e.shiftKey || e.altKey) return;
-
-                    // Don't intercept logout links
-                    if (pg === 'logout') return;
-
-                    e.preventDefault();
-                    navigateToPage(pg);
-                }, true);
-
-                // ── Prefetch on hover/touchstart for pages not yet cached ──
-                document.addEventListener('mouseover', function(e) {
-                    const link = e.target.closest('a[href*="?page="]');
-                    if (!link) return;
-                    const pg = pageFromHref(link.href);
-                    if (pg && PJAX_PAGES.includes(pg) && !pageCache.has(pg)) {
-                        fetchPageHtml(pg).then(d => { if (d) pageCache.set(pg, d); });
-                    }
-                });
-
-                // ── Handle browser back / forward ──
-                // Replace the old anti-back-button trap with proper PJAX history support
-                history.replaceState({ pjaxPage: cur_page }, '', location.href);
-                window.addEventListener('popstate', function(e) {
-                    const pg = e.state?.pjaxPage || pageFromHref(location.href);
-                    if (pg && PJAX_PAGES.includes(pg)) {
-                        navigateToPage(pg, false); // false = don't pushState again
-                    } else {
-                        // Not a PJAX state — re-trap to prevent accidental exit
-                        history.pushState({ pjaxPage: cur_page }, '', location.href);
-                    }
-                });
-
-                // ── Start prefetching after DOM is ready ──
-                if (document.readyState === 'loading') {
-                    document.addEventListener('DOMContentLoaded', () => setTimeout(prefetchAll, 1500));
-                } else {
-                    setTimeout(prefetchAll, 1500);
-                }
-
-                // ── Expose for programmatic navigation ──
-                window.pjaxNavigate = navigateToPage;
-            })();
+            // ── BACK BUTTON / EDGE-SWIPE GUARD ──
+            // On mobile, an accidental back press or edge-swipe used to exit the
+            // whole web app — which felt exactly like being logged out. Trap the
+            // history instead: back does nothing while the app is open. Leaving
+            // is always deliberate — the Logout button is a real navigation and
+            // is not affected by this guard.
+            history.replaceState({ posApp: 1 }, '', location.href);
+            window.addEventListener('popstate', function () {
+                history.pushState({ posApp: 1 }, '', location.href);
+            });
 
             function openModal(id) {
                 const e = document.getElementById(id);
@@ -14544,28 +13690,11 @@ $seoImage = (!empty($storeSettings['shop_logo']) && strpos($storeSettings['shop_
             // the cashier enters is shown, to prevent them reverse-engineering the
             // expected total and covering up a shortage. Variance is only revealed
             // afterward, on the printed Z-Read receipt.
-            async function performLogout() {
-                try {
-                    if (navigator.serviceWorker && navigator.serviceWorker.controller) {
-                        navigator.serviceWorker.controller.postMessage('clearUserCache');
-                    }
-                    if ('caches' in window) {
-                        const keys = await caches.keys();
-                        for (const k of keys) {
-                            if (k.startsWith('pos-shell')) {
-                                await caches.delete(k);
-                            }
-                        }
-                    }
-                } catch (err) {}
-                location.href = '?page=logout';
-            }
-
             function openShiftCloseModal(loggingOut) {
                 apiGet('check_cash_float').then(r => {
                     if (!r?.success || !r.data.initialized) {
                         if (loggingOut) {
-                            performLogout();
+                            location.href = '?page=logout';
                         } else toast('No active shift to close', 'warning');
                         return;
                     }
@@ -14598,16 +13727,16 @@ $seoImage = (!empty($storeSettings['shop_logo']) && strpos($storeSettings['shop_
 
             // Intercepts the Logout link — forces a closing cash count first if a shift is open
             function attemptLogout(e) {
-                if (e) e.preventDefault();
+                e.preventDefault();
                 if (USER_ROLE === 'owner') {
-                    performLogout();
+                    location.href = '?page=logout';
                     return false;
                 }
                 apiGet('check_cash_float').then(r => {
                     if (r?.success && r.data.initialized) {
                         openShiftCloseModal(true);
                     } else {
-                        performLogout();
+                        location.href = '?page=logout';
                     }
                 });
                 return false;
@@ -14655,7 +13784,7 @@ $seoImage = (!empty($storeSettings['shop_logo']) && strpos($storeSettings['shop_
                         closeModal('shift-modal');
                         // Wipe session only after the receipt has been handed to the printer
                         setTimeout(() => {
-                            performLogout();
+                            location.href = '?page=logout';
                         }, 600);
                     });
                 }
@@ -14667,51 +13796,31 @@ $seoImage = (!empty($storeSettings['shop_logo']) && strpos($storeSettings['shop_
             // the shop address/TIN header are IDENTICAL across all three printed
             // documents — one CSS block, one header builder, one footer builder,
             // instead of three copies slowly drifting apart from each other.
-            // ── SHARED RECEIPT STYLING (Payment / Z-Read / Void) ──
-            // Universal thermal printer support: auto-adapts to 58mm & 80mm rolls
             function receiptBaseCSS() {
-                return '*{box-sizing:border-box;margin:0;padding:0;}' +
-                    'body{background:#fff;font-family:"SF Mono","Menlo","Consolas","Courier New",monospace;font-size:12.5px;line-height:1.35;color:#000;}' +
-                    '.receipt-container{width:100%;max-width:290px;background:#fff;padding:10px 8px;margin:0 auto;}' +
+                return '.receipt-container{width:290px;background:#fff;padding:10px 8px;font-family:"SF Mono","Menlo","Consolas","Courier New",monospace;font-size:12.5px;line-height:1.4;color:#000;margin:0 auto;}' +
                     '.receipt-header{text-align:center;margin-bottom:6px;}' +
-                    '.receipt-header h1{font-size:20px;font-weight:800;margin:0 0 3px 0;letter-spacing:1px;word-break:break-word;}' +
-                    '.receipt-header p{margin:1px 0;font-size:11px;word-break:break-word;}' +
-                    '.receipt-header .doc-type{font-size:10.5px;font-weight:800;letter-spacing:.06em;color:#333;margin-top:4px;}' +
+                    '.receipt-header h1{font-size:22px;font-weight:800;margin:0 0 4px 0;letter-spacing:1px;}' +
+                    '.receipt-header p{margin:1px 0;font-size:11px;}' +
+                    '.receipt-header .doc-type{font-size:10.5px;font-weight:800;letter-spacing:.06em;color:#444;margin-top:4px;}' +
                     '.divider{border-top:1px dashed #000;margin:6px 0;}' +
-                    '.receipt-row{display:flex;justify-content:space-between;width:100%;margin:1.5px 0;gap:4px;}' +
+                    '.receipt-row{display:flex;justify-content:space-between;width:100%;margin:1px 0;}' +
                     '.receipt-row.b{font-weight:800;}' +
                     '.receipt-row.void{color:#C0392B;font-weight:800;}' +
-                    'table.items{width:100%;border-collapse:collapse;table-layout:fixed;margin:2px 0;}' +
-                    'table.items th{font-size:10px;font-weight:800;text-align:left;padding:2px 1px;border-bottom:1px dashed #000;}' +
-                    'table.items td{font-size:11.5px;padding:2px 1px;vertical-align:top;word-break:break-word;}' +
-                    'table.items th.right, table.items td.right{text-align:right;white-space:nowrap;}' +
-                    'table.items col.qty{width:16%;} table.items col.desc{width:42%;} table.items col.price{width:21%;} table.items col.total{width:21%;}' +
-                    '.total-band{background:#e4e4e4;font-weight:800;font-size:14px;padding:5px 4px;margin:5px 0;display:flex;justify-content:space-between;border-radius:2px;}' +
-                    '.void-band{background:#fbe4e1;color:#C0392B;font-weight:800;font-size:12.5px;padding:5px 4px;margin:5px 0;display:flex;justify-content:space-between;border-radius:2px;}' +
+                    'table.items{width:100%;border-collapse:collapse;table-layout:fixed;}' +
+                    'table.items th{font-size:10.5px;font-weight:800;text-align:left;padding:2px 2px;border-bottom:1px dashed #000;}' +
+                    'table.items td{font-size:11.5px;padding:2px 2px;vertical-align:top;word-break:break-word;}' +
+                    'table.items th.right, table.items td.right{text-align:right;}' +
+                    'table.items col.qty{width:14%;} table.items col.desc{width:44%;} table.items col.price{width:21%;} table.items col.total{width:21%;}' +
+                    '.total-band{background:#e4e4e4;font-weight:800;font-size:14.5px;padding:5px 4px;margin:4px 0;display:flex;justify-content:space-between;}' +
+                    '.void-band{background:#fbe4e1;color:#C0392B;font-weight:800;font-size:13px;padding:5px 4px;margin:4px 0;display:flex;justify-content:space-between;}' +
                     'tr.voided-row td{color:#C0392B;text-decoration:line-through;}' +
                     '.void-tag{font-size:9.5px;font-weight:800;letter-spacing:.04em;text-decoration:none;}' +
-                    'h3{font-size:10.5px;letter-spacing:.06em;color:#333;margin:8px 0 3px;}' +
+                    'h3{font-size:10.5px;letter-spacing:.06em;color:#444;margin:8px 0 3px;}' +
                     '.receipt-footer{text-align:center;margin-top:10px;font-size:11px;}' +
                     '.receipt-footer .bold{font-weight:800;font-size:12px;}' +
-                    '@media print{' +
-                    '  @page{margin:0;size:auto;}' +
-                    '  html,body{width:100%!important;margin:0!important;padding:0!important;background:#fff!important;}' +
-                    '  body *{visibility:hidden;}' +
-                    '  .receipt-container,.receipt-container *{visibility:visible;}' +
-                    '  .receipt-container{position:absolute;left:0;top:0;width:100%!important;max-width:100%!important;padding:3mm 2mm!important;margin:0!important;font-size:11.5px!important;-webkit-print-color-adjust:exact;print-color-adjust:exact;}' +
-                    '  .total-band,.void-band{-webkit-print-color-adjust:exact;print-color-adjust:exact;}' +
-                    '}';
-            }
-
-            function receiptPrintScript() {
-                return '<script>' +
-                    'function doPrint(){' +
-                    '  try{ window.focus(); window.print(); }catch(e){}' +
-                    '  window.onafterprint = function(){ setTimeout(function(){ try{window.close();}catch(e){} }, 300); };' +
-                    '}' +
-                    'if (document.readyState === "complete") { setTimeout(doPrint, 150); }' +
-                    'else { window.addEventListener("load", function(){ setTimeout(doPrint, 150); }); setTimeout(doPrint, 500); }' +
-                    '<\/script>';
+                    '@media print{body *{visibility:hidden;}.receipt-container,.receipt-container *{visibility:visible;}' +
+                    '.receipt-container{position:absolute;left:0;top:0;width:100%;padding:0;margin:0;}@page{margin:0;}}' +
+                    '*{box-sizing:border-box;}body{margin:0;}';
             }
 
             function receiptEsc(s) {
@@ -14817,11 +13926,10 @@ $seoImage = (!empty($storeSettings['shop_logo']) && strpos($storeSettings['shop_
                     '<div class="divider"></div>' +
                     receiptFooterHTML(['Generated ' + fmtDate(new Date().toISOString()), 'Thank you — session closed.']) +
                     '</div>' +
-                    receiptPrintScript() +
+                    '<script>window.onload=function(){window.print();}<\/script>' +
                     '</body></html>'
                 );
                 win.document.close();
-                setTimeout(() => { try { if (win && !win.closed) { win.focus(); win.print(); } } catch(e){} }, 450);
             }
 
             // ── IMAGE HELPERS ──
@@ -15200,8 +14308,9 @@ $seoImage = (!empty($storeSettings['shop_logo']) && strpos($storeSettings['shop_
                 // inactive, solid accent-blue pill when active — just sized down to
                 // fit a compact stat-card header instead of a full toolbar.
                 const html = DASH_PERIODS.map(([val, label]) =>
-                    '<button type="button" class="btn period-btn dash-period-btn' + (val === dashPeriod ? ' active' : '') + '" ' +
-                    'onclick="setDashPeriod(\'' + val + '\')">' + label + '</button>'
+                    '<button type="button" class="btn period-btn' + (val === dashPeriod ? ' active' : '') + '" ' +
+                    'onclick="setDashPeriod(\'' + val + '\')" ' +
+                    'style="font-size:.62rem;padding:3px 8px;">' + label + '</button>'
                 ).join('');
                 document.querySelectorAll('.stat-period-group').forEach(g => g.innerHTML = html);
             }
@@ -15248,31 +14357,11 @@ $seoImage = (!empty($storeSettings['shop_logo']) && strpos($storeSettings['shop_
 
             function loadAllProds(force = false) {
                 if (force) invalidateProdCache();
-
-                // Instant paint from memory or session cache!
-                if (!force && _prodCache.data?.data && Array.isArray(_prodCache.data.data) && _prodCache.data.data.length > 0) {
-                    allProds = _prodCache.data.data;
-                    renderGrid(true);
-                }
-
-                Promise.all([
-                    apiGetProducts(force, (fresh) => {
-                        if (fresh?.success && Array.isArray(fresh.data)) {
-                            allProds = fresh.data;
-                            renderGrid();
-                        }
-                    }),
-                    apiGet('get_categories')
-                ]).then(([pr, cr]) => {
-                    if (pr?.success && Array.isArray(pr.data)) allProds = pr.data;
-                    if (cr?.success && Array.isArray(cr.data)) allCats = cr.data;
+                Promise.all([apiGetProducts(force), apiGet('get_categories')]).then(([pr, cr]) => {
+                    if (pr?.success) allProds = pr.data;
+                    if (cr?.success) allCats = cr.data;
                     renderCatPills();
                     renderGrid(true);
-                }).catch(() => {
-                    if (!allProds || !allProds.length) {
-                        const pg = document.getElementById('prods-grid');
-                        if (pg) pg.innerHTML = '<div style="grid-column:1/-1;text-align:center;padding:30px;"><div style="color:var(--text);font-weight:700;margin-bottom:6px;">⚠️ Could not load products</div><button type="button" class="btn btn-primary btn-sm" onclick="loadAllProds(true)">🔄 Tap to Retry</button></div>';
-                    }
                 });
             }
 
@@ -16279,11 +15368,10 @@ $seoImage = (!empty($storeSettings['shop_logo']) && strpos($storeSettings['shop_
                         receiptFooterHTML(['Thank You for Shopping!', 'Please keep receipt for returns.']) +
                         barcodeImgHtml +
                         '</div>' +
-                        receiptPrintScript() +
+                        '<script>window.onload=function(){window.print();}<\/script>' +
                         '</body></html>'
                     );
                     win.document.close();
-                    setTimeout(() => { try { if (win && !win.closed) { win.focus(); win.print(); } } catch(e){} }, 450);
                 };
 
                 if (typeof JsBarcode === 'undefined') {
@@ -16333,36 +15421,10 @@ $seoImage = (!empty($storeSettings['shop_logo']) && strpos($storeSettings['shop_
 
             function loadInvProds(force = false) {
                 if (force) invalidateProdCache();
-                const countEl = document.getElementById('prod-count');
-                const grid = document.getElementById('prod-grid');
-
-                // Instant Paint: check if we already have products in memory or session cache!
-                if (!force && _prodCache.data?.data && Array.isArray(_prodCache.data.data) && _prodCache.data.data.length > 0) {
-                    invProds = _prodCache.data.data;
-                    renderProds();
-                } else if (!invProds || !invProds.length) {
-                    if (countEl) countEl.textContent = 'Loading products…';
-                    if (grid) grid.innerHTML = '<div style="grid-column:1/-1;text-align:center;padding:50px;color:var(--text3);"><div style="font-size:2rem;margin-bottom:8px;">⏳</div>Loading product catalog…</div>';
-                }
-
-                apiGetProducts(force, (fresh) => {
-                    // Background sync callback if server had fresh updates
-                    if (fresh?.success && Array.isArray(fresh.data)) {
-                        invProds = fresh.data;
-                        renderProds();
-                    }
-                }).then(r => {
-                    if (r?.success && Array.isArray(r.data)) {
+                apiGetProducts(force).then(r => {
+                    if (r?.success) {
                         invProds = r.data;
                         renderProds();
-                    } else if (!invProds || !invProds.length) {
-                        if (countEl) countEl.textContent = 'Failed to load';
-                        if (grid) grid.innerHTML = '<div style="grid-column:1/-1;text-align:center;padding:40px;"><div style="font-size:2rem;margin-bottom:8px;">⚠️</div><div style="color:var(--text);font-weight:700;margin-bottom:6px;">Could not load products</div><div style="color:var(--text3);font-size:.85rem;margin-bottom:14px;">The server took too long to respond. Tap to retry.</div><button type="button" class="btn btn-primary btn-sm" onclick="loadInvProds(true)">🔄 Retry Now</button></div>';
-                    }
-                }).catch(err => {
-                    if (!invProds || !invProds.length) {
-                        if (countEl) countEl.textContent = 'Failed to load';
-                        if (grid) grid.innerHTML = '<div style="grid-column:1/-1;text-align:center;padding:40px;"><div style="font-size:2rem;margin-bottom:8px;">⚠️</div><div style="color:var(--text);font-weight:700;margin-bottom:6px;">Could not reach server</div><div style="color:var(--text3);font-size:.85rem;margin-bottom:14px;">' + (err?.message || 'Connection timeout') + '</div><button type="button" class="btn btn-primary btn-sm" onclick="loadInvProds(true)">🔄 Retry Now</button></div>';
                     }
                 });
             }
@@ -16611,7 +15673,7 @@ $seoImage = (!empty($storeSettings['shop_logo']) && strpos($storeSettings['shop_
                 const pCostEdit = document.getElementById('p-cost');
                 if (pCostEdit) pCostEdit.value = (p.cost_price ?? '');
                 document.getElementById('p-desc').value = p.description || '';
-                setExpiryFromIso(p.expiry_date || p.next_batch_expiry || '');
+                setExpiryFromIso(p.expiry_date || '');
                 setDeliveryFromIso(p.delivery_date || '');
                 document.getElementById('p-barcode').value = p.barcode || '';
                 _barcodeAutoGenerated = false; // editing an existing real barcode — never silently swap it
@@ -16750,8 +15812,8 @@ $seoImage = (!empty($storeSettings['shop_logo']) && strpos($storeSettings['shop_
                 const cost = (costRaw !== '' && costRaw !== undefined) ? parseFloat(costRaw) : null;
                 const qty = parseInt(document.getElementById('p-qty').value);
                 const desc = document.getElementById('p-desc').value.trim();
-                const expiry = document.getElementById('p-expiry')?.value || parseAnyDateToIso(document.getElementById('p-expiry-display')?.value) || null;
-                const deliveryDate = document.getElementById('p-delivery')?.value || parseAnyDateToIso(document.getElementById('p-delivery-display')?.value) || null;
+                const expiry = document.getElementById('p-expiry').value || null;
+                const deliveryDate = document.getElementById('p-delivery').value || null;
                 const barcode = document.getElementById('p-barcode').value.trim() || null;
                 if (!name) {
                     toast('Product name is required', 'error');
@@ -16897,7 +15959,6 @@ $seoImage = (!empty($storeSettings['shop_logo']) && strpos($storeSettings['shop_
                 closeModal('prod-modal');
                 invalidateProdCache();
                 loadInvProds(true);
-                if (typeof loadWhProds === 'function') loadWhProds();
             }
 
             function deleteProduct() {
@@ -18680,11 +17741,10 @@ $seoImage = (!empty($storeSettings['shop_logo']) && strpos($storeSettings['shop_
                     '<div class="divider"></div>' +
                     receiptFooterHTML(['This is a diagnostic test print', 'No sale was recorded — ' + esc(new Date().toLocaleString())]) +
                     '</div>' +
-                    receiptPrintScript() +
+                    '<script>window.onload=function(){window.print();}<\/script>' +
                     '</body></html>'
                 );
                 win.document.close();
-                setTimeout(() => { try { if (win && !win.closed) { win.focus(); win.print(); } } catch(e){} }, 450);
                 hwDiagResult('Test receipt sent to print. If nothing came out, check the printer power/cable/paper before retrying.', true);
             }
 
@@ -18740,11 +17800,10 @@ $seoImage = (!empty($storeSettings['shop_logo']) && strpos($storeSettings['shop_
                         '</style></head><body>' +
                         '<img src="' + png + '" alt="test barcode"/>' +
                         '<p>Diagnostic test label — scan this with your handheld scanner to confirm it reads back as "' + testCode + '"</p>' +
-                        receiptPrintScript() +
+                        '<script>window.onload=function(){window.print();}<\/script>' +
                         '</body></html>'
                     );
                     win.document.close();
-                    setTimeout(() => { try { if (win && !win.closed) { win.focus(); win.print(); } } catch(e){} }, 450);
                     hwDiagResult('Test label sent to print. Scan it afterward to confirm the code reads back correctly.', true);
                 });
             }
@@ -18788,12 +17847,12 @@ $seoImage = (!empty($storeSettings['shop_logo']) && strpos($storeSettings['shop_
                 return _qzConnectPromise;
             }
 
-            // Universal composite drawer-kick pulse:
-            // 1. ESC p 0 25 250 (Pin 2 — standard Epson, Xprinter, Citizen, Munbyn, Bixolon)
-            // 2. ESC p 1 25 250 (Pin 5 — alternate pin cash drawers)
-            // 3. ASCII 0x07 BEL (Star Micronics receipt printers)
-            // Combined, this opens 100% of cash drawers regardless of brand or pin wiring.
-            const DRAWER_KICK_ESCPOS = '\x1B\x70\x00\x19\xFA\x1B\x70\x01\x19\xFA\x07';
+            // Standard ESC/POS drawer-kick pulse (ESC p 0 25 250) — fires pin 2 on the
+            // printer's drawer-kick port, which is how the overwhelming majority of
+            // receipt-printer-wired cash drawers are triggered. If a specific printer
+            // model needs the alternate pin-5 sequence instead (ESC p 1 25 250) that's
+            // a one-character change below, not a redesign.
+            const DRAWER_KICK_ESCPOS = '\x1B\x70\x00\x19\xFA';
 
             // silent=true (used right after a real cash payment) never throws/toasts —
             // a printer being off or QZ Tray not running must NEVER block or interrupt
@@ -19688,63 +18747,25 @@ $seoImage = (!empty($storeSettings['shop_logo']) && strpos($storeSettings['shop_
             }
 
             // ── EXPIRY DATE (typeable MM/DD/YYYY, with a native picker fallback) ──
-            // ── DATE PARSER & SYNC (supports YYYY-MM-DD, MM/DD/YYYY, DD/MM/YYYY, etc.) ──
-            function parseAnyDateToIso(str) {
-                if (!str) return '';
-                str = String(str).trim();
-                if (/^\d{4}-\d{2}-\d{2}/.test(str)) return str.slice(0, 10);
-                if (/^\d{4}\/\d{1,2}\/\d{1,2}/.test(str)) {
-                    const [y, m, d] = str.split('/');
-                    return y + '-' + String(m).padStart(2, '0') + '-' + String(d).padStart(2, '0');
-                }
-                const parts = str.split(/[\/\-\.]/);
-                if (parts.length === 3) {
-                    let [p1, p2, p3] = parts;
-                    if (p3.length === 2) p3 = '20' + p3;
-                    if (p1.length === 4) {
-                        return p1 + '-' + String(p2).padStart(2, '0') + '-' + String(p3).padStart(2, '0');
-                    }
-                    if (p3.length === 4) {
-                        let n1 = parseInt(p1, 10);
-                        let n2 = parseInt(p2, 10);
-                        if (n1 > 12 && n2 <= 12) {
-                            return p3 + '-' + String(p2).padStart(2, '0') + '-' + String(p1).padStart(2, '0');
-                        }
-                        return p3 + '-' + String(p1).padStart(2, '0') + '-' + String(p2).padStart(2, '0');
-                    }
-                }
-                const d = new Date(str);
-                if (!isNaN(d.getTime())) {
-                    return d.toISOString().slice(0, 10);
-                }
-                return '';
-            }
-
-            function _smartFormatDateInput(el, hiddenId, nativeId) {
+            // Auto-inserts slashes as the user types digits, and keeps the hidden
+            // #p-expiry field in sync as an ISO yyyy-mm-dd string for the backend.
+            function formatExpiryInput(el) {
                 let v = el.value.replace(/[^\d]/g, '').slice(0, 8);
                 let out = v;
-                if (v.startsWith('20') || v.startsWith('19')) {
-                    if (v.length >= 7) out = v.slice(0, 4) + '-' + v.slice(4, 6) + '-' + v.slice(6);
-                    else if (v.length >= 5) out = v.slice(0, 4) + '-' + v.slice(4);
-                } else {
-                    if (v.length >= 5) out = v.slice(0, 2) + '/' + v.slice(2, 4) + '/' + v.slice(4);
-                    else if (v.length >= 3) out = v.slice(0, 2) + '/' + v.slice(2);
-                }
+                if (v.length >= 5) out = v.slice(0, 2) + '/' + v.slice(2, 4) + '/' + v.slice(4);
+                else if (v.length >= 3) out = v.slice(0, 2) + '/' + v.slice(2);
                 el.value = out;
-                const hidden = document.getElementById(hiddenId);
-                const iso = parseAnyDateToIso(out);
-                if (iso) {
-                    if (hidden) hidden.value = iso;
-                    const native = document.getElementById(nativeId);
-                    if (native) native.value = iso;
+                const hidden = document.getElementById('p-expiry');
+                if (v.length === 8) {
+                    const mm = v.slice(0, 2),
+                        dd = v.slice(2, 4),
+                        yyyy = v.slice(4);
+                    if (hidden) hidden.value = yyyy + '-' + mm + '-' + dd;
+                    const native = document.getElementById('p-expiry-native');
+                    if (native) native.value = yyyy + '-' + mm + '-' + dd;
                 } else if (hidden) {
                     hidden.value = '';
                 }
-            }
-
-            // ── EXPIRY DATE (typeable MM/DD/YYYY or YYYY-MM-DD, with native picker fallback) ──
-            function formatExpiryInput(el) {
-                _smartFormatDateInput(el, 'p-expiry', 'p-expiry-native');
             }
 
             function syncExpiryFromNative() {
@@ -19756,7 +18777,8 @@ $seoImage = (!empty($storeSettings['shop_logo']) && strpos($storeSettings['shop_
                 const display = document.getElementById('p-expiry-display');
                 if (display) display.value = m + '/' + d + '/' + y;
             }
-
+            // Sets both the display and hidden fields from an ISO date (used when
+            // opening the edit modal with an existing expiry_date).
             function setExpiryFromIso(iso) {
                 const hidden = document.getElementById('p-expiry');
                 const display = document.getElementById('p-expiry-display');
@@ -19767,22 +18789,32 @@ $seoImage = (!empty($storeSettings['shop_logo']) && strpos($storeSettings['shop_
                     if (native) native.value = '';
                     return;
                 }
-                const parsed = parseAnyDateToIso(iso);
-                if (parsed && parsed.includes('-')) {
-                    const [y, m, d] = parsed.split('-');
-                    if (hidden) hidden.value = parsed;
-                    if (display) display.value = m + '/' + d + '/' + y;
-                    if (native) native.value = parsed;
-                } else {
-                    if (hidden) hidden.value = '';
-                    if (display) display.value = '';
-                    if (native) native.value = '';
-                }
+                const [y, m, d] = iso.split('-');
+                if (hidden) hidden.value = iso;
+                if (display) display.value = m + '/' + d + '/' + y;
+                if (native) native.value = iso;
             }
 
-            // ── DELIVERY DATE (batch received) ──
+            // ── DELIVERY DATE (batch received) — same typeable MM/DD/YYYY + native
+            // picker pattern as Expiry Date above, kept as its own independent field so
+            // a product's "when it arrived" and "when it goes bad" can differ. ──
             function formatDeliveryInput(el) {
-                _smartFormatDateInput(el, 'p-delivery', 'p-delivery-native');
+                let v = el.value.replace(/[^\d]/g, '').slice(0, 8);
+                let out = v;
+                if (v.length >= 5) out = v.slice(0, 2) + '/' + v.slice(2, 4) + '/' + v.slice(4);
+                else if (v.length >= 3) out = v.slice(0, 2) + '/' + v.slice(2);
+                el.value = out;
+                const hidden = document.getElementById('p-delivery');
+                if (v.length === 8) {
+                    const mm = v.slice(0, 2),
+                        dd = v.slice(2, 4),
+                        yyyy = v.slice(4);
+                    if (hidden) hidden.value = yyyy + '-' + mm + '-' + dd;
+                    const native = document.getElementById('p-delivery-native');
+                    if (native) native.value = yyyy + '-' + mm + '-' + dd;
+                } else if (hidden) {
+                    hidden.value = '';
+                }
             }
 
             function syncDeliveryFromNative() {
@@ -19794,7 +18826,8 @@ $seoImage = (!empty($storeSettings['shop_logo']) && strpos($storeSettings['shop_
                 const display = document.getElementById('p-delivery-display');
                 if (display) display.value = m + '/' + d + '/' + y;
             }
-
+            // Sets both the display and hidden fields from an ISO date (used when
+            // opening the edit modal with an existing delivery_date).
             function setDeliveryFromIso(iso) {
                 const hidden = document.getElementById('p-delivery');
                 const display = document.getElementById('p-delivery-display');
@@ -19805,17 +18838,10 @@ $seoImage = (!empty($storeSettings['shop_logo']) && strpos($storeSettings['shop_
                     if (native) native.value = '';
                     return;
                 }
-                const parsed = parseAnyDateToIso(iso);
-                if (parsed && parsed.includes('-')) {
-                    const [y, m, d] = parsed.split('-');
-                    if (hidden) hidden.value = parsed;
-                    if (display) display.value = m + '/' + d + '/' + y;
-                    if (native) native.value = parsed;
-                } else {
-                    if (hidden) hidden.value = '';
-                    if (display) display.value = '';
-                    if (native) native.value = '';
-                }
+                const [y, m, d] = iso.split('-');
+                if (hidden) hidden.value = iso;
+                if (display) display.value = m + '/' + d + '/' + y;
+                if (native) native.value = iso;
             }
 
             function downloadBarcode() {
@@ -19853,22 +18879,21 @@ $seoImage = (!empty($storeSettings['shop_logo']) && strpos($storeSettings['shop_
                     return;
                 }
                 win.document.write(
-                    '<!DOCTYPE html><html><head><title>' + name.replace(/</g, '&lt;') + '</title>' +
+                    '<!DOCTYPE html><html><head>' +
                     '<style>*{margin:0;padding:0;box-sizing:border-box;}' +
-                    'body{font-family:Arial,sans-serif;text-align:center;padding:4px;background:#fff;}' +
-                    'h3{font-size:12px;margin-bottom:2px;font-weight:700;word-break:break-word;}' +
-                    'p{font-size:10px;color:#444;margin-bottom:4px;letter-spacing:.05em;font-family:monospace;}' +
-                    'img{display:block;margin:0 auto;max-width:100%;height:auto;image-rendering:crisp-edges;image-rendering:-webkit-optimize-contrast;image-rendering:pixelated;}' +
-                    '@media print{@page{margin:1mm 2mm;size:auto;}body{padding:2px;}}' +
+                    'body{font-family:Arial,sans-serif;text-align:center;padding:20px;background:#fff;}' +
+                    'h3{font-size:13px;margin-bottom:3px;}' +
+                    'p{font-size:10px;color:#666;margin-bottom:8px;letter-spacing:.05em;}' +
+                    'img{display:block;margin:0 auto;max-width:280px;image-rendering:crisp-edges;image-rendering:-webkit-optimize-contrast;}' +
+                    '@media print{@page{margin:8mm;}body{padding:10px;}}' +
                     '</style></head><body>' +
                     '<h3>' + name.replace(/</g, '&lt;') + '</h3>' +
                     '<p>' + barcode.replace(/</g, '&lt;') + '</p>' +
                     '<img src="' + png + '" alt="barcode"/>' +
-                    receiptPrintScript() +
+                    '<script>window.onload=function(){window.print();window.close();}<\/script>' +
                     '</body></html>'
                 );
                 win.document.close();
-                setTimeout(() => { try { if (win && !win.closed) { win.focus(); win.print(); } } catch(e){} }, 450);
             }
             // Alias
             function printQR() {
@@ -20146,11 +19171,10 @@ $seoImage = (!empty($storeSettings['shop_logo']) && strpos($storeSettings['shop_
                     '@media print{@page{margin:6mm;}}</style>' +
                     '</head><body>' +
                     '<table>' + rows + '</table>' +
-                    receiptPrintScript() +
+                    '<script>window.onload=function(){window.print();window.close();}<\/script>' +
                     '</body></html>'
                 );
                 win.document.close();
-                setTimeout(() => { try { if (win && !win.closed) { win.focus(); win.print(); } } catch(e){} }, 450);
                 toast('✅ Sent ' + items.length + ' label' + (items.length > 1 ? 's' : '') + ' to print', 'success');
                 closeModal('print-all-modal');
             }
@@ -20161,17 +19185,11 @@ $seoImage = (!empty($storeSettings['shop_logo']) && strpos($storeSettings['shop_
             // Handles: Code128, EAN-13, EAN-8, UPC-A, UPC-E, QR, Code39, Code93, ITF, PDF417
             // Works at any angle, any position, any distance
             // ════════════════════════════════════════════════
-            // Camera scanner state
             let scanStream = null,
                 scanInterval = null,
                 scanCooldown = false;
             let _barcodeDetector = null,
                 _zxingReader = null;
-            let _scannerFacingMode = 'environment';
-            let _scannerCurrentVideoId = null;
-            let _scannerCurrentCanvasId = null;
-            let _scannerCurrentOnResult = null;
-            let _scannerTorchOn = false;
 
             // Pre-init BarcodeDetector and ZXing as early as possible
             async function initScanEngines() {
@@ -20195,6 +19213,7 @@ $seoImage = (!empty($storeSettings['shop_logo']) && strpos($storeSettings['shop_
                 if (typeof ZXing !== 'undefined') {
                     try {
                         const hints = new Map();
+                        // Enable all supported formats for maximum compatibility
                         if (ZXing.DecodeHintType) {
                             hints.set(ZXing.DecodeHintType.TRY_HARDER, true);
                             hints.set(ZXing.DecodeHintType.POSSIBLE_FORMATS, [
@@ -20222,17 +19241,16 @@ $seoImage = (!empty($storeSettings['shop_logo']) && strpos($storeSettings['shop_
 
             // ── Core decode function — tries all 3 engines in order ──
             async function tryDecode(video, canvas) {
+                // Guard: video must be playing with valid dimensions
                 const vw = video.videoWidth;
                 const vh = video.videoHeight;
                 if (!vw || !vh) return null;
 
-                // Method 1: Native BarcodeDetector (fastest, any rotation, checksum-verified)
+                // Method 1: Native BarcodeDetector (fastest, any rotation, all formats)
                 if (_barcodeDetector) {
                     try {
                         const results = await _barcodeDetector.detect(video);
-                        if (results && results.length > 0 && results[0].rawValue) {
-                            return { text: results[0].rawValue, engine: 'native' };
-                        }
+                        if (results && results.length > 0) return results[0].rawValue;
                     } catch (e) {}
                 }
 
@@ -20246,69 +19264,38 @@ $seoImage = (!empty($storeSettings['shop_logo']) && strpos($storeSettings['shop_
                 const ctx = snapshotCanvas.getContext('2d');
                 ctx.drawImage(video, 0, 0, vw, vh);
 
-                // Method 2: jsQR (QR codes — reliable, Reed-Solomon checksum verified)
+                // Method 2: ZXing decodeFromCanvas (handles Code128, EAN, UPC, QR, Code39, etc.)
+                if (_zxingReader) {
+                    try {
+                        const result = await _zxingReader.decodeFromCanvas(snapshotCanvas);
+                        if (result && result.getText()) return result.getText();
+                    } catch (e) {
+                        // NotFoundException is thrown when no barcode found — this is normal, ignore
+                    }
+                }
+
+                // Method 3: jsQR (QR codes — reliable fallback)
                 if (typeof jsQR !== 'undefined') {
                     try {
                         const imgData = ctx.getImageData(0, 0, vw, vh);
                         const code = jsQR(imgData.data, vw, vh, {
                             inversionAttempts: 'attemptBoth'
                         });
-                        if (code && code.data) return { text: code.data, engine: 'jsqr' };
+                        if (code && code.data) return code.data;
                     } catch (e) {}
                 }
 
-                // Method 3: ZXing decodeFromCanvas (handles Code128, EAN, UPC, QR, Code39, etc.)
-                if (_zxingReader) {
-                    try {
-                        const result = await _zxingReader.decodeFromCanvas(snapshotCanvas);
-                        if (result && result.getText()) {
-                            return { text: result.getText(), engine: 'zxing' };
-                        }
-                    } catch (e) {
-                        // NotFoundException is normal when no barcode is in view
-                    }
-                }
-
-                return null;
-            }
-
-            // ── Camera Switcher & Torch Controls ──
-            async function switchScannerCamera() {
-                if (!scanStream) return;
-                _scannerFacingMode = (_scannerFacingMode === 'environment') ? 'user' : 'environment';
-                _scannerTorchOn = false;
-                stopScanner();
-                if (_scannerCurrentVideoId && _scannerCurrentOnResult) {
-                    await startScanner(_scannerCurrentVideoId, _scannerCurrentCanvasId, _scannerCurrentOnResult, _scannerFacingMode);
-                    toast('Switched to ' + (_scannerFacingMode === 'user' ? 'Front' : 'Back') + ' camera', 'info');
-                }
-            }
-
-            async function toggleScannerTorch() {
-                if (!scanStream) {
-                    toast('Camera is not active', 'warning');
-                    return;
-                }
-                const track = scanStream.getVideoTracks()[0];
-                if (!track) return;
-                const capabilities = (typeof track.getCapabilities === 'function') ? track.getCapabilities() : {};
-                if (!capabilities.torch) {
-                    toast('Flashlight / torch not supported on this camera/device', 'warning');
-                    return;
-                }
-                try {
-                    _scannerTorchOn = !_scannerTorchOn;
-                    await track.applyConstraints({
-                        advanced: [{ torch: _scannerTorchOn }]
-                    });
-                    toast(_scannerTorchOn ? '🔦 Flashlight ON' : 'Flashlight OFF', 'info');
-                } catch(e) {
-                    toast('Flashlight error: ' + e.message, 'error');
-                }
+                return null; // Nothing decoded
             }
 
             // ── Start camera scanner ──
-            async function startScanner(videoId, canvasId, onResult, preferredFacingMode) {
+            async function startScanner(videoId, canvasId, onResult) {
+                // The browser only exposes navigator.mediaDevices on secure origins
+                // (https:// or localhost). On plain http://, mediaDevices is undefined
+                // entirely — NOT a permission problem — so calling .getUserMedia on it
+                // throws "Cannot read properties of undefined (reading 'getUserMedia')".
+                // Catching this case up front turns that cryptic error into an actionable
+                // one, and tells the cashier the manual barcode field still works.
                 if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
                     const isSecure = window.isSecureContext;
                     if (!isSecure) {
@@ -20319,18 +19306,14 @@ $seoImage = (!empty($storeSettings['shop_logo']) && strpos($storeSettings['shop_
                     return;
                 }
 
-                _scannerCurrentVideoId = videoId;
-                _scannerCurrentCanvasId = canvasId;
-                _scannerCurrentOnResult = onResult;
-                if (preferredFacingMode) _scannerFacingMode = preferredFacingMode;
-
                 try {
+                    // Request back camera first, fallback to any camera
                     let stream;
                     try {
                         stream = await navigator.mediaDevices.getUserMedia({
                             video: {
                                 facingMode: {
-                                    ideal: _scannerFacingMode
+                                    ideal: 'environment'
                                 },
                                 width: {
                                     ideal: 1280,
@@ -20340,6 +19323,10 @@ $seoImage = (!empty($storeSettings['shop_logo']) && strpos($storeSettings['shop_
                                     ideal: 720,
                                     min: 480
                                 },
+                                // Best-effort — ignored by browsers/devices that don't support
+                                // it rather than throwing, so it's safe to always request.
+                                // Continuous autofocus meaningfully cuts down blurry-frame
+                                // misreads on phones that would otherwise focus once and hold.
                                 advanced: [{
                                     focusMode: 'continuous'
                                 }]
@@ -20359,7 +19346,7 @@ $seoImage = (!empty($storeSettings['shop_logo']) && strpos($storeSettings['shop_
                         return;
                     }
                     video.srcObject = stream;
-                    video.setAttribute('playsinline', 'true');
+                    video.setAttribute('playsinline', 'true'); // iOS Safari
                     video.muted = true;
 
                     // Wait for video to actually start playing with valid dimensions
@@ -20381,9 +19368,10 @@ $seoImage = (!empty($storeSettings['shop_logo']) && strpos($storeSettings['shop_
                             once: true
                         });
                         video.play().catch(() => {});
-                        setTimeout(check, 300);
-                    }).catch(() => {});
+                        setTimeout(check, 300); // initial check in case events already fired
+                    }).catch(() => {}); // non-fatal — interval will check readyState anyway
 
+                    // Offscreen canvas for pixel decoding — always create one
                     let offscreen = canvasId ? document.getElementById(canvasId) : null;
                     if (!offscreen || typeof offscreen.getContext !== 'function') {
                         offscreen = document.createElement('canvas');
@@ -20392,37 +19380,48 @@ $seoImage = (!empty($storeSettings['shop_logo']) && strpos($storeSettings['shop_
 
                     scanCooldown = false;
                     let _zxingActive = false;
-                    let _lastSeenCode = null;
-                    let _lastSeenTime = 0;
+                    // CONFIRM-BEFORE-ACCEPT: a single decoded frame can misread one digit
+                    // (motion blur, glare, a partial occlusion) and that garbage string then
+                    // legitimately isn't in the product table — which is what previously
+                    // showed up to the cashier as "Not found — try next item" even though the
+                    // physical barcode was scanned correctly. A misread almost never repeats
+                    // identically on the very next frame, so requiring the SAME decoded value
+                    // twice in a row before firing onResult filters out most of those false
+                    // negatives, at the cost of one extra ~300ms tick on a real, steady scan.
+                    let _lastCandidate = null;
+                    let _candidateStreak = 0;
 
                     scanInterval = setInterval(async () => {
                         if (scanCooldown) return;
                         if (video.readyState < 2 || !video.videoWidth || !video.videoHeight) return;
-                        if (_zxingActive) return;
+                        if (_zxingActive) return; // prevent overlapping async decode
                         _zxingActive = true;
                         try {
-                            const res = await tryDecode(video, offscreen);
-                            if (res && res.text) {
-                                const code = res.text.trim();
-                                const now = Date.now();
-                                const isVerified = (res.engine === 'native' || res.engine === 'jsqr');
-                                const isMatch = (code === _lastSeenCode && (now - _lastSeenTime) < 1000);
-                                _lastSeenCode = code;
-                                _lastSeenTime = now;
-
-                                if ((isVerified || isMatch) && !scanCooldown) {
-                                    scanCooldown = true;
-                                    _lastSeenCode = null;
-                                    _lastSeenTime = 0;
-                                    onResult(code);
+                            const code = await tryDecode(video, offscreen);
+                            if (code) {
+                                const trimmed = code.trim();
+                                if (trimmed === _lastCandidate) {
+                                    _candidateStreak++;
+                                } else {
+                                    _lastCandidate = trimmed;
+                                    _candidateStreak = 1;
                                 }
+                                if (_candidateStreak >= 2 && !scanCooldown) {
+                                    scanCooldown = true;
+                                    _lastCandidate = null;
+                                    _candidateStreak = 0;
+                                    onResult(trimmed);
+                                }
+                            } else {
+                                _lastCandidate = null;
+                                _candidateStreak = 0;
                             }
                         } catch (e) {
                             // ignore decode errors
                         } finally {
                             _zxingActive = false;
                         }
-                    }, 220);
+                    }, 300);
 
                 } catch (e) {
                     if (e.name === 'NotAllowedError') {
@@ -20444,7 +19443,6 @@ $seoImage = (!empty($storeSettings['shop_logo']) && strpos($storeSettings['shop_
                     scanStream.getTracks().forEach(t => t.stop());
                     scanStream = null;
                 }
-                _scannerTorchOn = false;
                 scanCooldown = false;
             }
 
@@ -20691,22 +19689,8 @@ $seoImage = (!empty($storeSettings['shop_logo']) && strpos($storeSettings['shop_
 
             function loadWhProducts(force = false) {
                 if (force) invalidateProdCache();
-
-                // Instant paint from cache!
-                if (!force && _prodCache.data?.data && Array.isArray(_prodCache.data.data) && _prodCache.data.data.length > 0) {
-                    whProds = _prodCache.data.data;
-                    updateWhStats();
-                    renderWhProducts();
-                }
-
-                apiGetProducts(force, (fresh) => {
-                    if (fresh?.success && Array.isArray(fresh.data)) {
-                        whProds = fresh.data;
-                        updateWhStats();
-                        renderWhProducts();
-                    }
-                }).then(r => {
-                    if (!r?.success || !Array.isArray(r.data)) return;
+                apiGetProducts(force).then(r => {
+                    if (!r?.success) return;
                     whProds = r.data;
                     updateWhStats();
                     renderWhProducts();
@@ -20754,9 +19738,8 @@ $seoImage = (!empty($storeSettings['shop_logo']) && strpos($storeSettings['shop_
                 in30.setDate(in30.getDate() + 30);
                 const in30Str = in30.toISOString().slice(0, 10);
                 const expiring = whProds.filter(p => {
-                    const eff = p.expiry_date || p.next_batch_expiry;
-                    if (!eff) return false;
-                    const expStr = String(eff).slice(0, 10);
+                    if (!p.expiry_date) return false;
+                    const expStr = String(p.expiry_date).slice(0, 10);
                     return expStr >= todayStr && expStr <= in30Str;
                 }).length;
                 document.getElementById('wh-total').textContent = total;
@@ -20888,15 +19871,13 @@ $seoImage = (!empty($storeSettings['shop_logo']) && strpos($storeSettings['shop_
                     if (whFilter === 'low') return sq > 0 && sq <= (p.low_stock_threshold ?? 5);
                     if (whFilter === 'out') return sq == 0;
                     if (whFilter === 'expiring') {
-                        const effExp = p.expiry_date || p.next_batch_expiry;
-                        if (!effExp) return false;
-                        const exp = new Date(effExp);
+                        if (!p.expiry_date) return false;
+                        const exp = new Date(p.expiry_date);
                         return exp >= today && exp <= in30;
                     }
                     if (whFilter === 'expired') {
-                        const effExp = p.expiry_date || p.next_batch_expiry;
-                        if (!effExp) return false;
-                        return new Date(effExp) < today;
+                        if (!p.expiry_date) return false;
+                        return new Date(p.expiry_date) < today;
                     }
                     return true;
                 });
@@ -20912,8 +19893,7 @@ $seoImage = (!empty($storeSettings['shop_logo']) && strpos($storeSettings['shop_
                 empty.style.display = 'none';
 
                 body.innerHTML = list.map(p => {
-                    const effExp = p.expiry_date || p.next_batch_expiry;
-                    const expSt = getExpiryStatus(effExp);
+                    const expSt = getExpiryStatus(p.expiry_date);
                     const expiryHTML = expSt ?
                         '<span class="expiry-' + expSt.cls + '">' + expSt.label + '</span>' :
                         '<span style="color:var(--text3);font-size:.78rem;">—</span>';
@@ -21018,7 +19998,7 @@ $seoImage = (!empty($storeSettings['shop_logo']) && strpos($storeSettings['shop_
             function whStatusText(p) {
                 const storeQty = p.store_quantity !== undefined ? p.store_quantity : p.quantity;
                 const threshold = p.low_stock_threshold ?? 5;
-                const expSt = getExpiryStatus(p.expiry_date || p.next_batch_expiry);
+                const expSt = getExpiryStatus(p.expiry_date);
                 if (storeQty == 0) return 'Out of Stock';
                 if (storeQty <= threshold) return 'Low Store';
                 if (expSt && expSt.cls === 'expired') return 'Expired';
@@ -21056,7 +20036,7 @@ $seoImage = (!empty($storeSettings['shop_logo']) && strpos($storeSettings['shop_
                         p.qty_returned_writeoff || 0,
                         p.qty_returned_restocked || 0,
                         p.delivery_date ? p.delivery_date.slice(0, 10) : '',
-                        (p.expiry_date || p.next_batch_expiry || '').slice(0, 10),
+                        p.expiry_date ? p.expiry_date.slice(0, 10) : '',
                         whStatusText(p)
                     ];
                 });
@@ -21144,7 +20124,7 @@ $seoImage = (!empty($storeSettings['shop_logo']) && strpos($storeSettings['shop_
                 if (kind === 'low') {
                     info = '<strong>' + p.name + '</strong> (Stock: ' + qty + ') - ' + (qty == 0 ? 'Out of Stock' : 'Hits Low Stock Limit (Threshold: ' + threshold + ')');
                 } else {
-                    const expSt = getExpiryStatus(p.expiry_date || p.next_batch_expiry);
+                    const expSt = getExpiryStatus(p.expiry_date);
                     info = '<strong>' + p.name + '</strong> - ' + (expSt?.label || 'Expiring soon');
                 }
                 return '<div class="alert-banner-row">' +
@@ -21182,7 +20162,7 @@ $seoImage = (!empty($storeSettings['shop_logo']) && strpos($storeSettings['shop_
                 const priceHTML = promoInfo.active ?
                     '<span style="text-decoration:line-through;color:var(--text3);">' + CUR + promoInfo.price.toFixed(2) + '</span> <span style="color:#e74c3c;font-weight:700;">' + CUR + promoInfo.promo.toFixed(2) + '</span> <span class="badge" style="background:#e74c3c;color:#fff;">PROMO</span>' :
                     CUR + parseFloat(p.price || 0).toFixed(2);
-                const expSt = getExpiryStatus(p.expiry_date || p.next_batch_expiry);
+                const expSt = getExpiryStatus(p.expiry_date);
                 const expiryHTML = expSt ? '<span class="expiry-' + expSt.cls + '">' + expSt.label + '</span>' : '—';
 
                 const row = (label, value) => value ?
@@ -21197,7 +20177,8 @@ $seoImage = (!empty($storeSettings['shop_logo']) && strpos($storeSettings['shop_
                 const hasCost = !isNaN(costVal);
                 const stockValueHTML = hasCost ? CUR + (costVal * (storeQty + whQty)).toFixed(2) : '<span style="color:var(--text3);">not set</span>';
 
-                // Cumulative shrinkage/return totals — computed server-side (see
+                // Cumulative shri
+                // ver-side (see
                 // get_products) from the Pull-Out & Returns log, so this reflects the
                 // product's whole history, not just what's on the most recent page.
                 const dmg = parseInt(p.qty_damaged) || 0;
@@ -21325,7 +20306,7 @@ $seoImage = (!empty($storeSettings['shop_logo']) && strpos($storeSettings['shop_
                 document.getElementById('qr-cost-price').value = p && p.cost_price ? p.cost_price : '';
                 document.getElementById('qr-supplier').value = '';
                 document.getElementById('qr-restock-date').value = new Date().toISOString().slice(0, 10);
-                document.getElementById('qr-expiry').value = (p && (p.expiry_date || p.next_batch_expiry)) ? (p.expiry_date || p.next_batch_expiry).slice(0, 10) : '';
+                document.getElementById('qr-expiry').value = p && p.expiry_date ? p.expiry_date.slice(0, 10) : '';
                 _qrUpdateTotal();
                 openModal('quick-restock-modal');
             }
@@ -22737,24 +21718,29 @@ $seoImage = (!empty($storeSettings['shop_logo']) && strpos($storeSettings['shop_
                 })();
 
 
-                // Physical scanners act as keyboards: they type chars fast then send Enter or Tab,
-                // or emit a fast burst followed by silence (scanners configured without a suffix).
-                // We intercept all variants here and route to the correct handler per page/context.
+                // Physical scanners act as keyboards: they type chars fast then send Enter.
+                // We intercept that here and route to the correct handler per page/context.
                 (function initGlobalHIDScanner() {
                     let _buf = '';
                     let _lastKey = 0;
                     let _fastStreak = 0; // consecutive keystrokes arriving faster than HID_SPEED_MS
-                    let _autoSubmitTimer = null;
-                    const HID_SPEED_MS = 75; // relaxed to 75ms for Bluetooth LE & wireless dongles
+                    const HID_SPEED_MS = 50; // chars typed faster than this = candidate scanner speed
                     const HID_MIN_LEN = 3; // minimum barcode length to accept
-                    // Fields where typing is the field's own intended behavior.
+                    // Fields where typing is the field's own intended behavior. A real
+                    // scanner's keystrokes are near-simultaneous (typically <15ms apart,
+                    // consistently, for every character) — a fast human typist can dip
+                    // under 50ms on an isolated keystroke but essentially never sustains
+                    // it for 3+ characters in a row. Requiring a streak (see _fastStreak
+                    // below) rather than a single fast gap is what keeps this list short:
+                    // it's a backstop for known scan-target fields, not the sole defense.
                     const MANUAL_ENTRY_FIELD_IDS = new Set([
                         'dash-manual-bc', 'prod-scan-manual',
                         'new-cat-input', 'p-barcode',
                         'qr-cases', 'qr-bundle', 'qr-pcs',
                         'po-cases', 'po-bundle', 'po-pcs',
                     ]);
-                    // Classes used for fields that repeat per-row (cart items, New Delivery line items)
+                    // Classes used for fields that repeat per-row (cart items, New Delivery
+                    // line items) and so can't be matched by a single fixed id.
                     const MANUAL_ENTRY_FIELD_CLASSES = [
                         'cart-qty-input', 'nd-product-search',
                         'nd-st-cases', 'nd-st-bundle', 'nd-st-pcs',
@@ -22777,15 +21763,24 @@ $seoImage = (!empty($storeSettings['shop_logo']) && strpos($storeSettings['shop_
                         const fast = (now - _lastKey) < HID_SPEED_MS;
                         _lastKey = now;
                         _fastStreak = fast ? _fastStreak + 1 : 0;
+                        // Require 3 consecutive fast keystrokes (a real scanner's whole
+                        // burst) before treating this as scanner input inside an editable
+                        // field. A single quick keystroke from a fast human typist no
+                        // longer counts, and only the LAST field of an Enter-driven manual
+                        // entry (cart qty, category name, etc.) can even be reached this
+                        // way, since scans there are meant to be read as scans anyway.
                         const looksLikeScanner = _fastStreak >= 3;
 
-                        if (e.key === 'Enter' || e.key === 'Tab') {
-                            clearTimeout(_autoSubmitTimer);
+                        if (e.key === 'Enter') {
                             const code = _buf.trim();
                             _buf = '';
                             _fastStreak = 0;
                             if (!code || code.length < HID_MIN_LEN) return;
 
+                            // If focus is inside a field meant for direct typing (manual
+                            // barcode entry, cart qty, category name, etc.), only steal Enter
+                            // away from that field's own handler when the keystrokes leading
+                            // up to it actually looked like a scanner burst, not human typing.
                             if (isManualEntryField() && !looksLikeScanner) return;
 
                             e.preventDefault();
@@ -22793,50 +21788,71 @@ $seoImage = (!empty($storeSettings['shop_logo']) && strpos($storeSettings['shop_
                             return;
                         }
 
+                        // Accumulate printable characters into the buffer. We used to refuse
+                        // to buffer the very FIRST character whenever an input field had focus
+                        // and it arrived "slowly" (old rule: isEditable && !fast && empty
+                        // buffer = assume human, ignore it). The problem: a scanner's first
+                        // keystroke *always* looks "slow" too, because the gap is measured
+                        // against whatever happened before the scan even started (e.g. the
+                        // idle time after clicking into the barcode field to prepare to
+                        // scan) — not against the scanner's own typing speed. That silently
+                        // dropped the first digit of the barcode any time someone scanned
+                        // while a field (like the barcode field itself) was focused, so the
+                        // saved barcode came out one character short and never matched a
+                        // later full re-scan ("Not found").
+                        //
+                        // Fix: always buffer the character. Only retroactively drop it if a
+                        // SECOND character in a row also arrives slowly while a field is
+                        // focused — two slow keystrokes back-to-back really is human typing.
+                        // This still resets on every slow keystroke, so sustained normal
+                        // typing never accumulates into a false "scan".
                         if (e.key.length === 1) {
                             if (isEditable && _buf.length === 1 && !fast) {
                                 _buf = '';
                             }
+                            // Once we're confident a fast scan is under way (a sustained
+                            // 3-keystroke-or-more burst, not just one quick keystroke), stop
+                            // it from ALSO being typed natively into whatever field happens to
+                            // be focused — e.g. a cart quantity box. This is what let a second
+                            // scan of an already-in-cart product silently overwrite its
+                            // quantity field with the raw barcode digits (which then got
+                            // clamped down to "whole stock available") instead of just
+                            // incrementing by 1. Requiring a streak — rather than a single
+                            // fast gap — is what keeps a fast human typist's own input intact.
                             if (isEditable && looksLikeScanner && _buf.length >= 1) {
                                 e.preventDefault();
                             }
                             _buf += e.key;
-
-                            // Scanners with NO suffix configured: auto-submit after 85ms of silence
-                            // following a fast streak >= 3 characters.
-                            clearTimeout(_autoSubmitTimer);
-                            if (looksLikeScanner && _buf.length >= HID_MIN_LEN) {
-                                _autoSubmitTimer = setTimeout(() => {
-                                    const code = _buf.trim();
-                                    _buf = '';
-                                    _fastStreak = 0;
-                                    if (code && code.length >= HID_MIN_LEN) {
-                                        routeHIDScan(code);
-                                    }
-                                }, 85);
-                            }
                         } else if (e.key !== 'Shift') {
-                            clearTimeout(_autoSubmitTimer);
+                            // Non-printable key that isn't Shift = probably human; reset buffer
                             if (!fast) _buf = '';
                         }
                     });
 
                     function routeHIDScan(barcode) {
-                        // 1. Remove non-printable ASCII control characters (\x00-\x1F, \x7F)
-                        barcode = String(barcode || '').replace(/[\x00-\x1F\x7F]/g, '');
-                        // 2. Remove common AIM symbology prefixes (e.g. ]C1, ]E0, ]Q1, ]e0, etc.)
-                        barcode = barcode.replace(/^\][a-zA-Z0-9]{2}/, '');
-                        // 3. Normalise: strip leading/trailing whitespace
-                        barcode = barcode.trim();
+                        // Normalise: strip leading/trailing whitespace
+                        barcode = barcode.replace(/^\s+|\s+$/g, '');
                         if (!barcode) return;
 
-                        // 0. Scanning receipt barcode (format ORD-XXXXXX) jumps straight into Void flow
+                        // 0. Scanning the barcode printed on a receipt (format ORD-XXXXXX) jumps
+                        // straight into the Void flow: openVoidOrderModal(prefillRef) already
+                        // auto-verifies the code and lands on item selection, so the cashier
+                        // never has to type or click Verify — scan, tick items, get an admin
+                        // to confirm. Checked before every other scan target since the format
+                        // is specific enough to never collide with a real product barcode.
                         if (/^ORD-[A-Z0-9]{4,}$/i.test(barcode)) {
                             openVoidOrderModal(barcode.toUpperCase());
                             return;
                         }
 
-                        // 1. If the New Delivery modal is open, fill whichever line item's search box has focus
+                        // 1. If the New Delivery modal is open, fill whichever line item's
+                        // product search box currently has focus — deliberately NOT "always
+                        // add a new line", so the person controls exactly which row a scan
+                        // lands in when several rows are already open. Falls back to
+                        // _ndFocusedRowId (the last row that was actually tapped/typed in)
+                        // if document.activeElement isn't the field at this exact instant —
+                        // a scanner burst can land right as a suggestion-list tap or an
+                        // on-screen keyboard event momentarily shifts focus away from it.
                         const ndModal = document.getElementById('new-delivery-modal');
                         if (ndModal && ndModal.classList.contains('open')) {
                             const active = document.activeElement;
@@ -22878,30 +21894,11 @@ $seoImage = (!empty($storeSettings['shop_logo']) && strpos($storeSettings['shop_
                             return;
                         }
 
-                        // 3. Products catalog page: if no modal is open, search product and open it
-                        if (cur_page === 'products' && !document.querySelector('.modal-overlay.open')) {
-                            const searchInp = document.getElementById('prod-search');
-                            if (searchInp) {
-                                searchInp.value = barcode;
-                                searchInp.dispatchEvent(new Event('input'));
-                            }
-                            apiGet('get_product_by_barcode', {
-                                barcode
-                            }).then(r => {
-                                if (!r?.success) {
-                                    toast('Product not found: ' + barcode, 'error');
-                                    return;
-                                }
-                                const p = r.data;
-                                toast('✅ Found product: ' + p.name, 'success');
-                                if (typeof openProductModal === 'function') {
-                                    openProductModal(p.id);
-                                }
-                            });
-                            return;
-                        }
-
-                        // 4. On the Warehouse page with nothing else open: log delivery for scanned product
+                        // 3. On the Warehouse page with nothing else already open, scanning a
+                        // product barcode almost always means "log a delivery for this" —
+                        // open New Delivery, drop the scanned product straight into its
+                        // first line item, and prefill Supplier/Reference from the
+                        // product's own saved supplier (if it has one).
                         if (cur_page === 'warehouse' && !document.querySelector('.modal-overlay.open')) {
                             apiGet('get_product_by_barcode', {
                                 barcode
@@ -22913,7 +21910,7 @@ $seoImage = (!empty($storeSettings['shop_logo']) && strpos($storeSettings['shop_
                                 const p = r.data;
                                 if (!whProds.find(x => x.id == p.id)) whProds.push(p);
                                 openNewDeliveryModal();
-                                _ndSelectProduct(1, p.id);
+                                _ndSelectProduct(1, p.id); // openNewDeliveryModal always seeds row #1
                                 const supplierEl = document.getElementById('nd-supplier');
                                 if (supplierEl && p.supplier) supplierEl.value = p.supplier;
                                 toast('✅ Scanned into New Delivery: ' + p.name, 'success');
@@ -22921,7 +21918,7 @@ $seoImage = (!empty($storeSettings['shop_logo']) && strpos($storeSettings['shop_
                             return;
                         }
 
-                        // 5. Default → add to cart (works on dashboard from anywhere)
+                        // 4. Default → add to cart (works on dashboard from anywhere)
                         apiGet('get_product_by_barcode', {
                             barcode
                         }).then(r => {
@@ -22936,6 +21933,8 @@ $seoImage = (!empty($storeSettings['shop_logo']) && strpos($storeSettings['shop_
                             addToCart(p.id, addQty);
                             updateScanCartCount();
                             toast('✅ Added: ' + p.name + (addQty > 1 ? ' ×' + addQty : ''), 'success');
+                            // First scan of a new sale — pop the Cart open automatically so the
+                            // cashier can go straight to keyboard hotkeys with zero mouse clicks.
                             if (wasEmpty) {
                                 const cartModalEl = document.getElementById('cart-modal');
                                 if (cartModalEl && !cartModalEl.classList.contains('open')) openModal('cart-modal');
@@ -23158,80 +22157,11 @@ $seoImage = (!empty($storeSettings['shop_logo']) && strpos($storeSettings['shop_
             // registration silently failed on every load and none of the above
             // ever actually ran — that's the fix here, not new behavior.
             // ════════════════════════════════════════════════
-            // PWA SERVICE WORKER REGISTRATION & INSTALL LOGIC
-            // ════════════════════════════════════════════════
             (function() {
                 if (!('serviceWorker' in navigator)) return;
-                if (location.protocol !== 'https:' && location.hostname !== 'localhost') return;
-                const regPromise = navigator.serviceWorker.register('sw.js', { scope: './' })
-                    .catch(() => navigator.serviceWorker.register('sw.php', { scope: './' }))
-                    .catch(() => navigator.serviceWorker.register('index.php?pwa=sw', { scope: './' }))
-                    .catch(() => {});
-                regPromise.then(reg => {
-                    if (reg) {
-                        reg.update();
-                        if (reg.waiting) {
-                            reg.waiting.postMessage('skipWaiting');
-                        }
-                    }
-                }).catch(() => {});
+                if (location.protocol !== 'https:' && location.hostname !== 'localhost') return; // SW needs HTTPS (or localhost)
+                navigator.serviceWorker.register('sw.php', { scope: './' }).catch(() => {});
             })();
-
-            let deferredPwaPrompt = null;
-            window.addEventListener('beforeinstallprompt', (e) => {
-                e.preventDefault();
-                deferredPwaPrompt = e;
-                const btn = document.getElementById('pwa-install-btn');
-                if (btn) btn.style.display = 'inline-flex';
-                const mobBtn = document.getElementById('mob-pwa-install-btn');
-                if (mobBtn) mobBtn.style.display = 'flex';
-                const banner = document.getElementById('pwa-install-banner');
-                if (banner && !sessionStorage.getItem('pwa_banner_dismissed')) {
-                    banner.style.display = 'flex';
-                }
-            });
-
-            window.addEventListener('appinstalled', () => {
-                deferredPwaPrompt = null;
-                const btn = document.getElementById('pwa-install-btn');
-                if (btn) btn.style.display = 'none';
-                const mobBtn = document.getElementById('mob-pwa-install-btn');
-                if (mobBtn) mobBtn.style.display = 'none';
-                const banner = document.getElementById('pwa-install-banner');
-                if (banner) banner.style.display = 'none';
-                if (typeof toast === 'function') toast('App installed successfully to your device!', 'success');
-            });
-
-            function dismissInstallBanner() {
-                const banner = document.getElementById('pwa-install-banner');
-                if (banner) banner.style.display = 'none';
-                sessionStorage.setItem('pwa_banner_dismissed', '1');
-            }
-
-            function promptInstallPwa() {
-                if (deferredPwaPrompt) {
-                    deferredPwaPrompt.prompt();
-                    deferredPwaPrompt.userChoice.then((choiceResult) => {
-                        if (choiceResult.outcome === 'accepted') {
-                            if (typeof toast === 'function') toast('Installing POS System...', 'info');
-                        }
-                        deferredPwaPrompt = null;
-                        const btn = document.getElementById('pwa-install-btn');
-                        if (btn) btn.style.display = 'none';
-                        const mobBtn = document.getElementById('mob-pwa-install-btn');
-                        if (mobBtn) mobBtn.style.display = 'none';
-                        const banner = document.getElementById('pwa-install-banner');
-                        if (banner) banner.style.display = 'none';
-                    });
-                } else {
-                    const isIos = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
-                    if (isIos) {
-                        alert('To install on your iPhone or iPad:\n1. Tap the Share button (square with arrow up) at the bottom of Safari.\n2. Scroll down and tap "Add to Home Screen" ➕.');
-                    } else {
-                        alert('To install as an app:\nOpen your browser menu (⋮) and tap "Install app" or "Add to Home screen".');
-                    }
-                }
-            }
         </script>
         </body>
 
