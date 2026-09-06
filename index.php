@@ -12351,9 +12351,28 @@ $seoImage = (!empty($storeSettings['shop_logo']) && strpos($storeSettings['shop_
                 </div>
                 <div id="vo-items-list" style="max-height:220px;overflow-y:auto;border:1px solid var(--border);border-radius:10px;"></div>
 
+                <!-- LIVE REFUND BANNER: Shows exact cash amount to return to customer -->
+                <div id="vo-refund-banner" style="background:rgba(192,57,43,0.08);border:1px solid rgba(192,57,43,0.25);border-radius:8px;padding:10px 14px;margin-top:12px;display:flex;justify-content:space-between;align-items:center;">
+                    <div style="font-size:.84rem;font-weight:700;color:var(--danger,#C0392B);">💸 Cash Due to Customer:</div>
+                    <strong id="vo-refund-total" style="font-size:1.15rem;color:var(--danger,#C0392B);">₱0.00</strong>
+                </div>
+
+                <!-- REASON FOR VOID / RETURN -->
+                <div class="form-group" style="margin-top:12px;">
+                    <label class="form-label">Reason for Void / Return</label>
+                    <select class="form-select" id="vo-reason">
+                        <option value="Customer Return / Exchange">Customer Return / Exchange</option>
+                        <option value="Wrong Item Scanned">Wrong Item Scanned</option>
+                        <option value="Damaged / Defective Item">Damaged / Defective Item</option>
+                        <option value="Customer Changed Mind">Customer Changed Mind</option>
+                        <option value="Cashier / System Error">Cashier / System Error</option>
+                        <option value="Other">Other (Audit Log)</option>
+                    </select>
+                </div>
+
                 <!-- STEP 3: password gate, only shown after a valid order is loaded -->
-                <div class="form-group" style="margin-top:14px;">
-                    <label class="form-label">Admin Password <span style="color:var(--text3);font-weight:400;">(cashier passwords are not accepted)</span></label>
+                <div class="form-group" style="margin-top:12px;">
+                    <label class="form-label" id="vo-auth-label">Admin / Owner Password <span style="color:var(--text3);font-weight:400;">(cashier passwords are not accepted)</span></label>
                     <div class="pw-eye-wrap">
                         <input type="password" class="form-input" id="vo-password" placeholder="Enter admin password to authorize" oninput="updateVoidOrderConfirmState()"
                             onkeydown="if(event.key==='Enter'){event.preventDefault();confirmVoidOrder();}" />
@@ -12362,7 +12381,7 @@ $seoImage = (!empty($storeSettings['shop_logo']) && strpos($storeSettings['shop_
                 </div>
 
                 <!-- STEP 4: locked until at least one item is selected AND a password is typed -->
-                <button type="button" class="btn btn-danger btn-full" id="vo-confirm-btn" onclick="confirmVoidOrder()" disabled>Confirm Void</button>
+                <button type="button" class="btn btn-danger btn-full" id="vo-confirm-btn" onclick="confirmVoidOrder()" disabled>🔓 Authorize Void &amp; Release Cash Refund</button>
             </div>
         </div>
     </div>
@@ -18233,18 +18252,49 @@ $seoImage = (!empty($storeSettings['shop_logo']) && strpos($storeSettings['shop_
 
             // PART 1 STEP 6 — print an updated receipt showing the remaining items,
             // recalculated total, and the voided line + amount returned.
-            function printVoidReceipt(tx, voidData) {
+            async function printVoidReceipt(tx, voidData) {
+                const esc = receiptEsc;
+                const items = (tx.items || []);
+                const isFullVoid = tx.status === 'VOIDED';
+                const reason = (voidData && voidData.reason) ? voidData.reason : 'Customer request';
+                const voidAmt = parseFloat(voidData?.voided_amount) || 0;
+                const netTot = parseFloat(tx.net_total) || 0;
+
+                // 1. Try Native Direct ESC/POS Print first (thermal printer on port 9100)
+                try {
+                    const nativePayload = {
+                        type: 'void_receipt',
+                        shop_name: (typeof SHOP_NAME !== 'undefined' && SHOP_NAME) ? SHOP_NAME : 'RE M STORE',
+                        shop_address: (typeof SHOP_ADDRESS !== 'undefined' && SHOP_ADDRESS) ? SHOP_ADDRESS : '',
+                        shop_tin: (typeof SHOP_TIN !== 'undefined' && SHOP_TIN) ? SHOP_TIN : '',
+                        order_ref: tx.order_ref,
+                        cashier: (typeof CASHIER_NAME !== 'undefined' && CASHIER_NAME) ? CASHIER_NAME : 'Cashier',
+                        date_time: fmtDate(new Date().toISOString()),
+                        reason: reason,
+                        is_full_void: isFullVoid,
+                        items: items.map(it => ({
+                            product_name: it.product_name,
+                            price: parseFloat(it.price) || 0,
+                            quantity: parseInt(it.quantity) || 0,
+                            voided_qty: parseInt(it.voided_qty) || 0
+                        })),
+                        voided_amount: voidAmt,
+                        net_total: netTot,
+                        currency: '₱'
+                    };
+                    const nativeOk = await tryNativePrintAgent(nativePayload);
+                    if (nativeOk) {
+                        toast('🖨️ Void receipt printed directly to thermal printer', 'success');
+                        return;
+                    }
+                } catch (e) {}
+
+                // 2. Fallback to clean browser popup if native agent is offline
                 const win = window.open('', '_blank', 'width=380,height=650');
                 if (!win) {
                     toast('Pop-up blocked — allow pop-ups to print the void receipt', 'warning');
                     return;
                 }
-                const esc = receiptEsc;
-                const items = (tx.items || []);
-                const isFullVoid = tx.status === 'VOIDED';
-
-                // Same date/time formatting as the Payment Receipt — "now", since this is
-                // printed at the moment the void is authorized, not at original sale time.
                 const dt = new Date();
                 const dateStr = String(dt.getMonth() + 1).padStart(2, '0') + '/' + String(dt.getDate()).padStart(2, '0') + '/' + dt.getFullYear();
                 let hh = dt.getHours();
@@ -18253,12 +18303,6 @@ $seoImage = (!empty($storeSettings['shop_logo']) && strpos($storeSettings['shop_
                 if (hh === 0) hh = 12;
                 const timeStr = String(hh).padStart(2, '0') + ':' + String(dt.getMinutes()).padStart(2, '0') + ' ' + ampm;
 
-                // Same QTY | ITEM DESCRIPTION | PRICE | TOTAL table as the Payment
-                // Receipt. Visual audit trail (Section 3): every line on the order is
-                // listed, not just what's left. An untouched line prints one normal row.
-                // A line with any voided_qty gets its remaining-active row as usual PLUS
-                // a separate struck-through "VOIDED" row for the removed quantity, so the
-                // full before/after picture is on one receipt.
                 const itemRows = items.map(it => {
                     const voidedQty = it.voided_qty || 0;
                     const remaining = it.quantity - voidedQty;
@@ -18286,6 +18330,7 @@ $seoImage = (!empty($storeSettings['shop_logo']) && strpos($storeSettings['shop_
                     '<div class="divider"></div>' +
                     '<div class="receipt-row"><span>CASHIER: ' + esc(CASHIER_NAME) + '</span></div>' +
                     '<div class="receipt-row"><span>TERM: ' + esc(TERMINAL_ID) + '</span><span>' + dateStr + ' ' + timeStr + '</span></div>' +
+                    (reason ? '<div class="receipt-row" style="font-size:10.5px;color:#555;"><span>REASON: ' + esc(reason) + '</span></div>' : '') +
                     '<div class="divider"></div>' +
                     '<table class="items">' +
                     '<colgroup><col class="qty"><col class="desc"><col class="price"><col class="total"></colgroup>' +
@@ -18293,12 +18338,16 @@ $seoImage = (!empty($storeSettings['shop_logo']) && strpos($storeSettings['shop_
                     '<tbody>' + itemRows + '</tbody>' +
                     '</table>' +
                     '<div class="divider"></div>' +
-                    '<div class="void-band"><span>VOIDED — REFUNDED (THIS ACTION)</span><span>-' + fmt(voidData.voided_amount) + '</span></div>' +
-                    '<div class="total-band"><span>' + (isFullVoid ? 'NEW TOTAL' : 'UPDATED TOTAL') + '</span><span>' + fmt(tx.net_total) + '</span></div>' +
+                    '<div class="void-band"><span>VOIDED — REFUNDED (THIS ACTION)</span><span>-' + fmt(voidAmt) + '</span></div>' +
+                    '<div class="total-band"><span>' + (isFullVoid ? 'NEW TOTAL' : 'UPDATED TOTAL') + '</span><span>' + fmt(netTot) + '</span></div>' +
                     '<div class="divider"></div>' +
-                    receiptFooterHTML(['Thank You for Shopping!', 'Please keep receipt for returns.']) +
+                    '<div style="margin:12px 0 6px;font-size:10.5px;text-align:center;">' +
+                    'Customer Signature: _______________________<br><br>' +
+                    'Manager / Owner Auth: _______________________' +
                     '</div>' +
-                    '<script>window.onload=function(){window.print();}<\/script>' +
+                    receiptFooterHTML(['TRANSACTION VOID AUDIT SLIP', 'Please keep receipt for refund audit.']) +
+                    '</div>' +
+                    receiptPrintScript() +
                     '</body></html>'
                 );
                 win.document.close();
@@ -18330,6 +18379,10 @@ $seoImage = (!empty($storeSettings['shop_logo']) && strpos($storeSettings['shop_
                 const summaryWrap = document.getElementById('vo-summary-wrap');
                 const confirmBtn = document.getElementById('vo-confirm-btn');
                 const itemsList = document.getElementById('vo-items-list');
+                const authLabel = document.getElementById('vo-auth-label');
+                const refundEl = document.getElementById('vo-refund-total');
+                const reasonSelect = document.getElementById('vo-reason');
+
                 if (codeInput) codeInput.value = prefillRef || '';
                 if (pwInput) pwInput.value = '';
                 if (errEl) {
@@ -18337,8 +18390,23 @@ $seoImage = (!empty($storeSettings['shop_logo']) && strpos($storeSettings['shop_
                     errEl.textContent = '';
                 }
                 if (summaryWrap) summaryWrap.style.display = 'none';
-                if (confirmBtn) confirmBtn.disabled = true;
+                if (confirmBtn) {
+                    confirmBtn.disabled = true;
+                    confirmBtn.innerHTML = '🔓 Authorize Void &amp; Release Cash Refund';
+                }
                 if (itemsList) itemsList.innerHTML = '';
+                if (refundEl) refundEl.textContent = fmt(0);
+                if (reasonSelect) reasonSelect.selectedIndex = 0;
+
+                // Dynamic authorization label based on logged in role
+                if (authLabel) {
+                    if (typeof USER_ROLE !== 'undefined' && USER_ROLE === 'owner') {
+                        authLabel.innerHTML = '👤 Owner Authorization <span style="color:var(--text3);font-weight:400;">(Enter your password to authorize refund &amp; pop drawer)</span>';
+                    } else {
+                        authLabel.innerHTML = '🔒 Manager / Owner Authorization <span style="color:var(--text3);font-weight:400;">(Owner must enter password to authorize refund)</span>';
+                    }
+                }
+
                 // Void Order must always be the only thing on screen — if the Cart (or
                 // any other modal) happens to already be open when this is triggered
                 // (e.g. scanning a receipt barcode to void an order), close it first so
@@ -18488,23 +18556,44 @@ $seoImage = (!empty($storeSettings['shop_logo']) && strpos($storeSettings['shop_
             }
 
             // STEP 3 gate: Confirm Void stays disabled until at least one item is
-            // selected AND a password has been typed.
+            // selected AND a password has been typed. Also computes live refund total.
             function updateVoidOrderConfirmState() {
                 const confirmBtn = document.getElementById('vo-confirm-btn');
                 const pw = document.getElementById('vo-password')?.value || '';
                 const hasSelection = Object.keys(voSelections).length > 0;
-                if (confirmBtn) confirmBtn.disabled = !(voOrderData && hasSelection && pw.trim().length > 0);
+
+                // Compute total refund amount dynamically
+                let refundTotal = 0;
+                if (voOrderData && voOrderData.items) {
+                    const itemMap = {};
+                    voOrderData.items.forEach(it => { itemMap[it.id] = it; });
+                    Object.entries(voSelections).forEach(([itemId, qty]) => {
+                        const it = itemMap[itemId];
+                        if (it) refundTotal += (parseFloat(it.price) || 0) * qty;
+                    });
+                }
+                const refundEl = document.getElementById('vo-refund-total');
+                if (refundEl) refundEl.textContent = fmt(refundTotal);
+
+                if (confirmBtn) {
+                    confirmBtn.disabled = !(voOrderData && hasSelection && pw.trim().length > 0);
+                    if (hasSelection && refundTotal > 0) {
+                        confirmBtn.innerHTML = '🔓 Authorize Refund (' + fmt(refundTotal) + ') &amp; Pop Drawer';
+                    } else {
+                        confirmBtn.innerHTML = '🔓 Authorize Void &amp; Release Cash Refund';
+                    }
+                }
             }
 
             // STEP 4: admin-password-gated write. Voids exactly the selected
             // items/quantities, refunds their inventory, and updates the Sales History
             // row — "₱0.00 VOIDED" if that was every remaining item, otherwise a
             // struck-through original total next to the new net total. Then
-            // automatically re-prints an updated receipt showing which lines are still
-            // active and which are now voided.
+            // automatically pops the drawer and prints a thermal void receipt.
             function confirmVoidOrder() {
                 if (!voOrderData) return;
                 const pw = document.getElementById('vo-password')?.value || '';
+                const reason = document.getElementById('vo-reason')?.value || 'Customer request';
                 const items = Object.entries(voSelections).map(([itemId, qty]) => ({
                     item_id: parseInt(itemId, 10),
                     qty
@@ -18516,27 +18605,32 @@ $seoImage = (!empty($storeSettings['shop_logo']) && strpos($storeSettings['shop_
                 apiPost('void_order_items', {
                     transaction_id: voOrderData.id,
                     password: pw,
+                    reason: reason,
                     items
-                }).then(r => {
+                }).then(async r => {
                     setLoading(confirmBtn, false);
                     if (!r?.success) {
                         toast(r?.error || 'Void failed', 'error');
                         return;
                     }
-                    toast('Order ' + r.data.order_ref + ' updated — ' + fmt(r.data.cash_due_to_customer) + ' due back to customer', 'success');
+                    const cashBack = r.data.cash_due_to_customer;
+                    toast('Order ' + r.data.order_ref + ' updated — ' + fmt(cashBack) + ' refunded (Drawer opened)', 'success');
                     closeVoidOrderModal();
                     loadTx();
-                    // Automatic print trigger (Section 3): re-issue the receipt right away
-                    // using the full, fresh item list the backend just returned — no extra
-                    // round trip needed since void_order_items already sends it back.
+
+                    // 7-Eleven flow: Cash drawer kicks open automatically so cashier/owner can refund customer!
+                    triggerShiftDrawerKick();
+
+                    // Automatic print trigger: re-issue the void receipt to thermal printer
                     const txForPrint = {
                         order_ref: r.data.order_ref,
                         status: r.data.status,
                         items: r.data.items,
                         net_total: r.data.net_total,
                     };
-                    printVoidReceipt(txForPrint, {
-                        voided_amount: r.data.voided_amount
+                    await printVoidReceipt(txForPrint, {
+                        voided_amount: r.data.voided_amount,
+                        reason: reason
                     });
                 });
             }
