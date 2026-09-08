@@ -1,5 +1,5 @@
 @echo off
-title POS System - Auto Print (Render Online)
+title ProCast - Auto Print (Render Online)
 cd /d "%~dp0"
 
 set CHROME_PATH=

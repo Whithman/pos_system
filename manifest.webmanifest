@@ -1,8 +1,8 @@
 {
   "id": "/?source=pwa",
-  "name": "POS & Inventory System",
-  "short_name": "POS System",
-  "description": "Fast Point of Sale & Warehouse Inventory Management System",
+  "name": "ProCast - POS & Inventory System",
+  "short_name": "ProCast",
+  "description": "ProCast - Fast Point of Sale & Warehouse Inventory Management System",
   "start_url": "./?source=pwa",
   "scope": "./",
   "display": "standalone",

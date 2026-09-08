@@ -1,8 +1,8 @@
 @echo off
-title POS System - Silent Printing Kiosk Mode
+title ProCast - Silent Printing Kiosk Mode
 cd /d "%~dp0"
 echo ========================================================
-echo   POS SYSTEM - Starting in Kiosk / Silent Print Mode
+echo   PROCAST - Starting in Kiosk / Silent Print Mode
 echo ========================================================
 echo.
 

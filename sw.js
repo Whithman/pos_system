@@ -1,4 +1,4 @@
-const SHELL = 'pos-shell-v9';
+const SHELL = 'pos-shell-v10';
 const IMGS = 'pos-img-v2';
 const IMG_LIMIT = 400; // ~a few hundred photos max on the device
 const BASE = new URL('./', self.location).href;
@@ -106,7 +106,7 @@ self.addEventListener('fetch', e => {
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Offline — POS System</title>
+<title>Offline — ProCast</title>
 <style>
 body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;background:#0a1628;color:#f8fafc;display:flex;align-items:center;justify-content:center;min-height:100vh;margin:0;padding:20px;text-align:center;box-sizing:border-box;}
 .box{background:#112240;padding:36px 24px;border-radius:16px;max-width:440px;width:100%;border:1.5px solid rgba(255,255,255,0.1);box-shadow:0 20px 40px rgba(0,0,0,0.5);}

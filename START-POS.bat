@@ -1,8 +1,8 @@
 @echo off
-title POS System - Local Server
+title ProCast - Local Server
 cd /d "%~dp0"
 echo ============================================
-echo   POS SYSTEM - Starting local server...
+echo   PROCAST - Starting local server...
 echo   Browser will open automatically.
 echo   Close this window to STOP the server.
 echo ============================================
