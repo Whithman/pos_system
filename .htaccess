@@ -1,6 +1,34 @@
+# ══════════════════════════════════════════════════════════════════
+# ProCast — Server Security & Access Hardening
+# ══════════════════════════════════════════════════════════════════
+
+# 1. Disable directory indexing / browsing
+Options -Indexes
+
+# 2. Block access to hidden files and directories (.env, .git, .htaccess, etc.)
 <IfModule mod_rewrite.c>
-RewriteEngine On
-RewriteCond %{REQUEST_FILENAME} !-f
-RewriteCond %{REQUEST_FILENAME} !-d
-RewriteRule ^(icons/.*|icon-.*\.png|apple-touch-icon.*\.png|favicon\.ico|manifest\.json|manifest\.webmanifest|sw\.js)$ index.php [QSA,L]
+    RewriteEngine On
+
+    # Block dotfiles / dotdirs (.env, .env.local, .git, etc.)
+    RewriteRule ^\..* - [F,L]
+    RewriteRule (^|/)\. - [F,L]
+
+    # Block sensitive extensions (backups, sql dumps, logs, scripts)
+    RewriteRule \.(bak|backup|sql|log|ini|conf|sh|bat|ps1|vbs|lock|md)$ - [F,L]
+
+    # PWA & Asset routing to index.php if physical file does not exist
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteRule ^(icons/.*|icon-.*\.png|apple-touch-icon.*\.png|favicon\.ico|manifest\.json|manifest\.webmanifest|sw\.js)$ index.php [QSA,L]
 </IfModule>
+
+# 3. Extra layer: Match-based denial for sensitive files
+<FilesMatch "^(\.env|\.git|\.agents|composer\.|package\.|.*\.sql|.*\.bak|.*\.log|.*\.ps1|.*\.bat)">
+    <IfModule mod_authz_core.c>
+        Require all denied
+    </IfModule>
+    <IfModule !mod_authz_core.c>
+        Order allow,deny
+        Deny from all
+    </IfModule>
+</FilesMatch>

@@ -4,6 +4,29 @@
 //  Made by Arnolfo Reyes Asidoy Jr.
 // ═══════════════════════════════════════════════════
 
+// ── DEFENSE-IN-DEPTH: SERVER & SENSITIVE PATH SHIELD ──
+ini_set('display_errors', '0');
+ini_set('log_errors', '1');
+@header_remove('X-Powered-By');
+
+$__reqUri = $_SERVER['REQUEST_URI'] ?? '';
+$__rawPath = parse_url($__reqUri, PHP_URL_PATH) ?? '';
+if (preg_match('#(?:^|/)\.(?:env|git|agents|htaccess)#i', $__rawPath) || preg_match('#\.(?:bak|backup|sql|log|ini|conf|sh|bat|ps1|vbs)$#i', $__rawPath)) {
+    http_response_code(403);
+    echo '403 Forbidden';
+    exit;
+}
+
+header('X-Frame-Options: SAMEORIGIN');
+header('X-Content-Type-Options: nosniff');
+header('Referrer-Policy: strict-origin-when-cross-origin');
+header('X-XSS-Protection: 1; mode=block');
+header('Permissions-Policy: camera=(self), microphone=(), geolocation=()');
+$__isHttps = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') || (($_SERVER['HTTP_X_FORWARDED_PROTO'] ?? '') === 'https');
+if ($__isHttps) {
+    header('Strict-Transport-Security: max-age=31536000; includeSubDomains');
+}
+
 // ── OUTPUT COMPRESSION ──
 // REMOVED: a prior version manually gzip-compressed every response here via
 // ob_start('ob_gzhandler') for speed. On Render specifically, the platform's
@@ -247,6 +270,8 @@ if (str_ends_with($reqPathLower, 'favicon.ico')) {
 }
 
 $__isHttps = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') || (($_SERVER['HTTP_X_FORWARDED_PROTO'] ?? '') === 'https');
+ini_set('session.use_strict_mode', '1');
+ini_set('session.use_only_cookies', '1');
 session_set_cookie_params([
     'lifetime' => 30 * 24 * 3600,
     'path'     => '/',
@@ -1788,7 +1813,17 @@ const LOGIN_LOCKOUT_MINUTES = 15;
 
 function clientIp(): string
 {
-    return $_SERVER['HTTP_X_FORWARDED_FOR'] ?? $_SERVER['REMOTE_ADDR'] ?? 'unknown';
+    $raw = $_SERVER['HTTP_X_FORWARDED_FOR'] ?? $_SERVER['REMOTE_ADDR'] ?? '127.0.0.1';
+    if (str_contains($raw, ',')) {
+        $parts = explode(',', $raw);
+        $raw = trim($parts[0]);
+    }
+    $raw = trim($raw);
+    if (filter_var($raw, FILTER_VALIDATE_IP, FILTER_FLAG_IPV4 | FILTER_FLAG_IPV6)) {
+        return $raw;
+    }
+    $remote = trim((string)($_SERVER['REMOTE_ADDR'] ?? '127.0.0.1'));
+    return filter_var($remote, FILTER_VALIDATE_IP) ? $remote : '127.0.0.1';
 }
 
 // Returns minutes remaining locked out, or 0 if not currently locked.
@@ -2250,7 +2285,7 @@ if (isset($_GET['api'])) {
     // header (see apiPost() in the frontend) rather than in the JSON body,
     // so every mutating call is covered from one place instead of adding it
     // to dozens of individual $body[...] payloads.
-    if ($_SERVER['REQUEST_METHOD'] === 'POST' && !csrfValid($_SERVER['HTTP_X_CSRF_TOKEN'] ?? null)) {
+    if (in_array($_SERVER['REQUEST_METHOD'], ['POST', 'PUT', 'DELETE', 'PATCH'], true) && !csrfValid($_SERVER['HTTP_X_CSRF_TOKEN'] ?? null)) {
         json(false, null, 'Your session expired — please refresh the page and try again.');
     }
 
@@ -3704,6 +3739,7 @@ if (isset($_GET['api'])) {
                 break;
 
             case 'save_settings':
+                if ($role !== 'owner') json(false, null, 'Unauthorized — only store owner can update settings');
                 $st = $db->prepare("INSERT INTO settings(store_id,key,value) VALUES(?,?,?) ON CONFLICT (store_id,key) DO UPDATE SET value=EXCLUDED.value");
                 // shop_address/shop_tin/terminal_id are new, purely additive keys for
                 // the redesigned printed receipt header (BIR-style store details) —
@@ -3763,12 +3799,7 @@ if (isset($_GET['api'])) {
                 break;
 
             case 'upload_shop_logo':
-                // Shown on the Login page, the nav bar, and as the browser tab
-                // favicon — validated the same strict way as product photos (real
-                // image bytes, allowed type, size/dimension caps), never trusting
-                // the client's claimed file type. Only Owners should be doing this,
-                // but role-gating settings changes isn't this endpoint's job here —
-                // it matches how the rest of save_settings already works.
+                if ($role !== 'owner') json(false, null, 'Unauthorized — only store owner can update shop logo');
                 if (empty($body['image'])) json(false, null, 'No image provided');
                 $validated = decodeValidatedImage($body['image']);
                 if (!$validated) json(false, null, 'That photo could not be used — please choose a valid JPG, PNG, WEBP, or GIF image under 5MB.');
@@ -3792,6 +3823,7 @@ if (isset($_GET['api'])) {
                 break;
 
             case 'remove_shop_logo':
+                if ($role !== 'owner') json(false, null, 'Unauthorized — only store owner can remove shop logo');
                 $rmSid = currentStoreId();
                 $oldLogoStmt2 = $db->prepare("SELECT value FROM settings WHERE store_id=? AND key='shop_logo'");
                 $oldLogoStmt2->execute([$rmSid]);
@@ -4076,7 +4108,7 @@ if (isset($_GET['api'])) {
                 $duOwnCheck = $db->prepare("SELECT id FROM users WHERE id=? AND store_id=?");
                 $duOwnCheck->execute([$id, currentStoreId()]);
                 if (!$duOwnCheck->fetch()) json(false, null, 'User not found');
-                $db->prepare("DELETE FROM users WHERE id=?")->execute([$id]);
+                $db->prepare("DELETE FROM users WHERE id=? AND store_id=?")->execute([$id, currentStoreId()]);
                 json(true, ['ok' => true]);
                 break;
 
@@ -5127,10 +5159,12 @@ if (isset($_GET['api'])) {
         // file in your file manager if you need the file/line too).
         error_log('[API ERROR] action=' . $action . ' : ' . $e->getMessage()
             . ' @ ' . $e->getFile() . ':' . $e->getLine());
-        // Return the real message to the frontend so the toast is useful
-        // instead of a bare "Server error (500)". Remove/shorten this in
-        // production if you don't want DB details visible to the browser.
-        json(false, null, 'Server error: ' . $e->getMessage());
+        // Sanitize internal database/PDO errors to prevent disclosing schema details or credentials
+        $msg = $e->getMessage();
+        if (stripos($msg, 'SQLSTATE') !== false || stripos($msg, 'PDO') !== false || stripos($msg, 'postgres') !== false || stripos($msg, 'connection') !== false) {
+            json(false, null, 'A database error occurred. Please try again.');
+        }
+        json(false, null, 'Server error: ' . htmlspecialchars($msg, ENT_QUOTES, 'UTF-8'));
     }
 }
 
@@ -5332,7 +5366,7 @@ if ($page === 'forgot' && $_SERVER['REQUEST_METHOD'] === 'POST') {
                 if ($user) {
                     $token = bin2hex(random_bytes(32));
                     $expires = date('Y-m-d H:i:s', strtotime('+1 hour'));
-                    db()->prepare("UPDATE users SET reset_token=?, reset_expires=? WHERE id=?")->execute([$token, $expires, $user['id']]);
+                    db()->prepare("UPDATE users SET reset_token=?, reset_expires=? WHERE id=?")->execute([hash('sha256', $token), $expires, $user['id']]);
                     // Render/other proxies terminate TLS for us, so HTTPS is only
                     // visible in the X-Forwarded-Proto header — checking
                     // $_SERVER['HTTPS'] alone would produce http:// reset links
@@ -5384,8 +5418,8 @@ $resetTokenValid = false;
 $resetToken = $_GET['token'] ?? ($_POST['token'] ?? '');
 if ($page === 'reset') {
     if ($resetToken) {
-        $stmt = db()->prepare("SELECT id FROM users WHERE reset_token=? AND reset_expires > CURRENT_TIMESTAMP LIMIT 1");
-        $stmt->execute([$resetToken]);
+        $stmt = db()->prepare("SELECT id FROM users WHERE (reset_token=? OR reset_token=?) AND reset_expires > CURRENT_TIMESTAMP LIMIT 1");
+        $stmt->execute([$resetToken, hash('sha256', $resetToken)]);
         $resetTokenValid = (bool)$stmt->fetch();
     }
     if ($_SERVER['REQUEST_METHOD'] === 'POST' && $resetTokenValid) {
@@ -5398,8 +5432,8 @@ if ($page === 'reset') {
         } elseif ($newPw !== $confirmPw) {
             $resetError = 'Passwords do not match.';
         } else {
-            db()->prepare("UPDATE users SET password=?, reset_token=NULL, reset_expires=NULL WHERE reset_token=?")
-                ->execute([password_hash($newPw, PASSWORD_DEFAULT), $resetToken]);
+            db()->prepare("UPDATE users SET password=?, reset_token=NULL, reset_expires=NULL WHERE (reset_token=? OR reset_token=?)")
+                ->execute([password_hash($newPw, PASSWORD_DEFAULT), $resetToken, hash('sha256', $resetToken)]);
             $resetSuccess = true;
             $resetTokenValid = false;
         }
