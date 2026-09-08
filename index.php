@@ -4265,7 +4265,7 @@ if (isset($_GET['api'])) {
                 // picking the wrong one silently forecasted for a model that may not
                 // exist. This pulls the real list straight from the API.
                 //
-                // ?refresh=1 bypasses the 1-hour cache — used by the "🔄 Refresh"
+                // ?refresh=1 bypasses the 1-hour cache — used by the "Refresh"
                 // button so a stale/incomplete list (e.g. cached during a Render
                 // cold-start timeout) doesn't stick around for the full hour.
                 $forceRefresh = !empty($_GET['refresh']);
@@ -11187,18 +11187,18 @@ $seoImage = (!empty($storeSettings['shop_logo']) && strpos($storeSettings['shop_
                 <?= renderShopNameHtml($storeSettings['shop_name'], 'b') ?>
             </a>
             <div class="nav-links">
-                <a href="?page=dashboard" class="nav-link <?= $page === 'dashboard' ? 'active' : '' ?>">🏠 Dashboard</a>
+                <a href="?page=dashboard" class="nav-link <?= $page === 'dashboard' ? 'active' : '' ?>"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" style="margin-right:3px;"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>Dashboard</a>
                 <?php if (!$isCashierRole): ?>
-                    <a href="?page=products" class="nav-link <?= $page === 'products' ? 'active' : '' ?>">📦 Products</a>
-                    <a href="?page=warehouse" class="nav-link <?= $page === 'warehouse' ? 'active' : '' ?>">🏭 Warehouse</a>
+                    <a href="?page=products" class="nav-link <?= $page === 'products' ? 'active' : '' ?>"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" style="margin-right:3px;"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg>Products</a>
+                    <a href="?page=warehouse" class="nav-link <?= $page === 'warehouse' ? 'active' : '' ?>"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" style="margin-right:3px;"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>Warehouse</a>
                 <?php endif; ?>
                 <?php if (!$isCashierRole): ?>
-                    <a href="?page=sales" class="nav-link <?= $page === 'sales' ? 'active' : '' ?>">🧾 Sales</a>
+                    <a href="?page=sales" class="nav-link <?= $page === 'sales' ? 'active' : '' ?>"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" style="margin-right:3px;"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>Sales</a>
                 <?php endif; ?>
                 <?php if (!$isCashierRole): ?>
-                    <a href="?page=analytics" class="nav-link <?= $page === 'analytics' ? 'active' : '' ?>">📊 Analytics</a>
-                    <a href="?page=forecast" class="nav-link <?= $page === 'forecast' ? 'active' : '' ?>">🔮 Forecast</a>
-                    <a href="?page=settings" class="nav-link <?= $page === 'settings' ? 'active' : '' ?>">⚙️ Settings</a>
+                    <a href="?page=analytics" class="nav-link <?= $page === 'analytics' ? 'active' : '' ?>"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" style="margin-right:3px;"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>Analytics</a>
+                    <a href="?page=forecast" class="nav-link <?= $page === 'forecast' ? 'active' : '' ?>"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" style="margin-right:3px;"><path d="M23 6l-9.5 9.5-5-5L1 18"/><polyline points="17 6 23 6 23 12"/></svg>Forecast</a>
+                    <a href="?page=settings" class="nav-link <?= $page === 'settings' ? 'active' : '' ?>"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" style="margin-right:3px;"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>Settings</a>
                 <?php endif; ?>
             </div>
             <!-- Light/Dark app-theme toggle — see toggleTheme() in the main
@@ -11214,7 +11214,7 @@ $seoImage = (!empty($storeSettings['shop_logo']) && strpos($storeSettings['shop_
            to ?page=logout itself once the drawer count is submitted
            (see submitShiftModal()'s close-shift branch). This keeps "No Count,
            No Transaction" from being bypassed by simply logging out mid-shift. -->
-                    <button class="btn btn-secondary btn-sm nav-logout-btn" onclick="requestEndShift()">🔚 End Shift</button>
+                    <button class="btn btn-secondary btn-sm nav-logout-btn" onclick="requestEndShift()">End Shift</button>
                 <?php else: ?>
                     <a href="?page=logout" class="btn btn-secondary btn-sm nav-logout-btn" onclick="return attemptLogout(event)">Logout</a>
                 <?php endif; ?>
@@ -11325,19 +11325,19 @@ $seoImage = (!empty($storeSettings['shop_logo']) && strpos($storeSettings['shop_
         <div class="modal-overlay" id="shift-modal">
             <div class="modal" style="max-width:540px;">
                 <div class="modal-header">
-                    <span class="modal-title" id="shift-modal-title" style="font-size:1.35rem;">💰 Cash Count</span>
+                    <span class="modal-title" id="shift-modal-title" style="font-size:1.35rem;">Cash Count</span>
                 </div>
                 <p style="font-size:.92rem;color:var(--text2);margin-bottom:14px;" id="shift-modal-sub"></p>
 
                 <div id="shift-drawer-banner" style="display:flex;align-items:center;justify-content:space-between;background:rgba(37,99,235,0.08);border:1px solid rgba(37,99,235,0.25);border-radius:8px;padding:10px 14px;margin-bottom:14px;">
                     <div style="display:flex;align-items:center;gap:8px;">
-                        <span style="font-size:1.2rem;">🔓</span>
+                        
                         <div>
                             <div style="font-size:.82rem;font-weight:700;color:var(--text1);" id="shift-drawer-status">Cash drawer released for cash count</div>
                             <div style="font-size:.72rem;color:var(--text3);">Hardware pulse sent to cash drawer</div>
                         </div>
                     </div>
-                    <button type="button" class="btn btn-secondary btn-sm" onclick="openCashDrawer(false)" style="font-size:.78rem;padding:5px 12px;display:flex;align-items:center;gap:5px;">🔓 Pop Drawer</button>
+                    <button type="button" class="btn btn-secondary btn-sm" onclick="openCashDrawer(false)" style="font-size:.78rem;padding:5px 12px;display:flex;align-items:center;gap:5px;">Pop Drawer</button>
                 </div>
 
                 <div style="display:grid;grid-template-columns:1fr 92px 112px;gap:8px 12px;align-items:center;font-size:.82rem;font-weight:800;color:var(--text3);text-transform:uppercase;letter-spacing:.04em;margin-bottom:8px;">
@@ -11781,7 +11781,7 @@ $seoImage = (!empty($storeSettings['shop_logo']) && strpos($storeSettings['shop_
                 <div class="lp-steps">
                     <button type="button" class="lp-step" onclick="openStepGuide(0)" aria-haspopup="dialog">
                         <div class="lp-step-num">1</div>
-                        <div class="lp-step-icon">📝</div>
+                        <div class="lp-step-icon"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></div>
                         <h3>Create Your Account</h3>
                         <p>Sign up with your name, email, and a password. This becomes your own admin account — separate from every other store.</p>
                         <div class="lp-step-learn">Learn more →</div>
@@ -11789,7 +11789,7 @@ $seoImage = (!empty($storeSettings['shop_logo']) && strpos($storeSettings['shop_
                     </button>
                     <button type="button" class="lp-step" onclick="openStepGuide(1)" aria-haspopup="dialog">
                         <div class="lp-step-num">2</div>
-                        <div class="lp-step-icon">📦</div>
+                        <div class="lp-step-icon"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg></div>
                         <h3>Add Your Products</h3>
                         <p>Enter your items with prices, barcodes, and categories — or import stock straight into your Warehouse.</p>
                         <div class="lp-step-learn">Learn more →</div>
@@ -11797,7 +11797,7 @@ $seoImage = (!empty($storeSettings['shop_logo']) && strpos($storeSettings['shop_
                     </button>
                     <button type="button" class="lp-step" onclick="openStepGuide(2)" aria-haspopup="dialog">
                         <div class="lp-step-num">3</div>
-                        <div class="lp-step-icon">🏭</div>
+                        <div class="lp-step-icon"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg></div>
                         <h3>Stock Your Warehouse</h3>
                         <p>Log deliveries, track batches and expiry dates, and move stock between your warehouse and the store shelf.</p>
                         <div class="lp-step-learn">Learn more →</div>
@@ -11805,7 +11805,7 @@ $seoImage = (!empty($storeSettings['shop_logo']) && strpos($storeSettings['shop_
                     </button>
                     <button type="button" class="lp-step" onclick="openStepGuide(3)" aria-haspopup="dialog">
                         <div class="lp-step-num">4</div>
-                        <div class="lp-step-icon">🧾</div>
+                        <div class="lp-step-icon"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg></div>
                         <h3>Start Selling</h3>
                         <p>Ring up sales from the Dashboard, scan barcodes, take payments, and watch your reports update in real time.</p>
                         <div class="lp-step-learn">Learn more →</div>
@@ -11838,37 +11838,37 @@ $seoImage = (!empty($storeSettings['shop_logo']) && strpos($storeSettings['shop_
                 </div>
                 <div class="lp-features">
                     <button type="button" class="lp-feature" onclick="openFeatureGuide(0)" aria-haspopup="dialog">
-                        <div class="lp-feature-icon">🏠</div>
+                        <div class="lp-feature-icon"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg></div>
                         <h4>Dashboard</h4>
                         <p>A daily snapshot of sales, low stock, and top sellers the moment you log in.</p>
                         <div class="lp-feature-learn">See how it works →</div>
                     </button>
                     <button type="button" class="lp-feature" onclick="openFeatureGuide(1)" aria-haspopup="dialog">
-                        <div class="lp-feature-icon">📦</div>
+                        <div class="lp-feature-icon"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg></div>
                         <h4>Products</h4>
                         <p>Full catalog management — pricing, categories, barcodes, and photos.</p>
                         <div class="lp-feature-learn">See how it works →</div>
                     </button>
                     <button type="button" class="lp-feature" onclick="openFeatureGuide(2)" aria-haspopup="dialog">
-                        <div class="lp-feature-icon">🏭</div>
+                        <div class="lp-feature-icon"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg></div>
                         <h4>Warehouse</h4>
                         <p>Batch-level stock tracking with expiry dates and restock/pull-out logs.</p>
                         <div class="lp-feature-learn">See how it works →</div>
                     </button>
                     <button type="button" class="lp-feature" onclick="openFeatureGuide(3)" aria-haspopup="dialog">
-                        <div class="lp-feature-icon">🧾</div>
+                        <div class="lp-feature-icon"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg></div>
                         <h4>Sales</h4>
                         <p>Fast checkout, order history, and per-item voids when something goes wrong.</p>
                         <div class="lp-feature-learn">See how it works →</div>
                     </button>
                     <button type="button" class="lp-feature" onclick="openFeatureGuide(4)" aria-haspopup="dialog">
-                        <div class="lp-feature-icon">📊</div>
+                        <div class="lp-feature-icon"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg></div>
                         <h4>Analytics</h4>
                         <p>See which products sell together and where your revenue is really coming from.</p>
                         <div class="lp-feature-learn">See how it works →</div>
                     </button>
                     <button type="button" class="lp-feature" onclick="openFeatureGuide(5)" aria-haspopup="dialog">
-                        <div class="lp-feature-icon">🔮</div>
+                        <div class="lp-feature-icon"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 6l-9.5 9.5-5-5L1 18"/><polyline points="17 6 23 6 23 12"/></svg></div>
                         <h4>Forecast</h4>
                         <p>AI-powered demand predictions so you know what to restock before you run out.</p>
                         <div class="lp-feature-learn">See how it works →</div>
@@ -11910,7 +11910,7 @@ $seoImage = (!empty($storeSettings['shop_logo']) && strpos($storeSettings['shop_
             // whichever step is active and step forward/back without a
             // page reload.
             const STEP_GUIDES = [{
-                    icon: '📝',
+                    icon: '',
                     title: 'Create Your Account',
                     body: `
                     <p style="margin-bottom:14px;">Setting up your own store takes under a minute — no approval wait, no setup call.</p>
@@ -11919,11 +11919,11 @@ $seoImage = (!empty($storeSettings['shop_logo']) && strpos($storeSettings['shop_
                         <li style="margin-bottom:10px;">Enter your name, a working email address, and choose a password. Your email is used for login and for password-reset if you ever forget it.</li>
                         <li style="margin-bottom:10px;">Submit the form — you're instantly signed in as the <b style="color:#fff;">admin</b> of your own brand-new store.</li>
                     </ol>
-                    <p style="margin:0;padding:12px 14px;background:rgba(77,163,255,.1);border:1px solid rgba(77,163,255,.25);border-radius:10px;font-size:.83rem;">💡 Every store's data — products, sales, warehouse — is completely separate. Nothing you enter is ever visible to other stores using this same system.</p>
+                    <p style="margin:0;padding:12px 14px;background:rgba(77,163,255,.1);border:1px solid rgba(77,163,255,.25);border-radius:10px;font-size:.83rem;">Every store's data — products, sales, warehouse — is completely separate. Nothing you enter is ever visible to other stores using this same system.</p>
                 `
                 },
                 {
-                    icon: '📦',
+                    icon: '',
                     title: 'Add Your Products',
                     body: `
                     <p style="margin-bottom:14px;">Once you're in, head to the <b style="color:#fff;">Products</b> tab to build your catalog.</p>
@@ -11933,11 +11933,11 @@ $seoImage = (!empty($storeSettings['shop_logo']) && strpos($storeSettings['shop_
                         <li style="margin-bottom:10px;">Add a photo so items are easy to recognize at checkout.</li>
                         <li style="margin-bottom:10px;">Repeat for each item, or bring stock in through the Warehouse tab (next step) if you're starting with a delivery.</li>
                     </ol>
-                    <p style="margin:0;padding:12px 14px;background:rgba(77,163,255,.1);border:1px solid rgba(77,163,255,.25);border-radius:10px;font-size:.83rem;">💡 You can set multi-tier wholesale pricing per product too — different prices for different quantity breaks.</p>
+                    <p style="margin:0;padding:12px 14px;background:rgba(77,163,255,.1);border:1px solid rgba(77,163,255,.25);border-radius:10px;font-size:.83rem;">You can set multi-tier wholesale pricing per product too — different prices for different quantity breaks.</p>
                 `
                 },
                 {
-                    icon: '🏭',
+                    icon: '',
                     title: 'Stock Your Warehouse',
                     body: `
                     <p style="margin-bottom:14px;">The <b style="color:#fff;">Warehouse</b> tab is where incoming stock is tracked before it reaches the store shelf.</p>
@@ -11946,11 +11946,11 @@ $seoImage = (!empty($storeSettings['shop_logo']) && strpos($storeSettings['shop_
                         <li style="margin-bottom:10px;">Each delivery is tracked as its own <b style="color:#fff;">batch</b>, so you always know which stock is oldest and what's expiring soonest.</li>
                         <li style="margin-bottom:10px;">When you're ready to sell it, use <b style="color:#fff;">Transfer to Store</b> to move quantity from the warehouse onto the sales floor.</li>
                     </ol>
-                    <p style="margin:0;padding:12px 14px;background:rgba(77,163,255,.1);border:1px solid rgba(77,163,255,.25);border-radius:10px;font-size:.83rem;">💡 Low-stock and expiring-soon alerts show up automatically on your Dashboard — no manual checking needed.</p>
+                    <p style="margin:0;padding:12px 14px;background:rgba(77,163,255,.1);border:1px solid rgba(77,163,255,.25);border-radius:10px;font-size:.83rem;">Low-stock and expiring-soon alerts show up automatically on your Dashboard — no manual checking needed.</p>
                 `
                 },
                 {
-                    icon: '🧾',
+                    icon: '',
                     title: 'Start Selling',
                     body: `
                     <p style="margin-bottom:14px;">You're ready to ring up your first sale from the <b style="color:#fff;">Dashboard</b>.</p>
@@ -11960,7 +11960,7 @@ $seoImage = (!empty($storeSettings['shop_logo']) && strpos($storeSettings['shop_
                         <li style="margin-bottom:10px;">Take payment and confirm — the sale is recorded instantly and stock is deducted.</li>
                         <li style="margin-bottom:10px;">Check <b style="color:#fff;">Analytics</b> and <b style="color:#fff;">Forecast</b> any time to see your best sellers and what to restock next.</li>
                     </ol>
-                    <p style="margin:0;padding:12px 14px;background:rgba(77,163,255,.1);border:1px solid rgba(77,163,255,.25);border-radius:10px;font-size:.83rem;">💡 If the power or internet drops mid-sale, your cart is saved automatically and syncs the moment you're back online.</p>
+                    <p style="margin:0;padding:12px 14px;background:rgba(77,163,255,.1);border:1px solid rgba(77,163,255,.25);border-radius:10px;font-size:.83rem;">If the power or internet drops mid-sale, your cart is saved automatically and syncs the moment you're back online.</p>
                 `
                 }
             ];
@@ -12000,7 +12000,7 @@ $seoImage = (!empty($storeSettings['shop_logo']) && strpos($storeSettings['shop_
             // them), but a separate array/modal since these describe
             // existing pages rather than a linear onboarding sequence.
             const FEATURE_GUIDES = [{
-                    icon: '🏠',
+                    icon: '',
                     title: 'Dashboard',
                     body: `
                     <p style="margin-bottom:14px;">Your Dashboard is the first thing you see after logging in — a live snapshot of how the store is doing right now.</p>
@@ -12010,11 +12010,11 @@ $seoImage = (!empty($storeSettings['shop_logo']) && strpos($storeSettings['shop_
                         <li style="margin-bottom:10px;">The <b style="color:#fff;">AI-Powered Demand Forecasting</b> and <b style="color:#fff;">Combo Recommendations</b> panels link straight into Forecast and Analytics for deeper detail.</li>
                         <li style="margin-bottom:10px;">Use <b style="color:#fff;">Void</b> if you need to reverse a recent sale — every void is logged for your records.</li>
                     </ol>
-                    <p style="margin:0;padding:12px 14px;background:rgba(77,163,255,.1);border:1px solid rgba(77,163,255,.25);border-radius:10px;font-size:.83rem;">💡 This is also where cashiers spend most of their shift — it doubles as the checkout screen.</p>
+                    <p style="margin:0;padding:12px 14px;background:rgba(77,163,255,.1);border:1px solid rgba(77,163,255,.25);border-radius:10px;font-size:.83rem;">This is also where cashiers spend most of their shift — it doubles as the checkout screen.</p>
                 `
                 },
                 {
-                    icon: '📦',
+                    icon: '',
                     title: 'Products',
                     body: `
                     <p style="margin-bottom:14px;">Products is your full catalog — everything you sell, with pricing and details in one place.</p>
@@ -12024,11 +12024,11 @@ $seoImage = (!empty($storeSettings['shop_logo']) && strpos($storeSettings['shop_
                         <li style="margin-bottom:10px;">Search, filter by category, or scan a barcode to jump straight to a product and edit it.</li>
                         <li style="margin-bottom:10px;">Low-stock items are flagged right in the list, so you know what needs restocking before it runs out.</li>
                     </ol>
-                    <p style="margin:0;padding:12px 14px;background:rgba(77,163,255,.1);border:1px solid rgba(77,163,255,.25);border-radius:10px;font-size:.83rem;">💡 A product's stock count updates automatically as sales happen and warehouse stock is transferred in.</p>
+                    <p style="margin:0;padding:12px 14px;background:rgba(77,163,255,.1);border:1px solid rgba(77,163,255,.25);border-radius:10px;font-size:.83rem;">A product's stock count updates automatically as sales happen and warehouse stock is transferred in.</p>
                 `
                 },
                 {
-                    icon: '🏭',
+                    icon: '',
                     title: 'Warehouse',
                     body: `
                     <p style="margin-bottom:14px;">Warehouse tracks stock before it ever reaches the sales floor — deliveries, batches, and expiry dates.</p>
@@ -12038,11 +12038,11 @@ $seoImage = (!empty($storeSettings['shop_logo']) && strpos($storeSettings['shop_
                         <li style="margin-bottom:10px;">Use <b style="color:#fff;">Transfer to Store</b> to move a quantity from the warehouse onto the shelf, ready to sell.</li>
                         <li style="margin-bottom:10px;">Record <b style="color:#fff;">pull-outs</b> for damaged, expired, or returned stock, with a reason logged for your records.</li>
                     </ol>
-                    <p style="margin:0;padding:12px 14px;background:rgba(77,163,255,.1);border:1px solid rgba(77,163,255,.25);border-radius:10px;font-size:.83rem;">💡 Restock and pull-out dates are tracked per batch, giving you a full paper trail for every item that came through your stockroom.</p>
+                    <p style="margin:0;padding:12px 14px;background:rgba(77,163,255,.1);border:1px solid rgba(77,163,255,.25);border-radius:10px;font-size:.83rem;">Restock and pull-out dates are tracked per batch, giving you a full paper trail for every item that came through your stockroom.</p>
                 `
                 },
                 {
-                    icon: '🧾',
+                    icon: '',
                     title: 'Sales',
                     body: `
                     <p style="margin-bottom:14px;">Sales is your order history — every transaction the store has ever recorded, searchable and reviewable.</p>
@@ -12052,11 +12052,11 @@ $seoImage = (!empty($storeSettings['shop_logo']) && strpos($storeSettings['shop_
                         <li style="margin-bottom:10px;">Use <b style="color:#fff;">partial void</b> to reverse individual items from a completed sale rather than the whole order — every void is logged with a reason, and unusual patterns are flagged for review.</li>
                         <li style="margin-bottom:10px;">At the end of a shift, the <b style="color:#fff;">Z-read shift report</b> gives a full cash-drawer summary for reconciliation.</li>
                     </ol>
-                    <p style="margin:0;padding:12px 14px;background:rgba(77,163,255,.1);border:1px solid rgba(77,163,255,.25);border-radius:10px;font-size:.83rem;">💡 Nothing here can be silently edited — every change leaves an audit trail.</p>
+                    <p style="margin:0;padding:12px 14px;background:rgba(77,163,255,.1);border:1px solid rgba(77,163,255,.25);border-radius:10px;font-size:.83rem;">Nothing here can be silently edited — every change leaves an audit trail.</p>
                 `
                 },
                 {
-                    icon: '📊',
+                    icon: '',
                     title: 'Analytics',
                     body: `
                     <p style="margin-bottom:14px;">Analytics turns your sales history into insight — what's actually driving revenue, and what sells together.</p>
@@ -12065,11 +12065,11 @@ $seoImage = (!empty($storeSettings['shop_logo']) && strpos($storeSettings['shop_
                         <li style="margin-bottom:10px;">The <b style="color:#fff;">Combo Recommendations</b> panel finds products that are frequently bought together, so you can bundle or place them side-by-side.</li>
                         <li style="margin-bottom:10px;">Break down revenue by category, time of day, or cashier to spot patterns.</li>
                     </ol>
-                    <p style="margin:0;padding:12px 14px;background:rgba(77,163,255,.1);border:1px solid rgba(77,163,255,.25);border-radius:10px;font-size:.83rem;">💡 Use Analytics before restocking or running a promo — it shows you what's actually worth pushing.</p>
+                    <p style="margin:0;padding:12px 14px;background:rgba(77,163,255,.1);border:1px solid rgba(77,163,255,.25);border-radius:10px;font-size:.83rem;">Use Analytics before restocking or running a promo — it shows you what's actually worth pushing.</p>
                 `
                 },
                 {
-                    icon: '🔮',
+                    icon: '',
                     title: 'Forecast',
                     body: `
                     <p style="margin-bottom:14px;">Forecast uses your sales history to predict what you'll need to restock — before you actually run out.</p>
@@ -12078,7 +12078,7 @@ $seoImage = (!empty($storeSettings['shop_logo']) && strpos($storeSettings['shop_
                         <li style="margin-bottom:10px;">Items likely to run low are flagged with a suggested restock quantity.</li>
                         <li style="margin-bottom:10px;">Forecasts improve automatically the longer you use the system — more sales history means more accurate predictions.</li>
                     </ol>
-                    <p style="margin:0;padding:12px 14px;background:rgba(77,163,255,.1);border:1px solid rgba(77,163,255,.25);border-radius:10px;font-size:.83rem;">💡 Check Forecast before placing a supplier order — it's the fastest way to avoid both stockouts and overstocking.</p>
+                    <p style="margin:0;padding:12px 14px;background:rgba(77,163,255,.1);border:1px solid rgba(77,163,255,.25);border-radius:10px;font-size:.83rem;">Check Forecast before placing a supplier order — it's the fastest way to avoid both stockouts and overstocking.</p>
                 `
                 }
             ];
@@ -12131,12 +12131,12 @@ $seoImage = (!empty($storeSettings['shop_logo']) && strpos($storeSettings['shop_
                     <a href="?page=landing" style="display:inline-block;margin-top:8px;font-size:.8rem;color:var(--text3);text-decoration:none;border-bottom:1px dashed var(--text3);">New here? See how it works →</a>
                 </div>
                 <div class="login-card">
-                    <h2 style="font-size:1.05rem;font-weight:600;margin-bottom:18px;">Welcome back 👋</h2>
+                    <h2 style="font-size:1.05rem;font-weight:600;margin-bottom:18px;">Welcome back</h2>
                     <?php if ($signupFlash): ?>
-                        <div class="error-box" style="background:rgba(45,122,58,.08);border-color:rgba(45,122,58,.25);color:var(--green);">✅ Congratulations! Your account was created successfully. You can now log in.</div>
+                        <div class="error-box" style="background:rgba(45,122,58,.08);border-color:rgba(45,122,58,.25);color:var(--green);">Congratulations! Your account was created successfully. You can now log in.</div>
                     <?php endif; ?>
                     <?php if ($loginError): ?>
-                        <div class="error-box">⚠️ <?= htmlspecialchars($loginError) ?></div>
+                        <div class="error-box"><?= htmlspecialchars($loginError) ?></div>
                     <?php endif; ?>
                     <form method="POST" action="?page=login">
                         <input type="hidden" name="csrf_token" value="<?= htmlspecialchars(CSRF_TOKEN) ?>" />
@@ -12197,14 +12197,14 @@ $seoImage = (!empty($storeSettings['shop_logo']) && strpos($storeSettings['shop_
                 </div>
                 <div class="login-card">
                     <?php if ($signupSuccess): ?>
-                        <h2 style="font-size:1.05rem;font-weight:600;margin-bottom:18px;">Account created 🎉</h2>
-                        <div class="error-box" style="background:rgba(45,122,58,.08);border-color:rgba(45,122,58,.25);color:var(--green);">✅ Your account is ready. Sign in with your new username and password.</div>
+                        <h2 style="font-size:1.05rem;font-weight:600;margin-bottom:18px;">Account created</h2>
+                        <div class="error-box" style="background:rgba(45,122,58,.08);border-color:rgba(45,122,58,.25);color:var(--green);">Your account is ready. Sign in with your new username and password.</div>
                         <a href="?page=login" class="btn btn-primary btn-full btn-lg" style="margin-top:6px;text-align:center;text-decoration:none;display:block;">Go to Sign In →</a>
                     <?php else: ?>
-                        <h2 style="font-size:1.05rem;font-weight:600;margin-bottom:18px;">Sign up 👋</h2>
+                        <h2 style="font-size:1.05rem;font-weight:600;margin-bottom:18px;">Sign up</h2>
                         <p style="font-size:.82rem;color:var(--text2);margin-bottom:16px;">This creates a full admin account for managing your own store. An email is required so you can recover your account later if you forget your password.</p>
                         <?php if ($signupErrors): ?>
-                            <div class="error-box">⚠️ <?= implode('<br>⚠️ ', array_map('htmlspecialchars', $signupErrors)) ?></div>
+                            <div class="error-box"><?= implode('<br>', array_map('htmlspecialchars', $signupErrors)) ?></div>
                         <?php endif; ?>
                         <form method="POST" action="?page=signup">
                             <input type="hidden" name="csrf_token" value="<?= htmlspecialchars(CSRF_TOKEN) ?>" />
@@ -12279,24 +12279,24 @@ $seoImage = (!empty($storeSettings['shop_logo']) && strpos($storeSettings['shop_
             <div style="position:absolute;top:-10%;left:-15%;width:60%;height:120%;background:radial-gradient(circle, rgba(47,127,245,.25) 0%, transparent 70%);pointer-events:none;"></div>
             <div class="login-wrap">
                 <div class="login-logo">
-                    <span class="icon">🔑</span>
+                    <span class="icon"><svg viewBox="0 0 24 24" width="32" height="32" fill="none" stroke="currentColor" stroke-width="2"><circle cx="7.5" cy="15.5" r="5.5"/><path d="M12 11l8-8m-3 3l2 2m-4 0l2 2"/></svg></span>
                     <h1><?= renderShopNameHtml($storeSettings['shop_name']) ?></h1>
                     <p>Reset your password</p>
                 </div>
                 <div class="login-card">
                     <h2 style="font-size:1.05rem;font-weight:600;margin-bottom:18px;">Forgot your password?</h2>
                     <?php if ($forgotError): ?>
-                        <div class="error-box" style="margin-bottom:12px;">⚠️ <?= htmlspecialchars($forgotError) ?></div>
+                        <div class="error-box" style="margin-bottom:12px;"><?= htmlspecialchars($forgotError) ?></div>
                     <?php endif; ?>
                     <?php if (!empty($localResetLink)): ?>
                         <div class="error-box" style="background:rgba(47,127,245,.08);border-color:rgba(47,127,245,.25);color:var(--accent);margin-bottom:12px;">
-                            💡 <strong>Local Development Reset Link:</strong><br>
+                            <strong>Local Development Reset Link:</strong><br>
                             <span style="font-size:.82rem;">Since email was not delivered or you are testing locally, you can reset directly:</span><br>
                             <a href="<?= htmlspecialchars($localResetLink) ?>" class="btn btn-primary btn-sm" style="display:inline-block;margin-top:8px;padding:6px 14px;text-decoration:none;">Click Here to Reset Password →</a>
                         </div>
                     <?php endif; ?>
                     <?php if ($forgotMsg): ?>
-                        <div class="error-box" style="background:rgba(45,122,58,.08);border-color:rgba(45,122,58,.25);color:var(--green);">✅ <?= htmlspecialchars($forgotMsg) ?></div>
+                        <div class="error-box" style="background:rgba(45,122,58,.08);border-color:rgba(45,122,58,.25);color:var(--green);"><?= htmlspecialchars($forgotMsg) ?></div>
                     <?php else: ?>
                         <p style="font-size:.83rem;color:var(--text2);margin-bottom:16px;">Enter your username or the email on your account. We'll send a reset link if it matches an account.</p>
                         <form method="POST" action="?page=forgot">
@@ -12316,7 +12316,7 @@ $seoImage = (!empty($storeSettings['shop_logo']) && strpos($storeSettings['shop_
                     <?php endif; ?>
                     <div class="login-footer"><a href="?page=login" style="color:var(--accent);text-decoration:none;font-weight:600;">← Back to Sign In</a></div>
                     <div style="margin-top:22px;padding-top:18px;border-top:1px solid var(--border);">
-                        <p style="font-size:.8rem;color:var(--text3);line-height:1.6;">🔒 We'll email a secure reset link to the address on file for that account — it expires in 1 hour, and only works once. For security, you can request up to 3 reset emails per account per hour; further requests are blocked until the hour resets. If you signed up without an email on file, ask your store admin to reset your password for you from Settings instead.</p>
+                        <p style="font-size:.8rem;color:var(--text3);line-height:1.6;">We'll email a secure reset link to the address on file for that account — it expires in 1 hour, and only works once. For security, you can request up to 3 reset emails per account per hour; further requests are blocked until the hour resets. If you signed up without an email on file, ask your store admin to reset your password for you from Settings instead.</p>
                     </div>
                 </div>
             </div>
@@ -12331,21 +12331,21 @@ $seoImage = (!empty($storeSettings['shop_logo']) && strpos($storeSettings['shop_
             <div style="position:absolute;top:-10%;left:-15%;width:60%;height:120%;background:radial-gradient(circle, rgba(47,127,245,.25) 0%, transparent 70%);pointer-events:none;"></div>
             <div class="login-wrap">
                 <div class="login-logo">
-                    <span class="icon">🔒</span>
+                    <span class="icon"><svg viewBox="0 0 24 24" width="32" height="32" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></span>
                     <h1><?= renderShopNameHtml($storeSettings['shop_name']) ?></h1>
                     <p>Choose a new password</p>
                 </div>
                 <div class="login-card">
                     <h2 style="font-size:1.05rem;font-weight:600;margin-bottom:18px;">Reset password</h2>
                     <?php if ($resetSuccess): ?>
-                        <div class="error-box" style="background:rgba(45,122,58,.08);border-color:rgba(45,122,58,.25);color:var(--green);">✅ Password updated! You can now sign in.</div>
+                        <div class="error-box" style="background:rgba(45,122,58,.08);border-color:rgba(45,122,58,.25);color:var(--green);">Password updated! You can now sign in.</div>
                         <a href="?page=login" class="btn btn-primary btn-full btn-lg" style="margin-top:6px;text-align:center;text-decoration:none;display:block;">Go to Sign In →</a>
                     <?php elseif (!$resetTokenValid): ?>
-                        <div class="error-box">⚠️ This reset link is invalid or has expired.</div>
+                        <div class="error-box">This reset link is invalid or has expired.</div>
                         <a href="?page=forgot" style="color:var(--accent);text-decoration:none;font-weight:600;font-size:.85rem;">Request a new link →</a>
                     <?php else: ?>
                         <?php if ($resetError): ?>
-                            <div class="error-box">⚠️ <?= htmlspecialchars($resetError) ?></div>
+                            <div class="error-box"><?= htmlspecialchars($resetError) ?></div>
                         <?php endif; ?>
                         <form method="POST" action="?page=reset&token=<?= htmlspecialchars($resetToken) ?>">
                             <input type="hidden" name="csrf_token" value="<?= htmlspecialchars(CSRF_TOKEN) ?>" />
@@ -12381,16 +12381,16 @@ $seoImage = (!empty($storeSettings['shop_logo']) && strpos($storeSettings['shop_
     <?php endif; ?>
 
     <!-- TRANSFER TO STORE MODAL — moves stock from Warehouse to the Store shelf.
-     Used from the Warehouse page's 🔄 row icon and the Forecast page's
+     Used from the Warehouse page's transfer row button and the Forecast page's
      "recommended restock" list. Made page-agnostic (not nested inside any
      single ?page= block) for the same reason as Void Order above — it used
      to live only inside the Analytics page's markup, so document.getElementById
-     ('transfer-modal') returned null anywhere else, and clicking 🔄 on
+     ('transfer-modal') returned null anywhere else, and clicking transfer on
      Warehouse silently did nothing (openModal() no-ops on a missing element,
      no error shown). -->
     <div class="modal-overlay" id="transfer-modal">
         <div class="modal" style="max-width:380px;">
-            <div class="modal-header"><span class="modal-title">🔄 Transfer to Store</span><button class="modal-close" onclick="closeModal('transfer-modal')">✕</button></div>
+            <div class="modal-header"><span class="modal-title">Transfer to Store</span><button class="modal-close" onclick="closeModal('transfer-modal')">✕</button></div>
             <p style="font-size:.83rem;color:var(--text2);margin-bottom:14px;">Move stock from Warehouse into the Store shelf.</p>
             <div class="form-group">
                 <label class="form-label">Product</label>
@@ -12439,7 +12439,7 @@ $seoImage = (!empty($storeSettings['shop_logo']) && strpos($storeSettings['shop_
      cashier's Dashboard-only view. -->
     <div class="modal-overlay" id="void-order-modal">
         <div class="modal" style="max-width:460px;">
-            <div class="modal-header"><span class="modal-title">🚫 Void Order</span><button class="modal-close" onclick="closeVoidOrderModal()">✕</button></div>
+            <div class="modal-header"><span class="modal-title">Void Order</span><button class="modal-close" onclick="closeVoidOrderModal()">✕</button></div>
 
             <!-- STEP 1: order code entry, so the cashier doesn't have to scroll history -->
             <div class="form-group">
@@ -12477,7 +12477,7 @@ $seoImage = (!empty($storeSettings['shop_logo']) && strpos($storeSettings['shop_
 
                 <!-- LIVE REFUND BANNER: Shows exact cash amount to return to customer -->
                 <div id="vo-refund-banner" style="background:rgba(192,57,43,0.08);border:1px solid rgba(192,57,43,0.25);border-radius:8px;padding:10px 14px;margin-top:12px;display:flex;justify-content:space-between;align-items:center;">
-                    <div style="font-size:.84rem;font-weight:700;color:var(--danger,#C0392B);">💸 Cash Due to Customer:</div>
+                    <div style="font-size:.84rem;font-weight:700;color:var(--danger,#C0392B);">Cash Due to Customer:</div>
                     <strong id="vo-refund-total" style="font-size:1.15rem;color:var(--danger,#C0392B);">₱0.00</strong>
                 </div>
 
@@ -12505,7 +12505,7 @@ $seoImage = (!empty($storeSettings['shop_logo']) && strpos($storeSettings['shop_
                 </div>
 
                 <!-- STEP 4: locked until at least one item is selected AND a password is typed -->
-                <button type="button" class="btn btn-danger btn-full" id="vo-confirm-btn" onclick="confirmVoidOrder()" disabled>🔓 Authorize Void &amp; Release Cash Refund</button>
+                <button type="button" class="btn btn-danger btn-full" id="vo-confirm-btn" onclick="confirmVoidOrder()" disabled>Authorize Void &amp; Release Cash Refund</button>
             </div>
         </div>
     </div>
@@ -12529,12 +12529,12 @@ $seoImage = (!empty($storeSettings['shop_logo']) && strpos($storeSettings['shop_
                         <div style="border:2px dashed var(--border);border-radius:var(--r-sm);padding:16px;background:var(--bg);text-align:center;">
                             <img id="img-preview" style="max-height:140px;object-fit:contain;border-radius:8px;display:none;margin:0 auto 10px;width:100%;" />
                             <div id="img-placeholder" style="margin-bottom:10px;">
-                                <div style="font-size:2.2rem;margin-bottom:4px;">🖼️</div>
+                                <div style="display:flex;justify-content:center;margin-bottom:4px;"><svg viewBox="0 0 24 24" width="40" height="40" fill="none" stroke="var(--text3)" stroke-width="1.8"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg></div>
                                 <div style="font-size:.8rem;color:var(--text3);">No image selected</div>
                             </div>
                             <div style="display:flex;gap:8px;justify-content:center;flex-wrap:wrap;">
-                                <button type="button" class="btn btn-secondary btn-sm" onclick="document.getElementById('img-input-camera').click()">📷 Camera</button>
-                                <button type="button" class="btn btn-secondary btn-sm" onclick="document.getElementById('img-input-gallery').click()">🖼️ Gallery</button>
+                                <button type="button" class="btn btn-secondary btn-sm" onclick="document.getElementById('img-input-camera').click()">Camera</button>
+                                <button type="button" class="btn btn-secondary btn-sm" onclick="document.getElementById('img-input-gallery').click()">Gallery</button>
                                 <button type="button" class="btn btn-secondary btn-sm" id="img-remove-btn" onclick="removeImg()" style="display:none;color:var(--danger);">✕ Remove</button>
                             </div>
                         </div>
@@ -12552,7 +12552,7 @@ $seoImage = (!empty($storeSettings['shop_logo']) && strpos($storeSettings['shop_
                             <label class="form-label">Expiry Date</label>
                             <div style="display:flex;gap:6px;">
                                 <input type="text" class="form-input" id="p-expiry-display" placeholder="MM/DD/YYYY" inputmode="numeric" maxlength="10" oninput="formatExpiryInput(this)" />
-                                <button type="button" class="btn btn-secondary btn-sm" onclick="try{document.getElementById('p-expiry-native').showPicker();}catch(e){document.getElementById('p-expiry-native').click();}" title="Pick a date">📅</button>
+                                <button type="button" class="btn btn-secondary btn-sm" onclick="try{document.getElementById('p-expiry-native').showPicker();}catch(e){document.getElementById('p-expiry-native').click();}" title="Pick a date"><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg></button>
                                 <input type="date" id="p-expiry-native" style="position:absolute;opacity:0;width:1px;height:1px;overflow:hidden;" onchange="syncExpiryFromNative()" />
                             </div>
                             <input type="hidden" id="p-expiry" />
@@ -12562,7 +12562,7 @@ $seoImage = (!empty($storeSettings['shop_logo']) && strpos($storeSettings['shop_
                         <label class="form-label">Delivery Date <span style="font-weight:400;color:var(--text3);">(batch received)</span></label>
                         <div style="display:flex;gap:6px;">
                             <input type="text" class="form-input" id="p-delivery-display" placeholder="MM/DD/YYYY" inputmode="numeric" maxlength="10" oninput="formatDeliveryInput(this)" />
-                            <button type="button" class="btn btn-secondary btn-sm" onclick="try{document.getElementById('p-delivery-native').showPicker();}catch(e){document.getElementById('p-delivery-native').click();}" title="Pick a date">📅</button>
+                            <button type="button" class="btn btn-secondary btn-sm" onclick="try{document.getElementById('p-delivery-native').showPicker();}catch(e){document.getElementById('p-delivery-native').click();}" title="Pick a date"><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg></button>
                             <input type="date" id="p-delivery-native" style="position:absolute;opacity:0;width:1px;height:1px;overflow:hidden;" onchange="syncDeliveryFromNative()" />
                         </div>
                         <input type="hidden" id="p-delivery" />
@@ -12660,7 +12660,7 @@ $seoImage = (!empty($storeSettings['shop_logo']) && strpos($storeSettings['shop_
 
                     <!-- MULTI-UNIT CONFIGURATION & INVENTORY LEDGER -->
                     <div style="border-top:1.5px solid var(--border);margin:18px 0 14px;"></div>
-                    <div style="font-family:'Poppins',sans-serif;font-size:1rem;font-style:italic;color:var(--text);margin-bottom:10px;">📦 Multi-Unit Configuration &amp; Inventory Ledger</div>
+                    <div style="font-family:'Poppins',sans-serif;font-size:1rem;font-style:italic;color:var(--text);margin-bottom:10px;">Multi-Unit Configuration &amp; Inventory Ledger</div>
 
                     <!-- Piece (base unit — always active) -->
                     <div class="form-group" style="background:var(--surface2);border:1.5px solid var(--border);border-radius:var(--r-sm);padding:12px 14px;">
@@ -12670,7 +12670,7 @@ $seoImage = (!empty($storeSettings['shop_logo']) && strpos($storeSettings['shop_
                         </div>
                         <div style="display:flex;gap:5px;margin-bottom:4px;">
                             <input type="text" class="form-input" id="p-barcode" placeholder="Auto-generated" style="flex:1;min-width:0;" oninput="_barcodeAutoGenerated=false;const b=document.getElementById('show-qr-btn');if(b)b.style.display=this.value.trim()?'':'none';onBarcodeFieldChange();" />
-                            <button type="button" class="btn btn-secondary btn-sm" onclick="openProductBarcodeScan('p-barcode')" title="Scan a real-world barcode with the camera">📷</button>
+                            <button type="button" class="btn btn-secondary btn-sm" onclick="openProductBarcodeScan('p-barcode')" title="Scan a real-world barcode with the camera"><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg></button>
                             <button type="button" class="btn btn-secondary btn-sm" onclick="genBarcode('p-barcode')" title="Generate new barcode">↺</button>
                         </div>
                         <div id="p-barcode-check" style="font-size:.74rem;margin-bottom:8px;min-height:16px;"></div>
@@ -12687,7 +12687,7 @@ $seoImage = (!empty($storeSettings['shop_logo']) && strpos($storeSettings['shop_
            the discount is visible everywhere the product appears. -->
                         <div style="margin-top:10px;padding-top:10px;border-top:1px dashed var(--border);">
                             <label style="display:flex;align-items:center;gap:8px;cursor:pointer;font-size:.82rem;font-weight:600;">
-                                <input type="checkbox" id="p-promo-enabled" onchange="onPromoToggle()" /> 🏷️ Enable Promo / Discount Price
+                                <input type="checkbox" id="p-promo-enabled" onchange="onPromoToggle()" /> Enable Promo / Discount Price
                             </label>
                             <div id="p-promo-wrap" style="display:none;margin-top:8px;">
                                 <label class="form-label" style="font-size:.72rem;margin-bottom:3px;">Promo Price (₱)</label>
@@ -12709,14 +12709,14 @@ $seoImage = (!empty($storeSettings['shop_logo']) && strpos($storeSettings['shop_
                         </div>
                         <div style="display:flex;gap:5px;margin-bottom:8px;">
                             <input type="text" class="form-input" id="p-pack-barcode" placeholder="Optional" style="flex:1;min-width:0;" />
-                            <button type="button" class="btn btn-secondary btn-sm" onclick="openProductBarcodeScan('p-pack-barcode')" title="Scan the bundle's printed barcode">📷</button>
+                            <button type="button" class="btn btn-secondary btn-sm" onclick="openProductBarcodeScan('p-pack-barcode')" title="Scan the bundle's printed barcode"><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg></button>
                             <button type="button" class="btn btn-secondary btn-sm" onclick="genBarcode('p-pack-barcode')" title="Generate new barcode">↺</button>
                         </div>
                         <label class="form-label" style="font-size:.72rem;margin-bottom:3px;">Selling Price (₱)</label>
                         <input type="number" class="form-input" id="p-pack-price" placeholder="1,000.00" min="0" step="0.01" style="width:100%;" oninput="updatePromoHint('pack')" />
                         <div style="margin-top:10px;padding-top:10px;border-top:1px dashed var(--border);">
                             <label style="display:flex;align-items:center;gap:8px;cursor:pointer;font-size:.8rem;font-weight:600;">
-                                <input type="checkbox" id="p-promo-pack-enabled" onchange="onPromoToggle('pack')" /> 🏷️ Enable Bundle Promo Price
+                                <input type="checkbox" id="p-promo-pack-enabled" onchange="onPromoToggle('pack')" /> Enable Bundle Promo Price
                             </label>
                             <div id="p-promo-pack-wrap" style="display:none;margin-top:8px;">
                                 <input type="number" class="form-input" id="p-promo-pack-price" placeholder="e.g. 900.00" min="0" step="0.01" style="width:100%;" oninput="updatePromoHint('pack')" />
@@ -12737,14 +12737,14 @@ $seoImage = (!empty($storeSettings['shop_logo']) && strpos($storeSettings['shop_
                         </div>
                         <div style="display:flex;gap:5px;margin-bottom:8px;">
                             <input type="text" class="form-input" id="p-case-barcode" placeholder="Optional" style="flex:1;min-width:0;" />
-                            <button type="button" class="btn btn-secondary btn-sm" onclick="openProductBarcodeScan('p-case-barcode')" title="Scan the case's printed barcode">📷</button>
+                            <button type="button" class="btn btn-secondary btn-sm" onclick="openProductBarcodeScan('p-case-barcode')" title="Scan the case's printed barcode"><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg></button>
                             <button type="button" class="btn btn-secondary btn-sm" onclick="genBarcode('p-case-barcode')" title="Generate new barcode">↺</button>
                         </div>
                         <label class="form-label" style="font-size:.72rem;margin-bottom:3px;">Selling Price (₱)</label>
                         <input type="number" class="form-input" id="p-case-price" placeholder="9,000.00" min="0" step="0.01" style="width:100%;" oninput="updatePromoHint('case')" />
                         <div style="margin-top:10px;padding-top:10px;border-top:1px dashed var(--border);">
                             <label style="display:flex;align-items:center;gap:8px;cursor:pointer;font-size:.8rem;font-weight:600;">
-                                <input type="checkbox" id="p-promo-case-enabled" onchange="onPromoToggle('case')" /> 🏷️ Enable Case Promo Price
+                                <input type="checkbox" id="p-promo-case-enabled" onchange="onPromoToggle('case')" /> Enable Case Promo Price
                             </label>
                             <div id="p-promo-case-wrap" style="display:none;margin-top:8px;">
                                 <input type="number" class="form-input" id="p-promo-case-price" placeholder="e.g. 8,200.00" min="0" step="0.01" style="width:100%;" oninput="updatePromoHint('case')" />
@@ -12755,7 +12755,7 @@ $seoImage = (!empty($storeSettings['shop_logo']) && strpos($storeSettings['shop_
 
                     <!-- PHYSICAL QUANTITY TRACKING -->
                     <div style="border-top:1.5px solid var(--border);margin:4px 0 14px;"></div>
-                    <div style="font-family:'Poppins',sans-serif;font-size:1rem;font-style:italic;color:var(--text);margin-bottom:6px;">📊 Physical Quantity Tracking</div>
+                    <div style="font-family:'Poppins',sans-serif;font-size:1rem;font-style:italic;color:var(--text);margin-bottom:6px;">Physical Quantity Tracking</div>
                     <div style="font-size:.74rem;color:var(--text3);margin-bottom:10px;">Enter stock however it's counted — by Case/Bundle when the ledger above is filled in, or straight Pcs if not. Everything is combined into a total automatically.</div>
 
                     <div class="form-group">
@@ -12814,14 +12814,14 @@ $seoImage = (!empty($storeSettings['shop_logo']) && strpos($storeSettings['shop_
                         <!-- Hidden SVG used only as intermediate render target — never shown -->
                         <svg id="barcode-svg" style="position:absolute;left:-9999px;top:-9999px;visibility:hidden;" aria-hidden="true"></svg>
                         <div style="margin-top:8px;display:flex;gap:6px;justify-content:center;">
-                            <button type="button" class="btn btn-secondary btn-sm" onclick="downloadBarcode()">⬇️ Download</button>
-                            <button type="button" class="btn btn-secondary btn-sm" onclick="printBarcode()">🖨️ Print</button>
+                            <button type="button" class="btn btn-secondary btn-sm" onclick="downloadBarcode()">Download</button>
+                            <button type="button" class="btn btn-secondary btn-sm" onclick="printBarcode()">Print</button>
                         </div>
                     </div>
                     <div style="display:flex;gap:8px;margin-top:6px;flex-wrap:wrap;">
                         <button type="button" class="btn btn-primary" style="flex:2;" onclick="saveProduct()" id="save-prod-btn">Save Product</button>
-                        <button type="button" class="btn btn-secondary btn-sm" id="show-qr-btn" onclick="showQRPreview()" style="display:none;">🏷️ Barcode</button>
-                        <button type="button" class="btn btn-danger btn-sm" id="delete-prod-btn" onclick="deleteProduct()" style="display:none;">🗑️</button>
+                        <button type="button" class="btn btn-secondary btn-sm" id="show-qr-btn" onclick="showQRPreview()" style="display:none;">Barcode</button>
+                        <button type="button" class="btn btn-danger btn-sm" id="delete-prod-btn" onclick="deleteProduct()" style="display:none;">Delete</button>
                         <button type="button" class="btn btn-secondary btn-sm" onclick="closeModal('prod-modal')">Cancel</button>
                     </div>
                 </div>
@@ -12830,7 +12830,7 @@ $seoImage = (!empty($storeSettings['shop_logo']) && strpos($storeSettings['shop_
             <!-- CATEGORY MODAL -->
             <div class="modal-overlay" id="cat-modal">
                 <div class="modal" style="max-width:380px;">
-                    <div class="modal-header"><span class="modal-title">🏷️ Categories</span><button class="modal-close" onclick="closeModal('cat-modal')">✕</button></div>
+                    <div class="modal-header"><span class="modal-title">Categories</span><button class="modal-close" onclick="closeModal('cat-modal')">✕</button></div>
                     <div id="cat-list" style="margin-bottom:14px;"></div>
                     <div style="display:flex;gap:7px;">
                         <input type="text" class="form-input" id="new-cat-input" placeholder="New category name…" style="flex:1;" onkeydown="if(event.key==='Enter')addCat()" />
@@ -12846,10 +12846,10 @@ $seoImage = (!empty($storeSettings['shop_logo']) && strpos($storeSettings['shop_
             <div class="modal-overlay" id="prod-scan-modal" style="z-index:2200;">
                 <div class="modal" style="max-width:420px;">
                     <div class="modal-header">
-                        <span class="modal-title" id="prod-scan-title">📷 Scan Product Barcode</span>
+                        <span class="modal-title" id="prod-scan-title">Scan Product Barcode</span>
                         <div style="display:flex;align-items:center;gap:6px;">
-                            <button type="button" class="btn btn-secondary btn-sm" onclick="switchScannerCamera()" title="Switch Camera" style="padding:4px 8px;font-size:12px;">🔄 Switch</button>
-                            <button type="button" class="btn btn-secondary btn-sm" onclick="toggleScannerTorch()" title="Flashlight" style="padding:4px 8px;font-size:12px;">🔦 Light</button>
+                            <button type="button" class="btn btn-secondary btn-sm" onclick="switchScannerCamera()" title="Switch Camera" style="padding:4px 8px;font-size:12px;">Switch</button>
+                            <button type="button" class="btn btn-secondary btn-sm" onclick="toggleScannerTorch()" title="Flashlight" style="padding:4px 8px;font-size:12px;">Light</button>
                             <button class="modal-close" onclick="closeProductBarcodeScan()">✕</button>
                         </div>
                     </div>
@@ -12871,7 +12871,7 @@ $seoImage = (!empty($storeSettings['shop_logo']) && strpos($storeSettings['shop_
                  item becomes its own FEFO batch, split across warehouse/store) -->
             <div class="modal-overlay" id="new-delivery-modal">
                 <div class="modal" style="max-width:460px;">
-                    <div class="modal-header"><span class="modal-title">🚚 New Delivery</span><button class="modal-close" onclick="closeModal('new-delivery-modal')">✕</button></div>
+                    <div class="modal-header"><span class="modal-title">New Delivery</span><button class="modal-close" onclick="closeModal('new-delivery-modal')">✕</button></div>
                     <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
                         <div class="form-group"><label class="form-label">Supplier / Reference</label><input type="text" class="form-input" id="nd-supplier" list="nd-supplier-list" placeholder="e.g. ABC Distributors" autocomplete="off" /><datalist id="nd-supplier-list"></datalist></div>
                         <div class="form-group"><label class="form-label">Delivery Date</label><input type="date" class="form-input" id="nd-date" /></div>
@@ -12881,7 +12881,7 @@ $seoImage = (!empty($storeSettings['shop_logo']) && strpos($storeSettings['shop_
                     <div id="nd-items" style="display:flex;flex-direction:column;gap:10px;"></div>
                     <div style="display:flex;gap:8px;margin-top:8px;">
                         <button type="button" class="btn btn-secondary btn-sm" style="flex:1;" onclick="addDeliveryLineItem()">+ Add Product</button>
-                        <button type="button" class="btn btn-secondary btn-sm" style="flex:1;" onclick="openDeliveryBarcodeScanAuto()" title="Scan product barcode with mobile camera">📷 Scan Product</button>
+                        <button type="button" class="btn btn-secondary btn-sm" style="flex:1;" onclick="openDeliveryBarcodeScanAuto()" title="Scan product barcode with mobile camera">Scan Product</button>
                     </div>
                     <div style="display:flex;gap:8px;margin-top:14px;">
                         <button type="button" class="btn btn-primary btn-full" onclick="saveNewDelivery()" id="nd-save-btn">Save Delivery</button>
@@ -12893,14 +12893,14 @@ $seoImage = (!empty($storeSettings['shop_logo']) && strpos($storeSettings['shop_
             <!-- QUICK RESTOCK MODAL (from alert banner) -->
             <div class="modal-overlay" id="quick-restock-modal">
                 <div class="modal" style="max-width:400px;">
-                    <div class="modal-header"><span class="modal-title">➕ Quick Restock</span><button class="modal-close" onclick="closeModal('quick-restock-modal')">✕</button></div>
+                    <div class="modal-header"><span class="modal-title">Quick Restock</span><button class="modal-close" onclick="closeModal('quick-restock-modal')">✕</button></div>
                     <input type="hidden" id="qr-product-id" />
                     <p style="font-size:.84rem;color:var(--text2);margin-bottom:12px;font-weight:600;" id="qr-product-name">—</p>
                     <div class="form-group">
                         <label class="form-label">Destination</label>
                         <select class="form-select" id="qr-destination" onchange="_qrUpdateTotal()">
-                            <option value="store">🏪 Store Shelf</option>
-                            <option value="warehouse">🏭 Warehouse Stock</option>
+                            <option value="store">Store Shelf</option>
+                            <option value="warehouse">Warehouse Stock</option>
                         </select>
                     </div>
                     <div id="qr-unit-hint" style="font-size:.72rem;color:var(--text3);margin:-4px 0 8px;"></div>
@@ -12931,14 +12931,14 @@ $seoImage = (!empty($storeSettings['shop_logo']) && strpos($storeSettings['shop_
             <!-- PULL-OUT / RETURNS MODAL (from alert banner) -->
             <div class="modal-overlay" id="pullout-modal">
                 <div class="modal" style="max-width:400px;">
-                    <div class="modal-header"><span class="modal-title">⚠️ Pull-Out / Adjust Stock</span><button class="modal-close" onclick="closeModal('pullout-modal')">✕</button></div>
+                    <div class="modal-header"><span class="modal-title">Pull-Out / Adjust Stock</span><button class="modal-close" onclick="closeModal('pullout-modal')">✕</button></div>
                     <input type="hidden" id="po-product-id" />
                     <p style="font-size:.84rem;color:var(--text2);margin-bottom:12px;font-weight:600;" id="po-product-name">—</p>
                     <div class="form-group">
                         <label class="form-label">Pull-out From</label>
                         <select class="form-select" id="po-location" onchange="onPulloutLocationChange()">
-                            <option value="store">🏪 Store Shelf</option>
-                            <option value="warehouse">🏭 Warehouse Stock</option>
+                            <option value="store">Store Shelf</option>
+                            <option value="warehouse">Warehouse Stock</option>
                         </select>
                     </div>
                     <div id="po-unit-hint" style="font-size:.72rem;color:var(--text3);margin:-4px 0 8px;"></div>
@@ -12992,8 +12992,8 @@ $seoImage = (!empty($storeSettings['shop_logo']) && strpos($storeSettings['shop_
                         <div class="form-group">
                             <label class="form-label">Type</label>
                             <select class="form-select" id="move-type" onchange="toggleMoveBatchFields()">
-                                <option value="in">📦 Stock In (Restock)</option>
-                                <option value="out">📤 Stock Out (Remove)</option>
+                                <option value="in">Stock In (Restock)</option>
+                                <option value="out">Stock Out (Remove)</option>
                             </select>
                         </div>
                         <div class="form-group"><label class="form-label">Quantity</label><input type="number" class="form-input" id="move-qty" min="1" placeholder="0" /></div>
@@ -13001,8 +13001,8 @@ $seoImage = (!empty($storeSettings['shop_logo']) && strpos($storeSettings['shop_
                     <div class="form-group">
                         <label class="form-label">Target Location</label>
                         <select class="form-select" id="move-target">
-                            <option value="warehouse">🏭 Warehouse Stock</option>
-                            <option value="store">🏪 Store Shelf</option>
+                            <option value="warehouse">Warehouse Stock</option>
+                            <option value="store">Store Shelf</option>
                         </select>
                     </div>
                     <div id="move-batch-fields" style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
@@ -13022,7 +13022,7 @@ $seoImage = (!empty($storeSettings['shop_logo']) && strpos($storeSettings['shop_
      supplier, etc.), plus that product's own recent stock movements. -->
             <div class="modal-overlay" id="wh-details-modal">
                 <div class="modal" style="max-width:640px;max-height:90vh;overflow-y:auto;">
-                    <div class="modal-header"><span class="modal-title">👁️ Product Details</span><button class="modal-close" onclick="closeModal('wh-details-modal')">✕</button></div>
+                    <div class="modal-header"><span class="modal-title">Product Details</span><button class="modal-close" onclick="closeModal('wh-details-modal')">✕</button></div>
                     <div id="wh-details-body">Loading…</div>
                 </div>
             </div>
@@ -13036,13 +13036,13 @@ $seoImage = (!empty($storeSettings['shop_logo']) && strpos($storeSettings['shop_
             <div class="container">
                 <div class="page-header" style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;">
                     <div>
-                        <h1 class="page-title">Good <span id="greet">Day</span> 👋</h1>
+                        <h1 class="page-title">Good <span id="greet">Day</span></h1>
                         <p class="page-sub" id="shop-name"><?= htmlspecialchars((!empty($storeSettings['shop_name']) && $storeSettings['shop_name'] !== 'PANGGA STORE' && $storeSettings['shop_name'] !== 'PANGGA POS' && $storeSettings['shop_name'] !== 'POS SYSTEM') ? $storeSettings['shop_name'] : 'ProCast') ?></p>
                     </div>
                     <div style="display:flex;gap:8px;align-items:center;">
-                        <button type="button" class="btn btn-sm" onclick="openVoidOrderModal()" style="background:#C0392B;color:#fff;border:none;font-weight:700;">🚫 Void</button>
+                        <button type="button" class="btn btn-sm" onclick="openVoidOrderModal()" style="background:#C0392B;color:#fff;border:none;font-weight:700;">Void</button>
                         <button class="btn btn-primary btn-sm" onclick="openModal('cart-modal')">
-                            🛒 Cart <span id="cart-badge" style="background:#fff;color:var(--accent);border-radius:99px;padding:1px 6px;font-size:.68rem;margin-left:2px;">0</span>
+                            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align:middle;margin-right:2px;"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg> Cart <span id="cart-badge" style="background:#fff;color:var(--accent);border-radius:99px;padding:1px 6px;font-size:.68rem;margin-left:2px;">0</span>
                         </button>
                     </div>
                 </div>
@@ -13088,13 +13088,13 @@ $seoImage = (!empty($storeSettings['shop_logo']) && strpos($storeSettings['shop_
   ══════════════════════════════════════════ -->
                     <div class="card ai-highlights-wrap" style="margin-bottom:14px;padding:0;overflow:hidden;">
                         <div class="card-title collapse-toggle ai-highlights-toggle" onclick="toggleCollapseCard('ai-highlights-body', this)" style="cursor:pointer;display:none;align-items:center;justify-content:space-between;padding:10px 14px;margin:0;">
-                            <span style="font-size:.88rem;font-weight:700;">🔮 AI Insights (Forecast &amp; Combos)</span>
+                            <span style="font-weight:700;font-size:.88rem;">AI Insights (Forecast &amp; Combos)</span>
                             <span class="collapse-chevron">▾</span>
                         </div>
                         <div id="ai-highlights-body" class="collapse-body ai-highlights-body">
                             <div class="ai-highlights" style="display:grid;grid-template-columns:repeat(auto-fit, minmax(260px, 1fr));gap:16px;">
                                 <a href="?page=forecast" class="ai-card ai-card-forecast">
-                                    <div class="ai-card-icon">🔮</div>
+                                    <div class="ai-card-icon"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 6l-9.5 9.5-5-5L1 18"/><polyline points="17 6 23 6 23 12"/></svg></div>
                                     <div class="ai-card-body">
                                         <div class="ai-card-eyebrow">AI-Powered</div>
                                         <div class="ai-card-title">Demand Forecasting</div>
@@ -13108,14 +13108,14 @@ $seoImage = (!empty($storeSettings['shop_logo']) && strpos($storeSettings['shop_
                                 </a>
 
                                 <a href="?page=analytics#combo" class="ai-card ai-card-combo" onclick="localStorage.setItem('_gotoCombo','1')">
-                                    <div class="ai-card-icon">🛍️</div>
+                                    <div class="ai-card-icon"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg></div>
                                     <div class="ai-card-body">
                                         <div class="ai-card-eyebrow">AI-Powered</div>
                                         <div class="ai-card-title">Combo Recommendations</div>
                                         <div class="ai-card-desc">Discover which products sell well together, so you can bundle, place them side-by-side, or upsell at checkout.</div>
                                         <div class="ai-card-stats" id="dash-combo-preview">
                                             <span class="ai-mini-stat"><span class="ai-mini-num" id="dash-combo-count">—</span><span class="ai-mini-lbl">pairs found</span></span>
-                                            <span class="ai-mini-stat"><span class="ai-mini-num">🔥</span><span class="ai-mini-lbl">smart bundles</span></span>
+                                            <span class="ai-mini-stat"><span class="ai-mini-lbl">Smart Bundles</span></span>
                                         </div>
                                         <div class="ai-card-cta">View Combos →</div>
                                     </div>
@@ -13128,7 +13128,7 @@ $seoImage = (!empty($storeSettings['shop_logo']) && strpos($storeSettings['shop_
                 <!-- Top Sellers — collapsible card -->
                 <div class="card" style="margin-bottom:18px;">
                     <div class="card-title collapse-toggle" onclick="toggleCollapseCard('top-sellers-wrap', this)" style="cursor:pointer;display:flex;align-items:center;justify-content:space-between;">
-                        <span>🏆 Top Sellers</span><span class="collapse-chevron">▾</span>
+                        <span>Top Sellers</span><span class="collapse-chevron">▾</span>
                     </div>
                     <div id="top-sellers-wrap" class="collapse-body" style="display:none;">
                         <div id="top-sellers">
@@ -13153,21 +13153,21 @@ $seoImage = (!empty($storeSettings['shop_logo']) && strpos($storeSettings['shop_
                         <?php if (!$isCashierRole): ?>
                             <div class="dash-stock-source-bar">
                                 <div class="dash-stock-source-title">
-                                    <span style="font-size:.82rem;font-weight:700;color:var(--text);">📦 Stock Source:</span>
+                                    <span style="font-size:.82rem;font-weight:700;color:var(--text);">Stock Source:</span>
                                     <span style="font-size:.72rem;color:var(--text3);">(Admin/Owner Mode)</span>
                                 </div>
                                 <div class="dash-src-group" id="dash-stock-source-tabs">
                                     <button type="button" class="btn btn-sm dash-src-btn active" id="dash-src-store" onclick="setDashStockSource('store', this)" title="Store Stock">
-                                        <span class="src-lbl-full">🏪 Store Stock</span>
-                                        <span class="src-lbl-short">🏪 Store</span>
+                                        <span class="src-lbl-full">Store Stock</span>
+                                        <span class="src-lbl-short">Store</span>
                                     </button>
                                     <button type="button" class="btn btn-sm dash-src-btn" id="dash-src-warehouse" onclick="setDashStockSource('warehouse', this)" title="Warehouse Stock">
-                                        <span class="src-lbl-full">🏭 Warehouse Stock</span>
-                                        <span class="src-lbl-short">🏭 Warehouse</span>
+                                        <span class="src-lbl-full">Warehouse Stock</span>
+                                        <span class="src-lbl-short">Warehouse</span>
                                     </button>
                                     <button type="button" class="btn btn-sm dash-src-btn" id="dash-src-all" onclick="setDashStockSource('all', this)" title="All / Combined Stock">
-                                        <span class="src-lbl-full">🔄 All / Combined</span>
-                                        <span class="src-lbl-short">🔄 All Stock</span>
+                                        <span class="src-lbl-full">All / Combined</span>
+                                        <span class="src-lbl-short">All Stock</span>
                                     </button>
                                 </div>
                             </div>
@@ -13185,7 +13185,7 @@ $seoImage = (!empty($storeSettings['shop_logo']) && strpos($storeSettings['shop_
         <div class="modal-overlay" id="cart-modal">
             <div class="modal" style="max-width:720px;width:96%;max-height:95vh;padding:22px;">
                 <div class="modal-header">
-                    <span class="modal-title">🛒 Cart</span>
+                    <span class="modal-title">Cart</span>
                     <div style="display:flex;align-items:center;gap:10px;">
                         <button class="modal-close" onclick="closeModal('cart-modal')">✕</button>
                     </div>
@@ -13209,10 +13209,10 @@ $seoImage = (!empty($storeSettings['shop_logo']) && strpos($storeSettings['shop_
            cashier pick any product already in the cart and mark it down on
            the spot (e.g. it expires tomorrow and nobody set a Promo Price). -->
                     <button type="button" id="cart-discount-trigger-btn" class="btn btn-secondary btn-full" style="display:none;margin-top:8px;border:1.5px dashed #e74c3c;color:#e74c3c;" onclick="openCartDiscountModal()">
-                        🏷️ Give a Discount on a Product
+                        Give a Discount on a Product
                     </button>
                     <button class="btn btn-primary btn-full btn-lg" style="margin-top:10px;" onclick="processPayment()" id="pay-btn" disabled>
-                        ✔ Process Payment
+                        Process Payment
                     </button>
                     <div style="display:flex;gap:7px;margin-top:8px;">
                         <button type="button" class="btn cart-hold-btn" style="flex:1;" onclick="holdCurrentCart()">
@@ -13230,7 +13230,7 @@ $seoImage = (!empty($storeSettings['shop_logo']) && strpos($storeSettings['shop_
                     </div>
                 </div>
                 <div id="cart-empty" style="text-align:center;padding:36px;color:var(--text3);">
-                    <div style="font-size:2.8rem;margin-bottom:7px;">🛒</div>
+                    <div style="display:flex;justify-content:center;margin-bottom:7px;"><svg viewBox="0 0 24 24" width="48" height="48" fill="none" stroke="var(--text3)" stroke-width="1.6"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg></div>
                     <p>Cart is empty</p>
                     <p style="font-size:.78rem;margin-top:3px;">Scan or tap a product to add it</p>
                 </div>
@@ -13244,7 +13244,7 @@ $seoImage = (!empty($storeSettings['shop_logo']) && strpos($storeSettings['shop_
      it's in this cart/sale, it never touches the product's stored price. -->
         <div class="modal-overlay" id="cart-discount-modal">
             <div class="modal" style="max-width:380px;">
-                <div class="modal-header"><span class="modal-title">🏷️ Give a Discount</span><button class="modal-close" onclick="closeModal('cart-discount-modal')">✕</button></div>
+                <div class="modal-header"><span class="modal-title">Give a Discount</span><button class="modal-close" onclick="closeModal('cart-discount-modal')">✕</button></div>
 
                 <label class="form-label">Product</label>
                 <select class="form-input" id="cd-product-select" onchange="onCartDiscountProductChange()" style="width:100%;margin-bottom:4px;"></select>
@@ -13275,7 +13275,7 @@ $seoImage = (!empty($storeSettings['shop_logo']) && strpos($storeSettings['shop_
         <!-- SUCCESS MODAL -->
         <div class="modal-overlay" id="success-modal">
             <div class="modal" style="max-width:380px;text-align:center;">
-                <div style="font-size:3rem;margin-bottom:6px;">🎉</div>
+                <div style="display:flex;justify-content:center;margin-bottom:6px;"><svg viewBox="0 0 24 24" width="52" height="52" fill="none" stroke="var(--green,#2D7A3A)" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg></div>
                 <h2 class="modal-title" style="text-align:center;font-size:1.5rem;margin-bottom:10px;">Payment Receipt</h2>
                 <div id="receipt-display" class="receipt" style="text-align:left;max-height:260px;overflow-y:auto;margin:14px 0;font-size:.76rem;"></div>
                 <div class="change-box" id="change-box">
@@ -13288,7 +13288,7 @@ $seoImage = (!empty($storeSettings['shop_logo']) && strpos($storeSettings['shop_
                 </div>
                 <div style="display:flex;gap:8px;margin-top:14px;">
                     <button class="btn btn-secondary btn-full" onclick="dismissSuccessModal()">Done <span class="kbd" style="margin-left:6px;">Enter</span></button>
-                    <button class="btn btn-primary btn-full" onclick="printSaleReceipt(true)">🖨️ Print <span class="kbd" style="margin-left:6px;">P</span></button>
+                    <button class="btn btn-primary btn-full" onclick="printSaleReceipt(true)">Print <span class="kbd" style="margin-left:6px;">P</span></button>
                 </div>
             </div>
         </div>
@@ -13296,17 +13296,17 @@ $seoImage = (!empty($storeSettings['shop_logo']) && strpos($storeSettings['shop_
 
         <!-- Draggable Scanner Float Button (Dashboard only) -->
         <div id="scanner-float" style="display:none;">
-            <button id="scan-fab-new" onclick="openDashScan()" title="Camera Barcode Scanner" aria-label="Camera Barcode Scanner">🛒</button>
+            <button id="scan-fab-new" onclick="openDashScan()" title="Camera Barcode Scanner" aria-label="Camera Barcode Scanner"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg></button>
         </div>
 
         <!-- DASH SCAN MODAL -->
         <div class="modal-overlay" id="dash-scan-modal">
             <div class="modal" style="max-width:420px;">
                 <div class="modal-header">
-                    <span class="modal-title">📷 Barcode Scanner</span>
+                    <span class="modal-title">Barcode Scanner</span>
                     <div style="display:flex;align-items:center;gap:6px;">
-                        <button type="button" class="btn btn-secondary btn-sm" onclick="switchScannerCamera()" title="Switch Camera" style="padding:4px 8px;font-size:12px;">🔄 Switch</button>
-                        <button type="button" class="btn btn-secondary btn-sm" onclick="toggleScannerTorch()" title="Flashlight" style="padding:4px 8px;font-size:12px;">🔦 Light</button>
+                        <button type="button" class="btn btn-secondary btn-sm" onclick="switchScannerCamera()" title="Switch Camera" style="padding:4px 8px;font-size:12px;">Switch</button>
+                        <button type="button" class="btn btn-secondary btn-sm" onclick="toggleScannerTorch()" title="Flashlight" style="padding:4px 8px;font-size:12px;">Light</button>
                         <button class="modal-close" onclick="closeDashScan()">✕</button>
                     </div>
                 </div>
@@ -13322,14 +13322,14 @@ $seoImage = (!empty($storeSettings['shop_logo']) && strpos($storeSettings['shop_
                      dead-ending at "try next item" for something that just isn't in the
                      system yet. Hidden again the moment any scan succeeds. -->
                 <div id="dash-scan-notfound-actions" style="display:none;margin-bottom:10px;">
-                    <button type="button" class="btn btn-secondary btn-full btn-sm" onclick="addNewProductFromScan(_lastNotFoundBarcode)">➕ Not in system — add as new product</button>
+                    <button type="button" class="btn btn-secondary btn-full btn-sm" onclick="addNewProductFromScan(_lastNotFoundBarcode)">+ Not in system — add as new product</button>
                 </div>
                 <div style="display:flex;gap:7px;margin-bottom:10px;">
                     <input type="text" class="form-input" id="dash-manual-bc" placeholder="Or type barcode…" style="flex:1;" onkeydown="if(event.key==='Enter')dashManualLookup()" />
                     <button type="button" class="btn btn-primary btn-sm" onclick="dashManualLookup()">Add</button>
                 </div>
                 <button type="button" class="btn btn-success btn-full" onclick="closeDashScan();openModal('cart-modal');" style="font-size:.93rem;">
-                    🛒 Pay Now — <span id="scan-cart-count">0</span> item(s) in cart
+                    Pay Now — <span id="scan-cart-count">0</span> item(s) in cart
                 </button>
             </div>
         </div>
@@ -13347,9 +13347,9 @@ $seoImage = (!empty($storeSettings['shop_logo']) && strpos($storeSettings['shop_
                         <p class="page-sub" id="prod-count">Loading…</p>
                     </div>
                     <div style="display:flex;gap:7px;flex-wrap:wrap;">
-                        <button type="button" class="btn btn-secondary btn-sm" onclick="openCatModal()">🏷️ Categories</button>
-                        <button type="button" class="btn btn-primary btn-sm" onclick="openNewDeliveryModal()">🚚 New Delivery</button>
-                        <button type="button" class="btn btn-secondary btn-sm" onclick="openNewDeliveryWithCamera()" title="Scan barcode with camera to start a delivery">📷 Scan Delivery</button>
+                        <button type="button" class="btn btn-secondary btn-sm" onclick="openCatModal()">Categories</button>
+                        <button type="button" class="btn btn-primary btn-sm" onclick="openNewDeliveryModal()">New Delivery</button>
+                        <button type="button" class="btn btn-secondary btn-sm" onclick="openNewDeliveryWithCamera()" title="Scan barcode with camera to start a delivery">Scan Delivery</button>
                         <button type="button" class="btn btn-primary btn-sm" onclick="openAddModal()">+ Add Product</button>
                     </div>
                 </div>
@@ -13390,8 +13390,8 @@ $seoImage = (!empty($storeSettings['shop_logo']) && strpos($storeSettings['shop_
                             <p class="page-sub">Stock movements & expiry tracking</p>
                         </div>
                         <div style="display:flex;gap:7px;flex-wrap:wrap;">
-                            <button type="button" class="btn btn-secondary btn-sm" onclick="openPrintAllModal()">🖨️ Print All Barcodes</button>
-                            <button type="button" class="btn btn-secondary btn-sm" onclick="openHistoryModal()">📜 Product History</button>
+                            <button type="button" class="btn btn-secondary btn-sm" onclick="openPrintAllModal()">Print All Barcodes</button>
+                            <button type="button" class="btn btn-secondary btn-sm" onclick="openHistoryModal()">Product History</button>
                             <button type="button" class="btn btn-secondary btn-sm" onclick="openMoveModal()">+ Stock Movement</button>
                         </div>
                     </div>
@@ -13439,18 +13439,18 @@ $seoImage = (!empty($storeSettings['shop_logo']) && strpos($storeSettings['shop_
                     <div style="display:flex;gap:7px;margin-bottom:14px;flex-wrap:wrap;align-items:center;">
                         <div class="cat-scroll" id="wh-filter-pills" style="flex:1;margin-bottom:0;">
                             <button class="cat-pill active" onclick="setWhFilter('all',this)">All Products</button>
-                            <button class="cat-pill" onclick="setWhFilter('low',this)">⚠️ Low Stock</button>
-                            <button class="cat-pill" onclick="setWhFilter('out',this)">🚫 Out of Stock</button>
+                            <button class="cat-pill" onclick="setWhFilter('low',this)">Low Stock</button>
+                            <button class="cat-pill" onclick="setWhFilter('out',this)">Out of Stock</button>
                             <button class="cat-pill" onclick="setWhFilter('expiring',this)">⏰ Expiring</button>
-                            <button class="cat-pill" onclick="setWhFilter('expired',this)">❌ Expired</button>
+                            <button class="cat-pill" onclick="setWhFilter('expired',this)">Expired</button>
                         </div>
-                        <button type="button" class="btn btn-secondary btn-sm" onclick="exportWhToExcel()">📊 Export to Excel</button>
+                        <button type="button" class="btn btn-secondary btn-sm" onclick="exportWhToExcel()">Export to Excel</button>
                     </div>
 
                     <!-- Products table -->
                     <div class="card" style="padding:0;overflow:hidden;margin-bottom:20px;">
                         <div class="card-title" style="display:flex;align-items:center;justify-content:space-between;margin:0;padding:16px 16px 0;">
-                            <span>📦 Products</span>
+                            <span>Products</span>
                         </div>
                         <div id="wh-products-wrap" style="margin-top:8px;">
                             <div class="table-wrap wh-table scroll-panel" tabindex="0" aria-label="Products table — scrollable with arrow keys">
@@ -13459,10 +13459,10 @@ $seoImage = (!empty($storeSettings['shop_logo']) && strpos($storeSettings['shop_
                                         <tr>
                                             <th rowspan="2">Product</th>
                                             <th rowspan="2">Barcode</th>
-                                            <th colspan="4">🏪 Store</th>
+                                            <th colspan="4">Store</th>
                                             <th rowspan="2">Restock</th>
                                             <th rowspan="2">Pull-out</th>
-                                            <th colspan="4">🏭 Warehouse</th>
+                                            <th colspan="4">Warehouse</th>
                                             <th rowspan="2">Wh-In</th>
                                             <th rowspan="2">Restocking Date</th>
                                             <th rowspan="2">Wh-Out</th>
@@ -13487,7 +13487,7 @@ $seoImage = (!empty($storeSettings['shop_logo']) && strpos($storeSettings['shop_
                                     <tbody id="wh-body"></tbody>
                                 </table>
                                 <div id="wh-empty" class="empty-state" style="display:none;">
-                                    <div class="empty-icon">🏭</div>
+                                    <div class="empty-icon"><svg viewBox="0 0 24 24" width="42" height="42" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg></div>
                                     <div class="empty-text">No products found</div>
                                 </div>
                             </div>
@@ -13497,7 +13497,7 @@ $seoImage = (!empty($storeSettings['shop_logo']) && strpos($storeSettings['shop_
                     <!-- Movement Log -->
                     <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;">
                         <div style="display:flex;align-items:center;gap:8px;font-family:'Poppins',sans-serif;font-size:1.1rem;font-style:italic;color:var(--text2);">
-                            <span>📋 Recent Stock Movements</span>
+                            <span>Recent Stock Movements</span>
                         </div>
                         <button type="button" class="btn btn-secondary btn-sm" onclick="loadWhLog()">↺ Refresh</button>
                     </div>
@@ -13522,7 +13522,7 @@ $seoImage = (!empty($storeSettings['shop_logo']) && strpos($storeSettings['shop_
                                     <tbody id="wh-log-body"></tbody>
                                 </table>
                                 <div id="wh-log-empty" class="empty-state" style="display:none;">
-                                    <div class="empty-icon">📋</div>
+                                    <div class="empty-icon"><svg viewBox="0 0 24 24" width="42" height="42" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><rect x="8" y="2" width="8" height="4" rx="1" ry="1"/></svg></div>
                                     <div class="empty-text">No movements yet</div>
                                 </div>
                             </div>
@@ -13534,7 +13534,7 @@ $seoImage = (!empty($storeSettings['shop_logo']) && strpos($storeSettings['shop_
             <!-- PRINT ALL BARCODES MODAL -->
             <div class="modal-overlay" id="print-all-modal">
                 <div class="modal" style="max-width:540px;max-height:88vh;overflow-y:auto;">
-                    <div class="modal-header"><span class="modal-title">🖨️ Print Barcodes</span><button class="modal-close" onclick="closeModal('print-all-modal')">✕</button></div>
+                    <div class="modal-header"><span class="modal-title">Print Barcodes</span><button class="modal-close" onclick="closeModal('print-all-modal')">✕</button></div>
                     <p style="font-size:.82rem;color:var(--text2);margin-bottom:10px;">Search for products, tick the ones you want, set quantities, then Print.</p>
                     <div class="form-group" style="margin-bottom:12px;">
                         <label class="form-label">Label Sticker Size</label>
@@ -13562,7 +13562,7 @@ $seoImage = (!empty($storeSettings['shop_logo']) && strpos($storeSettings['shop_
                     </div>
                     <div id="print-all-list" style="margin-bottom:14px;max-height:380px;overflow-y:auto;border:1px solid var(--border);border-radius:var(--r-sm);padding:8px 12px;"></div>
                     <div style="display:flex;gap:8px;">
-                        <button type="button" class="btn btn-primary btn-full" onclick="doPrintAll()">🖨️ Print</button>
+                        <button type="button" class="btn btn-primary btn-full" onclick="doPrintAll()">Print</button>
                         <button type="button" class="btn btn-secondary" onclick="closeModal('print-all-modal')">Cancel</button>
                     </div>
                 </div>
@@ -13575,7 +13575,7 @@ $seoImage = (!empty($storeSettings['shop_logo']) && strpos($storeSettings['shop_
             <!-- PRODUCT HISTORY MODAL -->
             <div class="modal-overlay" id="history-modal">
                 <div class="modal" style="max-width:960px;max-height:92vh;overflow-y:auto;">
-                    <div class="modal-header"><span class="modal-title">📜 Product History</span><button class="modal-close" onclick="closeModal('history-modal')">✕</button></div>
+                    <div class="modal-header"><span class="modal-title">Product History</span><button class="modal-close" onclick="closeModal('history-modal')">✕</button></div>
 
                     <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:8px;">
                         <div class="form-group" style="margin-bottom:0;">
@@ -13607,8 +13607,8 @@ $seoImage = (!empty($storeSettings['shop_logo']) && strpos($storeSettings['shop_
                     </div>
 
                     <div style="display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap;">
-                        <button type="button" class="btn btn-secondary btn-sm" onclick="exportHistoryToExcel()">📊 Export to Excel</button>
-                        <button type="button" class="btn btn-secondary btn-sm" onclick="printHistoryReport()">🖨️ Print Report</button>
+                        <button type="button" class="btn btn-secondary btn-sm" onclick="exportHistoryToExcel()">Export to Excel</button>
+                        <button type="button" class="btn btn-secondary btn-sm" onclick="printHistoryReport()">Print Report</button>
                         <button type="button" class="btn btn-secondary btn-sm" onclick="loadHistory()">↺ Refresh</button>
                     </div>
 
@@ -13635,7 +13635,7 @@ $seoImage = (!empty($storeSettings['shop_logo']) && strpos($storeSettings['shop_
                                 <tbody id="history-body"></tbody>
                             </table>
                             <div id="history-empty" class="empty-state" style="display:none;">
-                                <div class="empty-icon">📜</div>
+                                <div class="empty-icon"><svg viewBox="0 0 24 24" width="42" height="42" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg></div>
                                 <div class="empty-text">No history found</div>
                             </div>
                         </div>
@@ -13659,14 +13659,14 @@ $seoImage = (!empty($storeSettings['shop_logo']) && strpos($storeSettings['shop_
                         </div>
                         <div style="display:flex;gap:7px;flex-wrap:wrap;align-items:center;">
                             <!-- Far-left, per spec: red Void Order button before the date filter -->
-                            <button type="button" class="btn btn-sm" onclick="openVoidOrderModal()" style="background:#C0392B;color:#fff;border:none;font-weight:700;">🚫 Void Order</button>
+                            <button type="button" class="btn btn-sm" onclick="openVoidOrderModal()" style="background:#C0392B;color:#fff;border:none;font-weight:700;">Void Order</button>
 
                             <!-- Unified date-range dropdown — looks/behaves like a single button
            ("styled exactly like the All dropdown") that expands into a small
            popover with Start/End date pickers, instead of a bare date input
            sitting next to a separate "All" button. -->
                             <div style="position:relative;display:inline-block;" id="date-range-wrap">
-                                <button type="button" class="btn btn-secondary btn-sm" id="date-range-btn" onclick="toggleDateRangePopover(event)">📅 <span id="date-range-label">Filter by Date</span> ▾</button>
+                                <button type="button" class="btn btn-secondary btn-sm" id="date-range-btn" onclick="toggleDateRangePopover(event)"><span id="date-range-label">Filter by Date</span> ▾</button>
                                 <div id="date-range-popover" style="display:none;position:absolute;top:calc(100% + 6px);left:0;z-index:60;background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:12px;box-shadow:var(--shadow-lg);min-width:220px;">
                                     <div style="display:flex;flex-direction:column;gap:6px;">
                                         <label style="font-size:.72rem;font-weight:700;color:var(--text2);">Start Date</label>
@@ -13681,9 +13681,9 @@ $seoImage = (!empty($storeSettings['shop_logo']) && strpos($storeSettings['shop_
                                 </div>
                             </div>
 
-                            <button type="button" class="btn btn-secondary btn-sm" onclick="exportCSV()">📥 CSV</button>
-                            <button type="button" class="btn btn-secondary btn-sm" onclick="exportJSON()">📥 JSON</button>
-                            <button type="button" class="btn btn-danger btn-sm" onclick="deleteAllTx()">🗑️ Delete All</button>
+                            <button type="button" class="btn btn-secondary btn-sm" onclick="exportCSV()">CSV</button>
+                            <button type="button" class="btn btn-secondary btn-sm" onclick="exportJSON()">JSON</button>
+                            <button type="button" class="btn btn-danger btn-sm" onclick="deleteAllTx()">Delete All</button>
                         </div>
                     </div>
                     <!-- ── SHARED DAILY/WEEKLY/MONTHLY TOGGLE — drives Top Products, Sales by
@@ -13700,7 +13700,7 @@ $seoImage = (!empty($storeSettings['shop_logo']) && strpos($storeSettings['shop_
                     <!-- ── TOP PRODUCTS ── -->
                     <div class="card" style="margin-bottom:16px;">
                         <div class="card-title" style="display:flex;align-items:center;justify-content:space-between;">
-                            <span id="top-list-title">🏆 Top Products</span>
+                            <span id="top-list-title">Top Products</span>
                         </div>
                         <div id="top-list-wrap">
                             <div id="top-list">
@@ -13713,7 +13713,7 @@ $seoImage = (!empty($storeSettings['shop_logo']) && strpos($storeSettings['shop_
                     <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px;" class="dash-layout">
                         <div class="card">
                             <div class="card-title" style="display:flex;align-items:center;justify-content:space-between;">
-                                <span id="cat-chart-title">🏷️ Sales by Category</span>
+                                <span id="cat-chart-title">Sales by Category</span>
                             </div>
                             <div id="cat-chart-wrap">
                                 <div class="bar-chart" id="cat-chart">
@@ -13723,7 +13723,7 @@ $seoImage = (!empty($storeSettings['shop_logo']) && strpos($storeSettings['shop_
                         </div>
                         <div class="card">
                             <div class="card-title" style="display:flex;align-items:center;justify-content:space-between;">
-                                <span id="daily-chart-title">📈 7-Day Sales</span>
+                                <span id="daily-chart-title">7-Day Sales</span>
                             </div>
                             <div id="daily-chart-wrap">
                                 <div class="bar-chart" id="daily-chart">
@@ -13736,7 +13736,7 @@ $seoImage = (!empty($storeSettings['shop_logo']) && strpos($storeSettings['shop_
                     <!-- ── SALES HISTORY ── -->
                     <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;">
                         <div style="display:flex;align-items:center;gap:8px;font-family:'Poppins',sans-serif;font-size:1.1rem;font-style:italic;color:var(--text2);">
-                            <span>🧾 Sales History</span>
+                            <span>Sales History</span>
                         </div>
                     </div>
                     <div id="tx-history-wrap">
@@ -13759,7 +13759,7 @@ $seoImage = (!empty($storeSettings['shop_logo']) && strpos($storeSettings['shop_
                                     <tbody id="tx-body"></tbody>
                                 </table>
                                 <div id="tx-empty" class="empty-state">
-                                    <div class="empty-icon">🧾</div>
+                                    <div class="empty-icon"><svg viewBox="0 0 24 24" width="42" height="42" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg></div>
                                     <div class="empty-text">No transactions yet</div>
                                 </div>
                             </div>
@@ -13779,7 +13779,7 @@ $seoImage = (!empty($storeSettings['shop_logo']) && strpos($storeSettings['shop_
             <!-- DELETE CONFIRM MODAL -->
             <div class="modal-overlay" id="del-all-modal">
                 <div class="modal" style="max-width:380px;text-align:center;">
-                    <div style="font-size:3rem;margin-bottom:8px;">⚠️</div>
+                    <div style="display:flex;justify-content:center;margin-bottom:8px;"><svg viewBox="0 0 24 24" width="52" height="52" fill="none" stroke="var(--danger,#C0392B)" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg></div>
                     <h2 style="font-family:'Poppins',sans-serif;font-style:italic;font-size:1.4rem;margin-bottom:10px;">Delete All History?</h2>
                     <p style="font-size:.86rem;color:var(--text2);margin-bottom:20px;line-height:1.6;">This will permanently delete <strong>all transaction records</strong> and reset all product sold counts. This <strong>cannot be undone</strong>.</p>
                     <div style="display:flex;gap:8px;">
@@ -13824,7 +13824,7 @@ $seoImage = (!empty($storeSettings['shop_logo']) && strpos($storeSettings['shop_
                         </div>
                     </div>
                     <div class="insight-card">
-                        <h3>🤖 AI-Powered Insight</h3>
+                        <h3>AI-Powered Insight</h3>
                         <p id="ai-insight">Analyzing your sales data…</p>
                     </div>
 
@@ -13832,7 +13832,7 @@ $seoImage = (!empty($storeSettings['shop_logo']) && strpos($storeSettings['shop_
                     <div style="margin-top:4px;">
                         <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;margin-bottom:14px;">
                             <div>
-                                <div style="font-family:'Poppins',sans-serif;font-size:1.4rem;font-weight:800;">🛒 Market Basket Analysis</div>
+                                <div style="font-family:'Poppins',sans-serif;font-size:1.4rem;font-weight:800;">Market Basket Analysis</div>
                                 <div style="font-size:.85rem;color:var(--text2);margin-top:2px;">Local Apriori — discover products frequently bought together. For ML-powered associations, see <strong>Product Combos</strong> below.</div>
                             </div>
                             <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;">
@@ -13844,7 +13844,7 @@ $seoImage = (!empty($storeSettings['shop_logo']) && strpos($storeSettings['shop_
                                     <label style="font-size:.75rem;font-weight:700;color:var(--text3);display:block;margin-bottom:3px;">MIN CONFIDENCE %</label>
                                     <input type="number" id="mba-conf" class="form-input" value="30" min="1" max="100" step="5" style="width:80px;padding:6px 9px;font-size:.85rem;" />
                                 </div>
-                                <button type="button" class="btn btn-primary btn-sm" onclick="loadBasketAnalysis()" style="margin-top:16px;">🔍 Analyze</button>
+                                <button type="button" class="btn btn-primary btn-sm" onclick="loadBasketAnalysis()" style="margin-top:16px;">Analyze</button>
                             </div>
                         </div>
 
@@ -13872,7 +13872,7 @@ $seoImage = (!empty($storeSettings['shop_logo']) && strpos($storeSettings['shop_
 
                         <div id="mba-result">
                             <div class="empty-state">
-                                <div class="empty-icon">🛒</div>
+                                <div class="empty-icon"><svg viewBox="0 0 24 24" width="42" height="42" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg></div>
                                 <div class="empty-text">Click Analyze to discover product associations</div>
                             </div>
                         </div>
@@ -13883,10 +13883,10 @@ $seoImage = (!empty($storeSettings['shop_logo']) && strpos($storeSettings['shop_
                         <div class="card">
                             <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;margin-bottom:6px;">
                                 <div>
-                                    <div class="card-title" style="margin-bottom:4px;">🤝 Product Combo Recommendations <span style="font-size:.75rem;background:var(--accent);color:#fff;border-radius:99px;padding:2px 8px;vertical-align:middle;font-weight:700;">ML Powered</span></div>
+                                    <div class="card-title" style="margin-bottom:4px;">Product Combo Recommendations <span style="font-size:.75rem;background:var(--accent);color:#fff;border-radius:99px;padding:2px 8px;vertical-align:middle;font-weight:700;">ML Powered</span></div>
                                     <div style="font-size:.85rem;color:var(--text2);">Based on transactional patterns via <strong>pos-ml-api-johv.onrender.com/recommend</strong>. Suggests products to bundle or cross-sell.</div>
                                 </div>
-                                <button type="button" class="btn btn-primary btn-sm" onclick="loadCombos()">🔄 Load Combos</button>
+                                <button type="button" class="btn btn-primary btn-sm" onclick="loadCombos()">Load Combos</button>
                             </div>
                             <div style="margin-bottom:12px;">
                                 <label class="form-label" style="font-size:.75rem;">Cart Items to base on (comma-separated, or leave blank for auto top-sellers)</label>
@@ -13901,7 +13901,7 @@ $seoImage = (!empty($storeSettings['shop_logo']) && strpos($storeSettings['shop_
                             </div>
                             <div id="combo-result">
                                 <div class="empty-state">
-                                    <div class="empty-icon">🤝</div>
+                                    <div class="empty-icon"><svg viewBox="0 0 24 24" width="42" height="42" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></div>
                                     <div class="empty-text">Click "Load Combos" to get ML-powered combo suggestions</div>
                                 </div>
                             </div>
@@ -13926,12 +13926,12 @@ $seoImage = (!empty($storeSettings['shop_logo']) && strpos($storeSettings['shop_
                     <div style="margin-bottom:20px;">
                         <!-- Store ID dropdown — populated live from the ML API's trained models -->
                         <div style="margin-bottom:14px;">
-                            <div style="font-size:.76rem;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--text3);margin-bottom:8px;">📍 Select Store</div>
+                            <div style="font-size:.76rem;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--text3);margin-bottom:8px;">Select Store</div>
                             <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;">
                                 <select id="fc-store-select" class="form-input" style="max-width:340px;" onchange="onFcStoreChange(this.value)">
                                     <option value="">Loading stores…</option>
                                 </select>
-                                <button type="button" class="btn btn-secondary" style="padding:8px 12px;" onclick="loadStoreDropdown(true)" id="fc-store-refresh-btn" title="Reload store list from the ML API">🔄</button>
+                                <button type="button" class="btn btn-secondary" style="padding:8px 12px;" onclick="loadStoreDropdown(true)" id="fc-store-refresh-btn" title="Reload store list from the ML API">Refresh</button>
                             </div>
                             <div style="margin-top:7px;font-size:.78rem;color:var(--text3);">
                                 Selected: <strong id="fc-store-display" style="color:var(--accent);">—</strong>
@@ -13942,12 +13942,12 @@ $seoImage = (!empty($storeSettings['shop_logo']) && strpos($storeSettings['shop_
                         <!-- Period Tabs — same label-left/buttons-right bar design as the Sales
          page's Summary Period toggle (no card wrapper), for visual consistency. -->
                         <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;">
-                            <span style="font-weight:700;font-size:.88rem;color:var(--text2);">📊 Forecast Period</span>
+                            <span style="font-weight:700;font-size:.88rem;color:var(--text2);">Forecast Period</span>
                             <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;">
-                                <button type="button" class="btn btn-primary" id="fc-tab-daily" onclick="setFcPeriod('daily')">📅 Daily</button>
-                                <button type="button" class="btn btn-secondary" id="fc-tab-weekly" onclick="setFcPeriod('weekly')">📆 Weekly</button>
-                                <button type="button" class="btn btn-secondary" id="fc-tab-monthly" onclick="setFcPeriod('monthly')">🗓️ Monthly</button>
-                                <button type="button" class="btn btn-secondary" style="margin-left:8px;" onclick="runAllForecasts()" id="fc-run-btn">🔮 Run Forecast</button>
+                                <button type="button" class="btn btn-primary" id="fc-tab-daily" onclick="setFcPeriod('daily')">Daily</button>
+                                <button type="button" class="btn btn-secondary" id="fc-tab-weekly" onclick="setFcPeriod('weekly')">Weekly</button>
+                                <button type="button" class="btn btn-secondary" id="fc-tab-monthly" onclick="setFcPeriod('monthly')">Monthly</button>
+                                <button type="button" class="btn btn-secondary" style="margin-left:8px;" onclick="runAllForecasts()" id="fc-run-btn">Run Forecast</button>
                             </div>
                         </div>
                     </div>
@@ -13974,7 +13974,7 @@ $seoImage = (!empty($storeSettings['shop_logo']) && strpos($storeSettings['shop_
 
                     <!-- Single Product Quick Forecast -->
                     <div class="card" style="margin-bottom:20px;">
-                        <div class="card-title">🔍 Quick Single Forecast</div>
+                        <div class="card-title">Quick Single Forecast</div>
                         <div style="display:grid;grid-template-columns:1fr 1fr 1fr auto;gap:10px;align-items:end;flex-wrap:wrap;" class="dash-layout">
                             <div class="form-group" style="margin:0;position:relative;">
                                 <label class="form-label">Product Name</label>
@@ -13995,17 +13995,17 @@ $seoImage = (!empty($storeSettings['shop_logo']) && strpos($storeSettings['shop_
                         <div id="fc-single-result" style="display:none;margin-top:16px;">
                             <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;" class="dash-layout">
                                 <div class="stat-card green" style="padding:16px;">
-                                    <div class="stat-label">📅 Daily Prediction</div>
+                                    <div class="stat-label">Daily Prediction</div>
                                     <div class="stat-value" id="fc-r-daily-pred">—</div>
                                     <div class="stat-sub">Restock: <strong id="fc-r-daily-restock">—</strong> units</div>
                                 </div>
                                 <div class="stat-card orange" style="padding:16px;">
-                                    <div class="stat-label">📆 Weekly Prediction</div>
+                                    <div class="stat-label">Weekly Prediction</div>
                                     <div class="stat-value" id="fc-r-weekly-pred">—</div>
                                     <div class="stat-sub">Restock: <strong id="fc-r-weekly-restock">—</strong> units</div>
                                 </div>
                                 <div class="stat-card blue" style="padding:16px;">
-                                    <div class="stat-label">🗓️ Monthly Prediction</div>
+                                    <div class="stat-label">Monthly Prediction</div>
                                     <div class="stat-value" id="fc-r-monthly-pred">—</div>
                                     <div class="stat-sub">Restock: <strong id="fc-r-monthly-restock">—</strong> units</div>
                                 </div>
@@ -14016,14 +14016,14 @@ $seoImage = (!empty($storeSettings['shop_logo']) && strpos($storeSettings['shop_
                     <!-- All Products Forecast Table -->
                     <div class="card">
                         <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;flex-wrap:wrap;gap:10px;">
-                            <div class="card-title" style="margin:0;">📊 All Products Forecast <span id="fc-table-period-label" style="font-size:.8rem;font-weight:400;color:var(--text3);">(Daily)</span></div>
+                            <div class="card-title" style="margin:0;">All Products Forecast <span id="fc-table-period-label" style="font-size:.8rem;font-weight:400;color:var(--text3);">(Daily)</span></div>
                             <div style="display:flex;gap:8px;">
                                 <input type="text" class="form-input" id="fc-search" placeholder="Search product…" oninput="filterFcTable()" style="width:160px;padding:6px 10px;font-size:.83rem;" />
                             </div>
                         </div>
                         <div id="fc-table-wrap" class="table-wrap scroll-panel" tabindex="0" aria-label="All products forecast table — scrollable up, down, left, and right">
                             <div class="empty-state">
-                                <div class="empty-icon">🔮</div>
+                                <div class="empty-icon"><svg viewBox="0 0 24 24" width="42" height="42" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M23 6l-9.5 9.5-5-5L1 18"/><polyline points="17 6 23 6 23 12"/></svg></div>
                                 <div class="empty-text">Click "Run Forecast" to generate predictions for all products</div>
                             </div>
                         </div>
@@ -14032,7 +14032,7 @@ $seoImage = (!empty($storeSettings['shop_logo']) && strpos($storeSettings['shop_
                     <!-- Restock Action Panel -->
                     <div id="fc-restock-panel" style="display:none;margin-top:20px;">
                         <div class="card">
-                            <div class="card-title">⚠️ Restock Recommendations</div>
+                            <div class="card-title">Restock Recommendations</div>
                             <p style="font-size:.83rem;color:var(--text2);margin-bottom:14px;">Products where predicted demand exceeds current store stock.</p>
                             <div id="fc-restock-list"></div>
                         </div>
@@ -14054,7 +14054,7 @@ $seoImage = (!empty($storeSettings['shop_logo']) && strpos($storeSettings['shop_
                     </div>
 
                     <div class="card" style="margin-bottom:16px;">
-                        <div class="card-title">🎨 Appearance</div>
+                        <div class="card-title">Appearance</div>
                         <div style="display:flex;align-items:center;justify-content:space-between;padding:4px 0;">
                             <div>
                                 <div style="font-weight:700;font-size:.92rem;" id="appearance-theme-label">Dark mode</div>
@@ -14069,7 +14069,7 @@ $seoImage = (!empty($storeSettings['shop_logo']) && strpos($storeSettings['shop_
 
                     <div class="card" style="margin-bottom:16px;">
                         <div class="card-title collapse-toggle" onclick="toggleCollapseCard('shop-info-wrap', this)" style="cursor:pointer;display:flex;align-items:center;justify-content:space-between;">
-                            <span>🏪 Shop Information</span><span class="collapse-chevron">▾</span>
+                            <span>Shop Information</span><span class="collapse-chevron">▾</span>
                         </div>
                         <div id="shop-info-wrap" class="collapse-body" style="display:none;">
                             <!-- Shop logo — shown on the Login page, the nav bar, and as the
@@ -14097,7 +14097,7 @@ $seoImage = (!empty($storeSettings['shop_logo']) && strpos($storeSettings['shop_
            no extra library/CDN dependency is needed. -->
                             <div class="modal-overlay" id="crop-logo-modal">
                                 <div class="modal" style="max-width:360px;">
-                                    <div class="modal-header"><span class="modal-title">✂️ Crop Logo</span><button class="modal-close" onclick="cancelLogoCrop()">✕</button></div>
+                                    <div class="modal-header"><span class="modal-title">Crop Logo</span><button class="modal-close" onclick="cancelLogoCrop()">✕</button></div>
                                     <p style="font-size:.8rem;color:var(--text3);margin-bottom:10px;">Drag the image to reposition it, and use the slider to zoom. The frame shown is exactly what will be used as your logo.</p>
                                     <!-- Frame shape — some logos are already circular artwork (like a
                coin/badge design), so cropping them into a square leaves
@@ -14105,18 +14105,18 @@ $seoImage = (!empty($storeSettings['shop_logo']) && strpos($storeSettings['shop_
                transparent corners instead. -->
                                     <div style="display:flex;gap:8px;margin-bottom:10px;">
                                         <button type="button" class="btn btn-secondary btn-sm" id="crop-shape-square" style="flex:1;" onclick="setCropShape('square')">⬜ Square</button>
-                                        <button type="button" class="btn btn-secondary btn-sm" id="crop-shape-circle" style="flex:1;" onclick="setCropShape('circle')">⚪ Circle</button>
+                                        <button type="button" class="btn btn-secondary btn-sm" id="crop-shape-circle" style="flex:1;" onclick="setCropShape('circle')">Circle</button>
                                     </div>
                                     <div id="crop-frame-wrap" style="width:280px;height:280px;margin:0 auto;border-radius:14px;overflow:hidden;border:2px solid var(--accent);touch-action:none;background:#1a1a1a;">
                                         <canvas id="crop-canvas" width="280" height="280" style="display:block;cursor:grab;touch-action:none;"></canvas>
                                     </div>
                                     <div style="display:flex;align-items:center;gap:10px;margin-top:14px;">
-                                        <span style="font-size:.95rem;">🔍</span>
+                                        <span style="font-size:.95rem;display:inline-flex;align-items:center;"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg></span>
                                         <input type="range" id="crop-zoom-slider" min="1" max="3" step="0.01" value="1" style="flex:1;" oninput="onCropZoomChange()" />
                                     </div>
                                     <div style="display:flex;gap:8px;margin-top:16px;">
                                         <button type="button" class="btn btn-secondary" style="flex:1;" onclick="cancelLogoCrop()">Cancel</button>
-                                        <button type="button" class="btn btn-primary" style="flex:1;" onclick="applyLogoCrop()">✂️ Apply &amp; Upload</button>
+                                        <button type="button" class="btn btn-primary" style="flex:1;" onclick="applyLogoCrop()">Apply &amp; Upload</button>
                                     </div>
                                 </div>
                             </div>
@@ -14150,7 +14150,7 @@ $seoImage = (!empty($storeSettings['shop_logo']) && strpos($storeSettings['shop_
        personal display preference, not a store-wide/security setting. -->
                     <div class="card" style="margin-bottom:16px;">
                         <div class="card-title collapse-toggle" onclick="toggleCollapseCard('system-theme-wrap', this)" style="cursor:pointer;display:flex;align-items:center;justify-content:space-between;">
-                            <span>🎨 System Theme</span><span class="collapse-chevron">▾</span>
+                            <span>System Theme</span><span class="collapse-chevron">▾</span>
                         </div>
                         <div id="system-theme-wrap" class="collapse-body" style="display:none;">
                             <p style="font-size:.78rem;color:var(--text2);margin-bottom:12px;">Pick your own colors, font, and text size for the app. Changes preview instantly — nothing is saved until you tap <b>Save Theme</b>. This is saved to this browser/device only.</p>
@@ -14191,7 +14191,7 @@ $seoImage = (!empty($storeSettings['shop_logo']) && strpos($storeSettings['shop_
 
                     <div class="card" style="margin-bottom:16px;">
                         <div class="card-title collapse-toggle" onclick="toggleCollapseCard('my-email-wrap', this)" style="cursor:pointer;display:flex;align-items:center;justify-content:space-between;">
-                            <span>📧 My Email</span><span class="collapse-chevron">▾</span>
+                            <span>My Email</span><span class="collapse-chevron">▾</span>
                         </div>
                         <div id="my-email-wrap" class="collapse-body" style="display:none;">
                             <p style="font-size:.83rem;color:var(--text2);margin-bottom:14px;">Used for password reset links. <?= !empty($currentUser['email']) ? '' : 'No email set yet — Forgot Password won\'t work until you add one.' ?></p>
@@ -14202,7 +14202,7 @@ $seoImage = (!empty($storeSettings['shop_logo']) && strpos($storeSettings['shop_
 
                     <div class="card" style="margin-bottom:16px;">
                         <div class="card-title collapse-toggle" onclick="toggleCollapseCard('change-pw-wrap', this)" style="cursor:pointer;display:flex;align-items:center;justify-content:space-between;">
-                            <span>🔑 Change Password</span><span class="collapse-chevron">▾</span>
+                            <span>Change Password</span><span class="collapse-chevron">▾</span>
                         </div>
                         <div id="change-pw-wrap" class="collapse-body" style="display:none;">
                             <div class="form-group"><label class="form-label">Current Password</label><div class="pw-eye-wrap"><input type="password" class="form-input" id="old-pw" /><button type="button" class="show-pass-btn" onclick="togglePass(this)" aria-label="Show password">👁️</button></div></div>
@@ -14214,7 +14214,7 @@ $seoImage = (!empty($storeSettings['shop_logo']) && strpos($storeSettings['shop_
                     <?php if ($currentUser['role'] === 'owner'): ?>
                         <div class="card" style="margin-bottom:16px;">
                             <div class="card-title collapse-toggle" onclick="toggleCollapseCard('users-wrap', this)" style="cursor:pointer;display:flex;align-items:center;justify-content:space-between;">
-                                <span>👥 User Accounts</span><span class="collapse-chevron">▾</span>
+                                <span>User Accounts</span><span class="collapse-chevron">▾</span>
                             </div>
                             <div id="users-wrap" class="collapse-body" style="display:none;">
                                 <div id="users-list" style="margin-bottom:14px;"></div>
@@ -14243,7 +14243,7 @@ $seoImage = (!empty($storeSettings['shop_logo']) && strpos($storeSettings['shop_
        track record per cashier. -->
                         <div class="card" style="margin-bottom:16px;" id="shift-monitor-card">
                             <div class="card-title collapse-toggle" onclick="toggleCollapseCard('shift-monitor-wrap', this)" style="cursor:pointer;display:flex;align-items:center;justify-content:space-between;">
-                                <span>👥 Cashier Shift Monitor</span><span class="collapse-chevron">▾</span>
+                                <span>Cashier Shift Monitor</span><span class="collapse-chevron">▾</span>
                             </div>
                             <div id="shift-monitor-wrap" class="collapse-body" style="display:none;">
                                 <p style="font-size:.83rem;color:var(--text2);margin-bottom:14px;">
@@ -14271,7 +14271,7 @@ $seoImage = (!empty($storeSettings['shop_logo']) && strpos($storeSettings['shop_
        regardless of the real setting). -->
                     <div class="card" style="margin-bottom:16px;" id="hw-diagnostics-card">
                         <div class="card-title collapse-toggle" onclick="toggleCollapseCard('hw-diagnostics-wrap', this)" style="cursor:pointer;display:flex;align-items:center;justify-content:space-between;">
-                            <span>🔧 Hardware Diagnostics</span><span class="collapse-chevron">▾</span>
+                            <span>Hardware Diagnostics</span><span class="collapse-chevron">▾</span>
                         </div>
                         <div id="hw-diagnostics-wrap" class="collapse-body" style="display:none;">
                             <p style="font-size:.83rem;color:var(--text2);margin-bottom:14px;">
@@ -14289,7 +14289,7 @@ $seoImage = (!empty($storeSettings['shop_logo']) && strpos($storeSettings['shop_
 
                             <div style="display:flex;align-items:center;justify-content:space-between;gap:10px;padding:11px 0;border-bottom:1px solid var(--border);">
                                 <div>
-                                    <div style="font-size:.85rem;font-weight:700;">🧾 Receipt Printer</div>
+                                    <div style="font-size:.85rem;font-weight:700;">Receipt Printer</div>
                                     <div style="font-size:.72rem;color:var(--text3);">Prints a sample receipt through the same pipeline as a real sale</div>
                                 </div>
                                 <button type="button" class="btn btn-secondary btn-sm" onclick="testPrintReceipt()">Test Print</button>
@@ -14297,7 +14297,7 @@ $seoImage = (!empty($storeSettings['shop_logo']) && strpos($storeSettings['shop_
 
                             <div style="display:flex;align-items:center;justify-content:space-between;gap:10px;padding:11px 0;border-bottom:1px solid var(--border);">
                                 <div>
-                                    <div style="font-size:.85rem;font-weight:700;">🏷️ Barcode Label Printer</div>
+                                    <div style="font-size:.85rem;font-weight:700;">Barcode Label Printer</div>
                                     <div style="font-size:.72rem;color:var(--text3);">Renders + prints one scannable CODE128 test label</div>
                                 </div>
                                 <button type="button" class="btn btn-secondary btn-sm" onclick="testPrintBarcodeLabel()">Test Print</button>
@@ -14305,7 +14305,7 @@ $seoImage = (!empty($storeSettings['shop_logo']) && strpos($storeSettings['shop_
 
                             <div style="padding:11px 0;border-bottom:1px solid var(--border);">
                                 <div style="margin-bottom:8px;">
-                                    <div style="font-size:.85rem;font-weight:700;">🔌 USB / Handheld Scanner</div>
+                                    <div style="font-size:.85rem;font-weight:700;">USB / Handheld Scanner</div>
                                     <div style="font-size:.72rem;color:var(--text3);">Click the box below, then scan any barcode — this only checks the wedge is reading correctly, no product lookup happens</div>
                                 </div>
                                 <div id="hw-diag-scanner-box" tabindex="0" style="border:1.5px dashed var(--border);border-radius:8px;padding:14px;text-align:center;font-size:.85rem;color:var(--text3);cursor:text;outline:none;">Click here, then scan a barcode…</div>
@@ -14316,7 +14316,7 @@ $seoImage = (!empty($storeSettings['shop_logo']) && strpos($storeSettings['shop_
                             <div style="padding:11px 0;">
                                 <div style="display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:10px;">
                                     <div>
-                                        <div style="font-size:.85rem;font-weight:700;">💵 Cash Drawer &amp; Direct Thermal Printing</div>
+                                        <div style="font-size:.85rem;font-weight:700;">Cash Drawer &amp; Direct Thermal Printing</div>
                                         <div style="font-size:.72rem;color:var(--text3);">Auto-detected via POS Native Print Agent (port 9100) or QZ Tray</div>
                                     </div>
                                 </div>
@@ -14337,7 +14337,7 @@ $seoImage = (!empty($storeSettings['shop_logo']) && strpos($storeSettings['shop_
                     <!-- ── SALES HISTORY RETENTION & CLEANUP CARD ── -->
                     <div class="card" style="margin-bottom:16px;" id="sales-retention-card">
                         <div class="card-title collapse-toggle" onclick="toggleCollapseCard('sales-retention-wrap', this)" style="cursor:pointer;display:flex;align-items:center;justify-content:space-between;">
-                            <span>🧹 Sales History Retention &amp; Auto-Cleanup</span><span class="collapse-chevron">▾</span>
+                            <span>Sales History Retention &amp; Auto-Cleanup</span><span class="collapse-chevron">▾</span>
                         </div>
                         <div id="sales-retention-wrap" class="collapse-body" style="display:none;">
                             <p style="font-size:.83rem;color:var(--text2);margin-bottom:14px;">
@@ -14381,10 +14381,10 @@ $seoImage = (!empty($storeSettings['shop_logo']) && strpos($storeSettings['shop_
 
                             <div style="display:flex;gap:10px;align-items:center;">
                                 <button type="button" class="btn btn-secondary" id="sales-cleanup-now-btn" onclick="triggerManualSalesCleanup()" style="flex:1;">
-                                    🧹 Clean Old Transactions Now
+                                    Clean Old Transactions Now
                                 </button>
                                 <button type="button" class="btn btn-secondary btn-sm" onclick="loadSalesCleanupStatus()" title="Refresh Status">
-                                    🔄 Refresh
+                                    Refresh
                                 </button>
                             </div>
                             <div id="sales-cleanup-result-msg" style="margin-top:10px;font-size:.78rem;display:none;"></div>
@@ -14471,9 +14471,9 @@ $seoImage = (!empty($storeSettings['shop_logo']) && strpos($storeSettings['shop_
             }
 
             function apiErrorMessage(e) {
-                if (e && e.name === 'AbortError') return '⏱️ Server is taking too long to respond — please try again.';
-                if (navigator.onLine === false) return '📶 You appear to be offline — check your connection and try again.';
-                return '⚠️ Could not reach the server — check your connection and try again.';
+                if (e && e.name === 'AbortError') return 'Server is taking too long to respond — please try again.';
+                if (navigator.onLine === false) return 'You appear to be offline — check your connection and try again.';
+                return 'Could not reach the server — check your connection and try again.';
             }
             // ── FAST SESSION CACHE FOR STATIC/NEAR-STATIC LOOKUPS ──
             // Caches get_settings and get_categories in sessionStorage for 60 seconds
@@ -14528,7 +14528,7 @@ $seoImage = (!empty($storeSettings['shop_logo']) && strpos($storeSettings['shop_
                         return null;
                     }
                     if (!r.ok) {
-                        toast('⚠️ Server error (' + r.status + ') — please try again', 'error');
+                        toast('Server error (' + r.status + ') — please try again', 'error');
                         return null;
                     }
                     const json = await r.json(); // must await inside try/catch, or a malformed response silently fails with no toast at all
@@ -14633,7 +14633,7 @@ $seoImage = (!empty($storeSettings['shop_logo']) && strpos($storeSettings['shop_
                         return null;
                     }
                     if (!r.ok) {
-                        toast('⚠️ Server error (' + r.status + ') — please try again', 'error');
+                        toast('Server error (' + r.status + ') — please try again', 'error');
                         return null;
                     }
                     const json = await r.json();
@@ -15163,7 +15163,7 @@ $seoImage = (!empty($storeSettings['shop_logo']) && strpos($storeSettings['shop_
                 shiftLoggingOut = false;
                 document.body.classList.add('shift-locked');
                 const titleEl = document.getElementById('shift-modal-title');
-                if (titleEl) titleEl.textContent = '💰 Start of Shift — Cash Float Count';
+                if (titleEl) titleEl.textContent = 'Start of Shift — Cash Float Count';
                 const subEl = document.getElementById('shift-modal-sub');
                 if (subEl) subEl.textContent = 'Cash drawer released. Count your physical starting cash float in the till and enter each denomination below before starting transactions.';
                 const drawerStatus = document.getElementById('shift-drawer-status');
@@ -15171,13 +15171,13 @@ $seoImage = (!empty($storeSettings['shop_logo']) && strpos($storeSettings['shop_
                 const cancelWrap = document.getElementById('shift-cancel-wrap');
                 if (cancelWrap) cancelWrap.style.display = 'none';
                 const saveBtn = document.getElementById('shift-save-btn');
-                if (saveBtn) saveBtn.textContent = '✅ Save & Open Shift';
+                if (saveBtn) saveBtn.textContent = 'Save & Open Shift';
                 renderShiftDenomGrid();
                 updateShiftTotal();
                 openModal('shift-modal');
                 // 7-Eleven flow: Cash drawer kicks open automatically upon cashier login
                 triggerShiftDrawerKick();
-                toast('🔓 Cash drawer released — count your starting float', 'default');
+                toast('Cash drawer released — count your starting float', 'default');
             }
 
             // BLIND COUNT ENFORCEMENT: the expected cash and any live variance are
@@ -15214,7 +15214,7 @@ $seoImage = (!empty($storeSettings['shop_logo']) && strpos($storeSettings['shop_
                     shiftLoggingOut = !!loggingOut;
                     document.body.classList.add('shift-locked');
                     const titleEl = document.getElementById('shift-modal-title');
-                    if (titleEl) titleEl.textContent = '🔒 End of Shift — Blind Cash Count (Z-Read)';
+                    if (titleEl) titleEl.textContent = 'End of Shift — Blind Cash Count (Z-Read)';
                     const subEl = document.getElementById('shift-modal-sub');
                     if (subEl) subEl.textContent = 'The drawer has popped open. Count every bill and coin currently inside and enter it below — expected amount is hidden until your shift report prints.';
                     const drawerStatus = document.getElementById('shift-drawer-status');
@@ -15222,13 +15222,13 @@ $seoImage = (!empty($storeSettings['shop_logo']) && strpos($storeSettings['shop_
                     const cancelWrap = document.getElementById('shift-cancel-wrap');
                     if (cancelWrap) cancelWrap.style.display = 'block';
                     const saveBtn = document.getElementById('shift-save-btn');
-                    if (saveBtn) saveBtn.textContent = '🖨️ Submit & Close Shift';
+                    if (saveBtn) saveBtn.textContent = 'Submit & Close Shift';
                     renderShiftDenomGrid();
                     updateShiftTotal();
                     openModal('shift-modal');
                     // 7-Eleven flow: Cash drawer kicks open automatically for end of shift cash count
                     triggerShiftDrawerKick();
-                    toast('🔓 Cash drawer released — begin your closing count', 'default');
+                    toast('Cash drawer released — begin your closing count', 'default');
                 });
             }
 
@@ -15240,7 +15240,7 @@ $seoImage = (!empty($storeSettings['shop_logo']) && strpos($storeSettings['shop_
                 shiftMode = null;
             }
 
-            // Nav "🔚 End Shift" button
+            // Nav End Shift button
             function requestEndShift() {
                 openShiftCloseModal(false);
             }
@@ -15283,7 +15283,7 @@ $seoImage = (!empty($storeSettings['shop_logo']) && strpos($storeSettings['shop_
                         shift_id: d.shift_id
                     });
                     if (nativeOk) {
-                        toast('🖨️ Shift start float slip printed to thermal printer', 'success');
+                        toast('Shift start float slip printed to thermal printer', 'success');
                         return;
                     }
                 } catch (e) {}
@@ -15351,7 +15351,7 @@ $seoImage = (!empty($storeSettings['shop_logo']) && strpos($storeSettings['shop_
                             toast(r?.error || 'Could not start shift', 'error');
                             return;
                         }
-                        toast('✅ Shift started! Opening float: ' + fmt(total), 'success');
+                        toast('Shift started! Opening float: ' + fmt(total), 'success');
                         document.body.classList.remove('shift-locked');
                         closeModal('shift-modal');
                         shiftMode = null;
@@ -15499,7 +15499,7 @@ $seoImage = (!empty($storeSettings['shop_logo']) && strpos($storeSettings['shop_
                     };
                     const nativeOk = await tryNativePrintAgent(nativePayload);
                     if (nativeOk) {
-                        toast('🖨️ Shift summary Z-Read printed directly to thermal printer', 'success');
+                        toast('Shift summary Z-Read printed directly to thermal printer', 'success');
                         return;
                     }
                 } catch (e) {}
@@ -15760,7 +15760,7 @@ $seoImage = (!empty($storeSettings['shop_logo']) && strpos($storeSettings['shop_
 
                 const ageMin = Math.round((Date.now() - (saved.savedAt || 0)) / 60000);
                 const ok = confirm(
-                    '🔌 An unfinished sale was found (from ' + (ageMin <= 1 ? 'less than a minute ago' : ageMin + ' minute(s) ago') + '), ' +
+                    'An unfinished sale was found (from ' + (ageMin <= 1 ? 'less than a minute ago' : ageMin + ' minute(s) ago') + '), ' +
                     'likely left over from a power loss, crash, or closed tab.\n\n' +
                     'Restore it (' + saved.cart.length + ' item line(s)) and continue the sale?'
                 );
@@ -15777,7 +15777,7 @@ $seoImage = (!empty($storeSettings['shop_logo']) && strpos($storeSettings['shop_
                     calcChange();
                 }
                 openModal('cart-modal');
-                toast('🔌 Previous cart restored', 'success');
+                toast('Previous cart restored', 'success');
             }
 
             function pendingSalesList() {
@@ -15844,14 +15844,14 @@ $seoImage = (!empty($storeSettings['shop_logo']) && strpos($storeSettings['shop_
                     } else {
                         // Server reachable but rejected it (e.g. stock validation) — surface
                         // it instead of retrying forever on a sale that will never succeed.
-                        toast('⚠️ Offline sale ' + entry.localRef + ' failed to sync: ' + (r?.error || 'unknown error') + ' — please review manually', 'error');
+                        toast('Offline sale ' + entry.localRef + ' failed to sync: ' + (r?.error || 'unknown error') + ' — please review manually', 'error');
                     }
                 }
                 savePendingSalesList(remaining);
                 _flushingPendingSales = false;
                 renderPendingSyncBadge();
                 if (syncedCount > 0) {
-                    toast('✅ Synced ' + syncedCount + ' offline sale(s) to the server', 'success');
+                    toast('Synced ' + syncedCount + ' offline sale(s) to the server', 'success');
                     loadStats();
                     invalidateProdCache();
                     loadAllProds(true);
@@ -16000,7 +16000,7 @@ $seoImage = (!empty($storeSettings['shop_logo']) && strpos($storeSettings['shop_
                     // indication anything was wrong. Now it says so, so a real backend
                     // issue is visible instead of looking like the app is just slow.
                     if (!r?.success) {
-                        toast(r?.error ? ('⚠️ Dashboard stats: ' + r.error) : '⚠️ Could not load dashboard stats', 'error');
+                        toast(r?.error ? ('Dashboard stats: ' + r.error) : 'Could not load dashboard stats', 'error');
                         return;
                     }
                     const d = r.data;
@@ -16039,7 +16039,7 @@ $seoImage = (!empty($storeSettings['shop_logo']) && strpos($storeSettings['shop_
                 }).catch(() => {
                     if (!allProds || !allProds.length) {
                         const pg = document.getElementById('prods-grid');
-                        if (pg) pg.innerHTML = '<div style="grid-column:1/-1;text-align:center;padding:30px;"><div style="color:var(--text);font-weight:700;margin-bottom:6px;">⚠️ Could not load products</div><button type="button" class="btn btn-primary btn-sm" onclick="loadAllProds(true)">🔄 Tap to Retry</button></div>';
+                        if (pg) pg.innerHTML = '<div style="grid-column:1/-1;text-align:center;padding:30px;"><div style="color:var(--text);font-weight:700;margin-bottom:6px;">Could not load products</div><button type="button" class="btn btn-primary btn-sm" onclick="loadAllProds(true)">Tap to Retry</button></div>';
                     }
                 });
             }
@@ -16235,19 +16235,19 @@ $seoImage = (!empty($storeSettings['shop_logo']) && strpos($storeSettings['shop_
                         availStock = whQty;
                         isOut = availStock <= 0;
                         isLow = availStock > 0 && availStock <= threshold;
-                        stockMeta = (p.category_name || 'Uncategorized') + ' · 🏭 Wh: ' + whQty;
+                        stockMeta = (p.category_name || 'Uncategorized') + ' · Wh: ' + whQty;
                         clickHandler = isOut ? '' : 'onclick="addToCart(' + p.id + ', 1, \'warehouse\')"';
                     } else if (_dashStockSource === 'all') {
                         availStock = stQty + whQty;
                         isOut = availStock <= 0;
                         isLow = availStock > 0 && availStock <= threshold;
-                        stockMeta = (p.category_name || 'Uncategorized') + ' · 🏪 ' + stQty + ' | 🏭 ' + whQty;
+                        stockMeta = (p.category_name || 'Uncategorized') + ' · Store: ' + stQty + ' | Wh: ' + whQty;
                         clickHandler = isOut ? '' : 'onclick="addToCart(' + p.id + ')"';
                     } else { // 'store'
                         availStock = stQty;
                         isOut = availStock <= 0;
                         isLow = availStock > 0 && availStock <= threshold;
-                        stockMeta = (p.category_name || 'Uncategorized') + ' · 🏪 Store: ' + stQty;
+                        stockMeta = (p.category_name || 'Uncategorized') + ' · Store: ' + stQty;
                         clickHandler = isOut ? '' : 'onclick="addToCart(' + p.id + ', 1, \'store\')"';
                     }
                 } else {
@@ -16271,7 +16271,7 @@ $seoImage = (!empty($storeSettings['shop_logo']) && strpos($storeSettings['shop_
                     img +
                     (isLow && !isOut ? '<span class="low-badge">Low</span>' : '') +
                     (isOut ? '<span class="low-badge">Out</span>' : '') +
-                    (promoInfo.active && !isOut ? '<span class="sale-badge">🏷️ SALE</span>' : '') +
+                    (promoInfo.active && !isOut ? '<span class="sale-badge">SALE</span>' : '') +
                     (inCartQty > 0 ? '<span class="qty-badge">' + inCartQty + '</span>' : '') +
                     '<div class="product-card-body">' +
                     '<div class="product-card-name">' + escapeHtml(p.name) + '</div>' +
@@ -16336,7 +16336,7 @@ $seoImage = (!empty($storeSettings['shop_logo']) && strpos($storeSettings['shop_
                 if (!grid) return;
                 if (!_gridFilteredProds.length) {
                     if (_gridObserver) { _gridObserver.disconnect(); _gridObserver = null; }
-                    grid.innerHTML = '<div style="grid-column:1/-1"><div class="empty-state"><div class="empty-icon">🍽️</div><div class="empty-text">No products found</div></div></div>';
+                    grid.innerHTML = '<div style="grid-column:1/-1"><div class="empty-state"><div class="empty-icon" style="display:flex;justify-content:center;"><img src="' + DEFAULT_PRODUCT_IMG + '" class="default-prod-img" style="width:56px;height:56px;object-fit:cover;border-radius:10px;margin-bottom:8px;opacity:.7;" alt=""></div><div class="empty-text">No products found</div></div></div>';
                     return;
                 }
                 if (reset) {
@@ -16493,7 +16493,7 @@ $seoImage = (!empty($storeSettings['shop_logo']) && strpos($storeSettings['shop_
                     //   catalog_price  → regular_price, or the catalog Promo Price if one is active
                     //   price          → what's actually charged (starts equal to catalog_price;
                     //                     a cashier-applied manual_discount, added later in the
-                    //                     Cart via the 🏷️ button, can markdown it further for
+                    //                     Cart via the discount button, can markdown it further for
                     //                     this sale only — it never touches the stored product)
                     const promoInfo = getPromoInfo(p);
                     const catalogPrice = promoInfo.active ? promoInfo.promo : parseFloat(p.price);
@@ -16621,7 +16621,7 @@ $seoImage = (!empty($storeSettings['shop_logo']) && strpos($storeSettings['shop_
                     }
                     item.stock_source = targetSrc;
                 }
-                toast('Switched to ' + (targetSrc === 'warehouse' ? '🏭 Warehouse' : '🏪 Store') + ' stock', 'success');
+                toast('Switched to ' + (targetSrc === 'warehouse' ? 'Warehouse' : 'Store') + ' stock', 'success');
                 updateCartUI();
                 renderGrid(false);
             }
@@ -16666,7 +16666,7 @@ $seoImage = (!empty($storeSettings['shop_logo']) && strpos($storeSettings['shop_
             let cartDiscountTargetId = null;
             let cartDiscountType = 'percent';
 
-            // productId is optional: when set (clicked from a specific cart line's 🏷️
+            // productId is optional: when set (clicked from a specific cart line's discount button
             // button) that product is preselected; when omitted (clicked from the "Give
             // a Discount on a Product" button that appears once Cash Tendered is
             // entered) the cashier picks the product from the dropdown themselves.
@@ -16742,7 +16742,7 @@ $seoImage = (!empty($storeSettings['shop_logo']) && strpos($storeSettings['shop_
                 let newPrice = cartDiscountType === 'percent' ? base * (1 - val / 100) : base - val;
                 newPrice = Math.max(0, Math.round(newPrice * 100) / 100);
                 if (newPrice >= base) {
-                    preview.innerHTML = '<span style="color:var(--danger);">⚠️ That doesn\'t lower the price below ' + fmt(base) + '.</span>';
+                    preview.innerHTML = '<span style="color:var(--danger);">That doesn\'t lower the price below ' + fmt(base) + '.</span>';
                     return;
                 }
                 preview.innerHTML = 'New price: <strong style="color:#e74c3c;">' + fmt(newPrice) + '</strong> <span style="color:var(--text3);text-decoration:line-through;">' + fmt(base) + '</span> / piece';
@@ -16840,7 +16840,7 @@ $seoImage = (!empty($storeSettings['shop_logo']) && strpos($storeSettings['shop_
                             const stStock = parseInt(prod?.quantity) || 0;
                             const whStock = parseInt(prod?.warehouse_quantity) || 0;
                             const badgeColor = isWh ? 'background:rgba(59,130,246,0.18);color:#60a5fa;border:1px solid rgba(59,130,246,0.35);' : 'background:rgba(16,185,129,0.18);color:#34d399;border:1px solid rgba(16,185,129,0.35);';
-                            const badgeLabel = isWh ? '🏭 Warehouse Stock (' + whStock + ' avail)' : '🏪 Store Stock (' + stStock + ' avail)';
+                            const badgeLabel = isWh ? 'Warehouse Stock (' + whStock + ' avail)' : 'Store Stock (' + stStock + ' avail)';
                             const canSwitch = isWh ? stStock > 0 : whStock > 0;
                             const switchBtn = canSwitch ? ' <span style="text-decoration:underline;cursor:pointer;margin-left:5px;font-weight:700;" onclick="toggleCartItemSource(' + item.product_id + ', \'' + (item.stock_source || 'store') + '\')" title="Switch fulfillment source">⇄ Switch to ' + (isWh ? 'Store' : 'Wh') + '</span>' : '';
                             metaParts.push('<span style="' + badgeColor + 'font-size:.72rem;padding:2px 7px;border-radius:5px;font-weight:700;display:inline-flex;align-items:center;">' + badgeLabel + switchBtn + '</span>');
@@ -16850,9 +16850,9 @@ $seoImage = (!empty($storeSettings['shop_logo']) && strpos($storeSettings['shop_
                         if (item.manual_discount) {
                             const md = item.manual_discount;
                             const tagLabel = md.type === 'percent' ? md.value + '% OFF' : fmt(md.value) + ' OFF';
-                            metaParts.push('<span style="color:#e74c3c;font-weight:700;">🏷️ DISCOUNT (' + tagLabel + ')' + (md.reason ? ' — ' + escapeHtml(md.reason) : '') + '</span>');
+                            metaParts.push('<span style="color:#e74c3c;font-weight:700;">DISCOUNT (' + tagLabel + ')' + (md.reason ? ' — ' + escapeHtml(md.reason) : '') + '</span>');
                         } else if (item.is_promo) {
-                            metaParts.push('<span style="color:#e74c3c;font-weight:700;">🏷️ PROMO</span>');
+                            metaParts.push('<span style="color:#e74c3c;font-weight:700;">PROMO</span>');
                         }
                         if (item.category_name) metaParts.push('Category: ' + escapeHtml(item.category_name));
                         if (item.brand) metaParts.push('Brand: ' + escapeHtml(item.brand));
@@ -16873,12 +16873,12 @@ $seoImage = (!empty($storeSettings['shop_logo']) && strpos($storeSettings['shop_
                             const naive = item.qty * item.price;
                             const savings = naive - bd.subtotal;
                             const lines = bd.parts.map(p => {
-                                if (p.unit === 'case') return '<div class="cart-bulk-line"><span>📦📦 ' + p.count + 'x Case (' + item.case_qty + ' Pcs)</span><span>' + fmt(item.case_price) + '</span></div>';
-                                if (p.unit === 'bundle') return '<div class="cart-bulk-line"><span>📦 ' + p.count + 'x Bundle (' + item.pack_qty + ' Pcs)</span><span>' + fmt(item.pack_price) + '</span></div>';
-                                return '<div class="cart-bulk-line"><span>🔹 ' + p.count + 'x Pieces</span><span>' + fmt(item.price) + ' each</span></div>';
+                                if (p.unit === 'case') return '<div class="cart-bulk-line"><span>' + p.count + 'x Case (' + item.case_qty + ' Pcs)</span><span>' + fmt(item.case_price) + '</span></div>';
+                                if (p.unit === 'bundle') return '<div class="cart-bulk-line"><span>' + p.count + 'x Bundle (' + item.pack_qty + ' Pcs)</span><span>' + fmt(item.pack_price) + '</span></div>';
+                                return '<div class="cart-bulk-line"><span>' + p.count + 'x Pieces</span><span>' + fmt(item.price) + ' each</span></div>';
                             }).join('');
                             bulkCard = '<div class="cart-bulk-card">' + lines +
-                                (savings > 0.004 ? '<span class="cart-savings-badge">✨ Auto-optimized (Saved ' + fmt(savings) + ')</span>' : '') +
+                                (savings > 0.004 ? '<span class="cart-savings-badge">Auto-optimized (Saved ' + fmt(savings) + ')</span>' : '') +
                                 '</div>';
                         }
 
@@ -16897,7 +16897,7 @@ $seoImage = (!empty($storeSettings['shop_logo']) && strpos($storeSettings['shop_
                             '<div class="cart-sub-col">' + fmt(bd.subtotal) + '</div>' +
                             '<div style="display:flex;flex-direction:column;gap:4px;">' +
                             '<button type="button" class="cart-del-btn" onclick="removeFromCart(' + item.product_id + ',\'' + lineSrc + '\')" title="Remove">✕</button>' +
-                            '<button type="button" class="cart-del-btn" style="color:#e74c3c;" onclick="openCartDiscountModal(' + item.product_id + ')" title="Discount this item">🏷️</button>' +
+                            '<button type="button" class="cart-del-btn" style="color:#e74c3c;" onclick="openCartDiscountModal(' + item.product_id + ')" title="Discount this item">%</button>' +
                             '</div>' +
                             metaLine + bulkCard +
                             '</div>';
@@ -17102,7 +17102,7 @@ $seoImage = (!empty($storeSettings['shop_logo']) && strpos($storeSettings['shop_
                         // Order # the moment connectivity returns (see flushPendingSales).
                         ref = queuePendingSale(txPayload);
                         isOffline = true;
-                        toast('📴 No connection — sale saved offline, will sync automatically', 'warning');
+                        toast('No connection — sale saved offline, will sync automatically', 'warning');
                     } else {
                         ref = r.data.order_ref;
                     }
@@ -17255,7 +17255,7 @@ $seoImage = (!empty($storeSettings['shop_logo']) && strpos($storeSettings['shop_
 
                 const nativePrinted = await tryNativePrintAgent(agentPayload);
                 if (nativePrinted) {
-                    toast('🖨️ Receipt printed silently via Native Thermal Print Agent', 'success');
+                    toast('Receipt printed silently via Native Thermal Print Agent', 'success');
                     return;
                 }
 
@@ -17435,12 +17435,12 @@ $seoImage = (!empty($storeSettings['shop_logo']) && strpos($storeSettings['shop_
                         renderProds();
                     } else if (!invProds || !invProds.length) {
                         if (countEl) countEl.textContent = 'Failed to load';
-                        if (grid) grid.innerHTML = '<div style="grid-column:1/-1;text-align:center;padding:40px;"><div style="font-size:2rem;margin-bottom:8px;">⚠️</div><div style="color:var(--text);font-weight:700;margin-bottom:6px;">Could not load products</div><div style="color:var(--text3);font-size:.85rem;margin-bottom:14px;">The server took too long to respond. Tap to retry.</div><button type="button" class="btn btn-primary btn-sm" onclick="loadInvProds(true)">🔄 Retry Now</button></div>';
+                        if (grid) grid.innerHTML = '<div style="grid-column:1/-1;text-align:center;padding:40px;"><div style="display:flex;justify-content:center;margin-bottom:8px;"><svg viewBox="0 0 24 24" width="36" height="36" fill="none" stroke="var(--warning,#F39C12)" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg></div><div style="color:var(--text);font-weight:700;margin-bottom:6px;">Could not load products</div><div style="color:var(--text3);font-size:.85rem;margin-bottom:14px;">The server took too long to respond. Tap to retry.</div><button type="button" class="btn btn-primary btn-sm" onclick="loadInvProds(true)">Retry Now</button></div>';
                     }
                 }).catch(err => {
                     if (!invProds || !invProds.length) {
                         if (countEl) countEl.textContent = 'Failed to load';
-                        if (grid) grid.innerHTML = '<div style="grid-column:1/-1;text-align:center;padding:40px;"><div style="font-size:2rem;margin-bottom:8px;">⚠️</div><div style="color:var(--text);font-weight:700;margin-bottom:6px;">Could not reach server</div><div style="color:var(--text3);font-size:.85rem;margin-bottom:14px;">' + (err?.message || 'Connection timeout') + '</div><button type="button" class="btn btn-primary btn-sm" onclick="loadInvProds(true)">🔄 Retry Now</button></div>';
+                        if (grid) grid.innerHTML = '<div style="grid-column:1/-1;text-align:center;padding:40px;"><div style="display:flex;justify-content:center;margin-bottom:8px;"><svg viewBox="0 0 24 24" width="36" height="36" fill="none" stroke="var(--warning,#F39C12)" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg></div><div style="color:var(--text);font-weight:700;margin-bottom:6px;">Could not reach server</div><div style="color:var(--text3);font-size:.85rem;margin-bottom:14px;">' + (err?.message || 'Connection timeout') + '</div><button type="button" class="btn btn-primary btn-sm" onclick="loadInvProds(true)">Retry Now</button></div>';
                     }
                 });
             }
@@ -17493,7 +17493,7 @@ $seoImage = (!empty($storeSettings['shop_logo']) && strpos($storeSettings['shop_
                 const grid = document.getElementById('prod-grid');
                 if (!grid) return;
                 if (!list.length) {
-                    grid.innerHTML = '<div style="grid-column:1/-1"><div class="empty-state"><div class="empty-icon">📦</div><div class="empty-text">No products</div></div></div>';
+                    grid.innerHTML = '<div style="grid-column:1/-1"><div class="empty-state"><div class="empty-icon"><svg viewBox="0 0 24 24" width="42" height="42" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg></div><div class="empty-text">No products</div></div></div>';
                     return;
                 }
                 grid.innerHTML = list.map(p => {
@@ -17506,7 +17506,7 @@ $seoImage = (!empty($storeSettings['shop_logo']) && strpos($storeSettings['shop_
                         CUR + parseFloat(p.price).toFixed(2);
                     return '<div class="product-card" onclick="openEditModal(' + p.id + ')">' +
                         img +
-                        (promoInfo.active ? '<span class="sale-badge">🏷️ SALE</span>' : '') +
+                        (promoInfo.active ? '<span class="sale-badge">SALE</span>' : '') +
                         '<div class="product-card-body">' +
                         '<div class="product-card-name">' + escapeHtml(p.name) + '</div>' +
                         '<div class="product-card-price">' + priceHTML + '</div>' +
@@ -17660,12 +17660,12 @@ $seoImage = (!empty($storeSettings['shop_logo']) && strpos($storeSettings['shop_
                     return;
                 }
                 if (isNaN(price) || promo >= price) {
-                    hint.textContent = '⚠️ Promo price must be lower than the Selling Price (₱' + (isNaN(price) ? '0.00' : price.toFixed(2)) + ') to take effect.';
+                    hint.textContent = 'Promo price must be lower than the Selling Price (₱' + (isNaN(price) ? '0.00' : price.toFixed(2)) + ') to take effect.';
                     hint.style.color = 'var(--danger)';
                     return;
                 }
                 const pct = Math.round((1 - promo / price) * 100);
-                hint.textContent = '✅ ' + pct + '% off — will show as ₱' + promo.toFixed(2) + ' (was ₱' + price.toFixed(2) + ') in Sales, Cart, and Receipt.';
+                hint.textContent = pct + '% off — will show as ₱' + promo.toFixed(2) + ' (was ₱' + price.toFixed(2) + ') in Sales, Cart, and Receipt.';
                 hint.style.color = 'var(--green)';
             }
 
@@ -18162,11 +18162,11 @@ $seoImage = (!empty($storeSettings['shop_logo']) && strpos($storeSettings['shop_
                 if (wrap) wrap.querySelectorAll('.period-btn').forEach(b => b.classList.toggle('active', b === btnEl));
 
                 const topTitleEl = document.getElementById('top-list-title');
-                if (topTitleEl) topTitleEl.textContent = '🏆 Top Products — ' + periodLabel(period);
+                if (topTitleEl) topTitleEl.textContent = 'Top Products — ' + periodLabel(period);
                 const catTitleEl = document.getElementById('cat-chart-title');
-                if (catTitleEl) catTitleEl.textContent = '🏷️ Sales by Category — ' + periodLabel(period);
+                if (catTitleEl) catTitleEl.textContent = 'Sales by Category — ' + periodLabel(period);
                 const dailyTitleEl = document.getElementById('daily-chart-title');
-                if (dailyTitleEl) dailyTitleEl.textContent = period === 'weekly' ? '📈 Weekly Sales' : period === 'monthly' ? '📈 Monthly Sales' : '📈 7-Day Sales';
+                if (dailyTitleEl) dailyTitleEl.textContent = period === 'weekly' ? 'Weekly Sales' : period === 'monthly' ? 'Monthly Sales' : '7-Day Sales';
 
                 const topEl = document.getElementById('top-list');
                 if (topEl) topEl.innerHTML = '<div style="text-align:center;padding:16px;color:var(--text3);font-size:.83rem;">Loading…</div>';
@@ -18204,7 +18204,7 @@ $seoImage = (!empty($storeSettings['shop_logo']) && strpos($storeSettings['shop_
                     const el = document.getElementById('top-list');
                     if (!el) return;
                     if (!top?.success) {
-                        el.innerHTML = '<div class="empty-state"><div class="empty-icon">📊</div><div class="empty-text">' + escapeHtml(top?.error || 'No sales yet') + '</div></div>';
+                        el.innerHTML = '<div class="empty-state"><div class="empty-icon"><svg viewBox="0 0 24 24" width="42" height="42" fill="none" stroke="currentColor" stroke-width="1.6"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg></div><div class="empty-text">' + escapeHtml(top?.error || 'No sales yet') + '</div></div>';
                         return;
                     }
                     const tops = top.data || [];
@@ -18217,10 +18217,10 @@ $seoImage = (!empty($storeSettings['shop_logo']) && strpos($storeSettings['shop_
                             '<div class="top-info"><div class="top-name">' + p.name + '</div><div class="top-sales">' + (p.category_name || '') + ' · ' + p.total_sold + ' sold</div></div>' +
                             '<div class="top-rev">' + CUR + parseFloat(p.total_revenue).toFixed(2) + '</div>' +
                             '</div>';
-                    }).join('') : '<div class="empty-state"><div class="empty-icon">📊</div><div class="empty-text">No sales yet</div></div>';
+                    }).join('') : '<div class="empty-state"><div class="empty-icon"><svg viewBox="0 0 24 24" width="42" height="42" fill="none" stroke="currentColor" stroke-width="1.6"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg></div><div class="empty-text">No sales yet</div></div>';
                 }).catch(() => {
                     const el = document.getElementById('top-list');
-                    if (el) el.innerHTML = '<div class="empty-state"><div class="empty-icon">⚠️</div><div class="empty-text">Could not load top products</div></div>';
+                    if (el) el.innerHTML = '<div class="empty-state"><div class="empty-icon"><svg viewBox="0 0 24 24" width="42" height="42" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg></div><div class="empty-text">Could not load top products</div></div>';
                 });
             }
 
@@ -18289,7 +18289,7 @@ $seoImage = (!empty($storeSettings['shop_logo']) && strpos($storeSettings['shop_
                                 '<td style="color:var(--green);font-weight:600;">' + CUR + parseFloat(tx.change).toFixed(2) + '</td>' +
                                 '<td>' + (tx.cashier || '—') + '</td>' +
                                 '<td style="color:var(--text3);font-size:.78rem;">' + fmtDate(tx.created_at) + '</td>' +
-                                '<td style="display:flex;gap:5px;">' + '<button type="button" class="btn btn-secondary btn-sm" onclick="viewTx(' + tx.id + ')">View</button>' + '<button type="button" class="btn btn-danger btn-sm" onclick="deleteTx(' + tx.id + ',' + jsAttr(tx.order_ref) + ')">🗑️</button>' + '</td>' +
+                                '<td style="display:flex;gap:5px;">' + '<button type="button" class="btn btn-secondary btn-sm" onclick="viewTx(' + tx.id + ')">View</button>' + '<button type="button" class="btn btn-danger btn-sm" onclick="deleteTx(' + tx.id + ',' + jsAttr(tx.order_ref) + ')">Delete</button>' + '</td>' +
                                 '</tr>';
                         }).join('');
                     }
@@ -18371,7 +18371,7 @@ $seoImage = (!empty($storeSettings['shop_logo']) && strpos($storeSettings['shop_
                         ).join('') + '</div>' :
                         '') +
                     (hasVoidableItems ?
-                        '<button type="button" class="btn btn-secondary btn-full" style="margin-top:14px;" onclick="openVoidOrderModal(\'' + tx.order_ref + '\')">🔒 Modify / Void Item</button>' :
+                        '<button type="button" class="btn btn-secondary btn-full" style="margin-top:14px;" onclick="openVoidOrderModal(\'' + tx.order_ref + '\')">Modify / Void Item</button>' :
                         '');
                 openModal('tx-modal');
             }
@@ -18410,7 +18410,7 @@ $seoImage = (!empty($storeSettings['shop_logo']) && strpos($storeSettings['shop_
                     };
                     const nativeOk = await tryNativePrintAgent(nativePayload);
                     if (nativeOk) {
-                        toast('🖨️ Void receipt printed directly to thermal printer', 'success');
+                        toast('Void receipt printed directly to thermal printer', 'success');
                         return;
                     }
                 } catch (e) {}
@@ -18486,13 +18486,13 @@ $seoImage = (!empty($storeSettings['shop_logo']) && strpos($storeSettings['shop_
             // units of each) to void, gated behind an ADMIN password
             // (verifyAdminPassword() server-side — a cashier's own password is always
             // rejected, even if correct). The Sales History "view" modal's
-            // "🔒 Modify / Void Item" button opens this same modal pre-filled with that
+            // Modify / Void Item button opens this same modal pre-filled with that
             // order's code (see openVoidOrderModal's prefillRef param below) instead of
             // running its own separate, older single-item flow.
             let voOrderData = null; // holds the looked-up order between Step 2 and Step 4
             let voSelections = {}; // { itemId: qty } — currently checked items and their void qty
 
-            // prefillRef is optional — when the "🔒 Modify / Void" button is clicked
+            // prefillRef is optional — when the Modify / Void button is clicked
             // from a specific order's view (Sales History → View), the order code is
             // passed in here so this modal opens already looked-up, instead of making
             // the person retype a code they were already looking at.
@@ -18518,7 +18518,7 @@ $seoImage = (!empty($storeSettings['shop_logo']) && strpos($storeSettings['shop_
                 if (summaryWrap) summaryWrap.style.display = 'none';
                 if (confirmBtn) {
                     confirmBtn.disabled = true;
-                    confirmBtn.innerHTML = '🔓 Authorize Void &amp; Release Cash Refund';
+                    confirmBtn.innerHTML = 'Authorize Void &amp; Release Cash Refund';
                 }
                 if (itemsList) itemsList.innerHTML = '';
                 if (refundEl) refundEl.textContent = fmt(0);
@@ -18527,9 +18527,9 @@ $seoImage = (!empty($storeSettings['shop_logo']) && strpos($storeSettings['shop_
                 // Dynamic authorization label based on logged in role
                 if (authLabel) {
                     if (typeof USER_ROLE !== 'undefined' && USER_ROLE === 'owner') {
-                        authLabel.innerHTML = '👤 Owner Authorization <span style="color:var(--text3);font-weight:400;">(Enter your password to authorize refund &amp; pop drawer)</span>';
+                        authLabel.innerHTML = 'Owner Authorization <span style="color:var(--text3);font-weight:400;">(Enter your password to authorize refund &amp; pop drawer)</span>';
                     } else {
-                        authLabel.innerHTML = '🔒 Manager / Owner Authorization <span style="color:var(--text3);font-weight:400;">(Owner must enter password to authorize refund)</span>';
+                        authLabel.innerHTML = 'Manager / Owner Authorization <span style="color:var(--text3);font-weight:400;">(Owner must enter password to authorize refund)</span>';
                     }
                 }
 
@@ -18704,9 +18704,9 @@ $seoImage = (!empty($storeSettings['shop_logo']) && strpos($storeSettings['shop_
                 if (confirmBtn) {
                     confirmBtn.disabled = !(voOrderData && hasSelection && pw.trim().length > 0);
                     if (hasSelection && refundTotal > 0) {
-                        confirmBtn.innerHTML = '🔓 Authorize Refund (' + fmt(refundTotal) + ') &amp; Pop Drawer';
+                        confirmBtn.innerHTML = 'Authorize Refund (' + fmt(refundTotal) + ') &amp; Pop Drawer';
                     } else {
-                        confirmBtn.innerHTML = '🔓 Authorize Void &amp; Release Cash Refund';
+                        confirmBtn.innerHTML = 'Authorize Void &amp; Release Cash Refund';
                     }
                 }
             }
@@ -18889,7 +18889,7 @@ $seoImage = (!empty($storeSettings['shop_logo']) && strpos($storeSettings['shop_
 
                 if (btn) {
                     btn.disabled = false;
-                    btn.textContent = '🔄';
+                    btn.textContent = 'Refresh';
                 }
 
                 if (!stores.length) {
@@ -18914,9 +18914,9 @@ $seoImage = (!empty($storeSettings['shop_logo']) && strpos($storeSettings['shop_
                 }
 
                 if (r?.data?.source === 'local' && r.data.message) {
-                    toast('📡 ' + r.data.message, 'warning');
+                    toast(''+ r.data.message, 'warning');
                 } else if (forceRefresh && stores.length > 1) {
-                    toast('✅ Loaded ' + stores.length + ' stores', 'success');
+                    toast('Loaded '+ stores.length + ' stores', 'success');
                 }
 
                 _fcStoresLoaded = true;
@@ -18966,7 +18966,7 @@ $seoImage = (!empty($storeSettings['shop_logo']) && strpos($storeSettings['shop_
                     btn.disabled = true;
                     btn.textContent = '⏳ Forecasting…';
                 }
-                if (wrap) wrap.innerHTML = '<div class="fc-loading">🔮 Loading forecast… (cached results load instantly; a cold API falls back to your sales history in a few seconds)</div>';
+                if (wrap) wrap.innerHTML = '<div class="fc-loading">Loading forecast… (cached results load instantly; a cold API falls back to your sales history in a few seconds)</div>';
 
                 const r = await apiGet('get_all_forecasts', {
                     period: _fcPeriod,
@@ -18975,11 +18975,11 @@ $seoImage = (!empty($storeSettings['shop_logo']) && strpos($storeSettings['shop_
 
                 if (btn) {
                     btn.disabled = false;
-                    btn.textContent = '🔮 Run Forecast';
+                    btn.textContent = 'Run Forecast';
                 }
 
                 if (!r?.success) {
-                    if (wrap) wrap.innerHTML = '<div class="empty-state"><div class="empty-icon">⚠️</div><div class="empty-text">' + (r?.error || 'Could not reach forecast API. Check your internet connection.') + '</div></div>';
+                    if (wrap) wrap.innerHTML = '<div class="empty-state"><div class="empty-icon"><svg viewBox="0 0 24 24" width="42" height="42" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg></div><div class="empty-text">' + (r?.error || 'Could not reach forecast API. Check your internet connection.') + '</div></div>';
                     return;
                 }
 
@@ -18993,7 +18993,7 @@ $seoImage = (!empty($storeSettings['shop_logo']) && strpos($storeSettings['shop_
                     const banner = document.createElement('div');
                     banner.id = 'fc-offline-banner';
                     banner.style.cssText = 'background:rgba(244,160,36,.12);border:1.5px solid rgba(244,160,36,.4);border-radius:10px;padding:10px 14px;margin-bottom:12px;font-size:.83rem;color:#7a5500;';
-                    banner.innerHTML = '📡 <strong>Offline mode:</strong> ' + (r.data.message || 'ML API unreachable — showing estimates from your own sales history.');
+                    banner.innerHTML = '<strong>Offline mode:</strong> ' + (r.data.message || 'ML API unreachable — showing estimates from your own sales history.');
                     wrap.parentElement?.insertBefore(banner, wrap);
                 }
 
@@ -19023,7 +19023,7 @@ $seoImage = (!empty($storeSettings['shop_logo']) && strpos($storeSettings['shop_
                     const card = document.createElement('div');
                     card.className = 'card';
                     card.style.cssText = 'margin-bottom:20px;';
-                    card.innerHTML = '<div class="card-title">📈 ML Sales Forecast — Store: <span id="fc-chart-store"></span></div>' +
+                    card.innerHTML = '<div class="card-title">ML Sales Forecast — Store: <span id="fc-chart-store"></span></div>' +
                         '<div style="font-size:.82rem;color:var(--text2);margin-bottom:10px;">Predicted revenue from <strong>pos-ml-api-johv.onrender.com</strong></div>' +
                         '<div id="fc-ml-zero-note" style="display:none;font-size:.8rem;color:var(--text3);background:var(--surface2);border-radius:8px;padding:8px 12px;margin-bottom:10px;"></div>' +
                         '<div id="fc-ml-chart" style="overflow-x:auto;"></div>' +
@@ -19045,7 +19045,7 @@ $seoImage = (!empty($storeSettings['shop_logo']) && strpos($storeSettings['shop_
                 if (noteEl) {
                     if (noPeriodTx) {
                         noteEl.style.display = 'block';
-                        noteEl.textContent = '📭 No transactions logged yet for this period — showing ₱0 instead of a forecast until there\'s real sales data to predict from.';
+                        noteEl.textContent = 'No transactions logged yet for this period — showing ₱0 instead of a forecast until there\'s real sales data to predict from.';
                     } else {
                         noteEl.style.display = 'none';
                     }
@@ -19125,7 +19125,7 @@ $seoImage = (!empty($storeSettings['shop_logo']) && strpos($storeSettings['shop_
                 const wrap = document.getElementById('fc-table-wrap');
                 if (!wrap) return;
                 if (!rows.length) {
-                    wrap.innerHTML = '<div class="empty-state"><div class="empty-icon">📭</div><div class="empty-text">No products with sales history found. Add products and make some sales first.</div></div>';
+                    wrap.innerHTML = '<div class="empty-state"><div class="empty-icon"><svg viewBox="0 0 24 24" width="42" height="42" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg></div><div class="empty-text">No products with sales history found. Add products and make some sales first.</div></div>';
                     return;
                 }
 
@@ -19151,13 +19151,13 @@ $seoImage = (!empty($storeSettings['shop_logo']) && strpos($storeSettings['shop_
                     let pillClass, pillLabel;
                     if (storeQ >= pred) {
                         pillClass = 'fc-pill-ok';
-                        pillLabel = '✅ Sufficient';
+                        pillLabel = 'Sufficient';
                     } else if (storeQ >= pred * 0.5) {
                         pillClass = 'fc-pill-warn';
-                        pillLabel = '⚠️ Low';
+                        pillLabel = 'Low';
                     } else {
                         pillClass = 'fc-pill-danger';
-                        pillLabel = '🚨 Restock Now';
+                        pillLabel = 'Restock Now';
                     }
 
                     const tr = document.createElement('tr');
@@ -19207,7 +19207,7 @@ $seoImage = (!empty($storeSettings['shop_logo']) && strpos($storeSettings['shop_
                     '<div style="font-size:1.2rem;font-weight:800;color:var(--danger);">+' + f.restock_suggest + ' units</div>' +
                     '<div style="font-size:.73rem;color:var(--text3);">recommended restock</div>' +
                     '</div>' +
-                    '<button type="button" class="btn btn-primary btn-sm" onclick="openTransferModalFor(' + f.id + ')">🔄 Transfer to Store</button>' +
+                    '<button type="button" class="btn btn-primary btn-sm" onclick="openTransferModalFor(' + f.id + ')">Transfer to Store</button>' +
                     '</div>'
                 ).join('');
             }
@@ -19437,7 +19437,7 @@ $seoImage = (!empty($storeSettings['shop_logo']) && strpos($storeSettings['shop_
                 set('fc-r-monthly-pred', (monthly.predicted_qty || 0) + ' units');
                 set('fc-r-monthly-restock', monthly.restock_suggest || 0);
 
-                if (r.data.message) toast('📡 ' + r.data.message, 'warning');
+                if (r.data.message) toast(''+ r.data.message, 'warning');
                 document.getElementById('fc-single-result').style.display = 'block';
             }
 
@@ -19476,9 +19476,9 @@ $seoImage = (!empty($storeSettings['shop_logo']) && strpos($storeSettings['shop_
                                 msg += '"' + catStats.data[0].category + '" is your top category — consider expanding it. ';
                             }
                             msg += 'Top sellers: ' + topNames + '. ';
-                            if (d.low_stock > 0) msg += '⚠️ ' + d.low_stock + ' product(s) are low on stock — reorder soon. ';
-                            if (d.out_of_stock > 0) msg += '🚨 ' + d.out_of_stock + ' product(s) are out of stock. ';
-                            msg += 'Avg order value is ' + CUR + (d.total_tx ? (d.total_revenue / d.total_tx).toFixed(2) : '0.00') + '. Maintain 2× stock for top sellers to avoid stockouts. View the 🔮 Forecast page for AI-powered demand predictions and restock recommendations.';
+                            if (d.low_stock > 0) msg += d.low_stock + ' product(s) are low on stock — reorder soon. ';
+                            if (d.out_of_stock > 0) msg += d.out_of_stock + ' product(s) are out of stock. ';
+                            msg += 'Avg order value is ' + CUR + (d.total_tx ? (d.total_revenue / d.total_tx).toFixed(2) : '0.00') + '. Maintain 2× stock for top sellers to avoid stockouts. View the Forecast page for AI-powered demand predictions and restock recommendations.';
                         }
                         const insightEl = document.getElementById('ai-insight');
                         if (insightEl) insightEl.textContent = msg;
@@ -19763,10 +19763,10 @@ $seoImage = (!empty($storeSettings['shop_logo']) && strpos($storeSettings['shop_
                 const el = document.getElementById('hw-diag-lib-status');
                 if (!el) return;
                 if (typeof JsBarcode === 'undefined') {
-                    el.textContent = '❌ Failed to load';
+                    el.textContent = 'Failed to load';
                     el.style.color = 'var(--red, #C0392B)';
                 } else {
-                    el.textContent = '✅ Loaded';
+                    el.textContent = 'Loaded';
                     el.style.color = 'var(--green, #2D7A3A)';
                 }
             }
@@ -19802,8 +19802,8 @@ $seoImage = (!empty($storeSettings['shop_logo']) && strpos($storeSettings['shop_
                         const looksLikeScanner = buf.length >= 3 && avgGap > 0 && avgGap < 50;
                         if (resEl) {
                             resEl.innerHTML = looksLikeScanner ?
-                                '<span style="color:var(--green,#2D7A3A);font-weight:700;">✅ Reading correctly</span> — captured "' + escapeHtml(buf) + '" (' + buf.length + ' chars, ~' + avgGap.toFixed(1) + 'ms/char). Fast enough to be recognized as a scanner everywhere in the app.' :
-                                '<span style="color:var(--red,#C0392B);font-weight:700;">⚠️ Captured "' + escapeHtml(buf) + '"</span> (' + buf.length + ' chars' + (avgGap ? ', ~' + avgGap.toFixed(1) + 'ms/char' : '') + ') — that\'s slower/shorter than a real scanner burst. If this WAS a physical scan, check the cable/USB port, or try a different USB port; if you typed it, that\'s expected.';
+                                '<span style="color:var(--green,#2D7A3A);font-weight:700;">Reading correctly</span> — captured "' + escapeHtml(buf) + '" (' + buf.length + ' chars, ~' + avgGap.toFixed(1) + 'ms/char). Fast enough to be recognized as a scanner everywhere in the app.' :
+                                '<span style="color:var(--red,#C0392B);font-weight:700;">Captured "' + escapeHtml(buf) + '"</span> (' + buf.length + ' chars' + (avgGap ? ', ~' + avgGap.toFixed(1) + 'ms/char' : '') + ') — that\'s slower/shorter than a real scanner burst. If this WAS a physical scan, check the cable/USB port, or try a different USB port; if you typed it, that\'s expected.';
                         }
                         buf = '';
                         times = [];
@@ -19823,7 +19823,7 @@ $seoImage = (!empty($storeSettings['shop_logo']) && strpos($storeSettings['shop_
             function hwDiagResult(msg, ok) {
                 const el = document.getElementById('hw-diag-result');
                 if (!el) return;
-                el.innerHTML = (ok ? '✅ ' : '❌ ') + msg;
+                el.innerHTML = (ok ? '✓ ' : '✗ ') + msg;
                 el.style.color = ok ? 'var(--green, #2D7A3A)' : 'var(--red, #C0392B)';
             }
 
@@ -19859,8 +19859,8 @@ $seoImage = (!empty($storeSettings['shop_logo']) && strpos($storeSettings['shop_
                 };
                 const nativeOk = await tryNativePrintAgent(testPayload);
                 if (nativeOk) {
-                    hwDiagResult('✅ Test receipt printed directly via POS Native Print Agent (port 9100)!', true);
-                    toast('✅ Test receipt printed via Native Agent', 'success');
+                    hwDiagResult('Test receipt printed directly via POS Native Print Agent (port 9100)!', true);
+                    toast('Test receipt printed via Native Agent', 'success');
                     return;
                 }
 
@@ -20001,7 +20001,7 @@ $seoImage = (!empty($storeSettings['shop_logo']) && strpos($storeSettings['shop_
                 try {
                     const kicked = await tryNativeDrawerKick();
                     if (kicked) {
-                        if (!silent) hwDiagResult('✅ Cash drawer kick pulse sent successfully via Native Print Agent.', true);
+                        if (!silent) hwDiagResult('Cash drawer kick pulse sent successfully via Native Print Agent.', true);
                         return true;
                     }
                 } catch (e) {}
@@ -20050,7 +20050,7 @@ $seoImage = (!empty($storeSettings['shop_logo']) && strpos($storeSettings['shop_
                     }
                     QZ_DRAWER_ENABLED = enabled;
                     QZ_DRAWER_PRINTER = printer;
-                    toast('✅ Cash drawer settings saved', 'success');
+                    toast('Cash drawer settings saved', 'success');
                 });
             }
 
@@ -20119,13 +20119,13 @@ $seoImage = (!empty($storeSettings['shop_logo']) && strpos($storeSettings['shop_
 
                 if (btn) {
                     btn.disabled = true;
-                    btn.textContent = '🧹 Cleaning…';
+                    btn.textContent = 'Cleaning…';
                 }
 
                 apiPost('cleanup_old_sales', { retention_days: days }).then(r => {
                     if (btn) {
                         btn.disabled = false;
-                        btn.textContent = '🧹 Clean Old Transactions Now';
+                        btn.textContent = 'Clean Old Transactions Now';
                     }
                     if (r?.success) {
                         const delCount = r.data?.deleted_count || 0;
@@ -20134,7 +20134,7 @@ $seoImage = (!empty($storeSettings['shop_logo']) && strpos($storeSettings['shop_
                         if (msgEl) {
                             msgEl.style.display = 'block';
                             msgEl.style.color = 'var(--green, #2D7A3A)';
-                            msgEl.textContent = '✅ Successfully cleaned ' + delCount.toLocaleString() + ' transactions (' + archMonths + ' months archived).';
+                            msgEl.textContent = 'Successfully cleaned ' + delCount.toLocaleString() + ' transactions (' + archMonths + ' months archived).';
                         }
                         loadSalesCleanupStatus();
                     } else {
@@ -20142,13 +20142,13 @@ $seoImage = (!empty($storeSettings['shop_logo']) && strpos($storeSettings['shop_
                         if (msgEl) {
                             msgEl.style.display = 'block';
                             msgEl.style.color = 'var(--red, #C0392B)';
-                            msgEl.textContent = '❌ ' + (r?.error || 'Cleanup failed');
+                            msgEl.textContent = r?.error || 'Cleanup failed';
                         }
                     }
                 }).catch(err => {
                     if (btn) {
                         btn.disabled = false;
-                        btn.textContent = '🧹 Clean Old Transactions Now';
+                        btn.textContent = 'Clean Old Transactions Now';
                     }
                     toast('Cleanup request failed', 'error');
                 });
@@ -20167,12 +20167,12 @@ $seoImage = (!empty($storeSettings['shop_logo']) && strpos($storeSettings['shop_
                         const s = d.shift;
                         statusEl.innerHTML =
                             '<div style="background:rgba(45,122,58,.1);border:1.5px solid rgba(45,122,58,.3);border-radius:9px;padding:12px 14px;font-size:.83rem;color:#1e6328;line-height:1.7;">' +
-                            '✅ Shift active since <strong>' + fmtDate(s.login_time) + '</strong><br>' +
+                            'Shift active since <strong>' + fmtDate(s.login_time) + '</strong><br>' +
                             'Opening float: <strong>' + fmt(s.opening_float) + '</strong> · Cash sales so far: <strong>' + fmt(s.cash_sales) + '</strong><br>' +
                             'Expected cash in drawer right now: <strong>' + fmt(s.expected_cash) + '</strong>' +
                             '</div>';
                     } else {
-                        statusEl.innerHTML = '<div style="background:rgba(244,160,36,.12);border:1.5px solid rgba(244,160,36,.4);border-radius:9px;padding:10px 13px;font-size:.83rem;color:#7a5500;">⚠️ No active shift. You\'ll be asked to count the drawer next time the lock screen appears.</div>';
+                        statusEl.innerHTML = '<div style="background:rgba(244,160,36,.12);border:1.5px solid rgba(244,160,36,.4);border-radius:9px;padding:10px 13px;font-size:.83rem;color:#7a5500;">No active shift. You\'ll be asked to count the drawer next time the lock screen appears.</div>';
                     }
                 });
                 if (typeof USER_ROLE !== 'undefined' && USER_ROLE === 'owner') loadShiftMonitor();
@@ -20204,11 +20204,11 @@ $seoImage = (!empty($storeSettings['shop_logo']) && strpos($storeSettings['shop_
                             // while the shift is still open, not just after the Z-read.
                             const fraudFlag = (s.void_count > 3) || (s.void_value > 2000);
                             return '<div style="background:' + (fraudFlag ? 'rgba(192,57,43,.08)' : 'rgba(45,122,58,.08)') + ';border:1.5px solid ' + (fraudFlag ? 'var(--danger)' : 'rgba(45,122,58,.25)') + ';border-radius:9px;padding:10px 13px;font-size:.82rem;line-height:1.6;">' +
-                                '<strong>🟢 ' + escapeHtml(s.full_name) + '</strong> <span style="color:var(--text3);">@' + escapeHtml(s.username) + '</span><br>' +
+                                '<strong>' + escapeHtml(s.full_name) + '</strong> <span style="color:var(--text3);">@' + escapeHtml(s.username) + '</span><br>' +
                                 'Clocked in ' + fmtDate(s.login_time) + ' · Opening float: <strong>' + fmt(s.opening_float) + '</strong><br>' +
                                 'Cash sales so far: <strong>' + fmt(s.cash_sales) + '</strong>' + (s.void_count > 0 ? ' · Voids: <strong style="color:var(--danger);">' + s.void_count + ' (' + fmt(s.void_value) + ')</strong>' : '') + '<br>' +
                                 'Expected in drawer now: <strong>' + fmt(s.expected_cash) + '</strong>' +
-                                (fraudFlag ? '<br><strong style="color:var(--danger);">⚠️ Exceeds void threshold — review live</strong>' : '') +
+                                (fraudFlag ? '<br><strong style="color:var(--danger);">Exceeds void threshold — review live</strong>' : '') +
                                 '</div>';
                         }).join('') + '</div>';
                     }
@@ -20253,13 +20253,13 @@ $seoImage = (!empty($storeSettings['shop_logo']) && strpos($storeSettings['shop_
                             const v = parseFloat(s.variance);
                             let badge, badgeColor;
                             if (v < -0.005) {
-                                badge = '🔴 Short ' + fmt(Math.abs(v));
+                                badge = 'Short ' + fmt(Math.abs(v));
                                 badgeColor = 'var(--danger)';
                             } else if (v > 0.005) {
-                                badge = '🟡 Over ' + fmt(v);
+                                badge = 'Over ' + fmt(v));
                                 badgeColor = 'var(--accent2)';
                             } else {
-                                badge = '✅ Balanced';
+                                badge = 'Balanced';
                                 badgeColor = 'var(--green)';
                             }
                             const voidCount = s.total_void_count || 0;
@@ -20268,7 +20268,7 @@ $seoImage = (!empty($storeSettings['shop_logo']) && strpos($storeSettings['shop_
                             const fraudFlag = voidCount > 3 || voidValue > 2000;
                             const voidSub = voidCount > 0 ?
                                 '<div style="font-size:.72rem;margin-top:2px;font-weight:' + (fraudFlag ? '800' : '600') + ';color:' + (fraudFlag ? 'var(--danger)' : 'var(--accent2)') + ';">' +
-                                (fraudFlag ? '⚠️ ' : '') + voidCount + ' void(s) · ' + fmt(voidValue) + '</div>' :
+                                voidCount + ' void(s) · ' + fmt(voidValue) + '</div>' :
                                 '';
                             return '<div style="display:flex;justify-content:space-between;align-items:center;gap:10px;padding:8px 11px;background:var(--surface2);border-radius:8px;font-size:.79rem;' +
                                 (fraudFlag ? 'border:1.5px solid var(--danger);' : '') + '">' +
@@ -20699,7 +20699,7 @@ $seoImage = (!empty($storeSettings['shop_logo']) && strpos($storeSettings['shop_
                 _scanDeliveryRowId = null;
                 _scanTargetField = targetId || 'p-barcode';
                 const titleEl = document.getElementById('prod-scan-title');
-                if (titleEl) titleEl.textContent = '📷 Scan Product Barcode';
+                if (titleEl) titleEl.textContent = 'Scan Product Barcode';
                 const statusEl = document.getElementById('prod-scan-status');
                 if (statusEl) statusEl.textContent = 'Point the camera at the product\'s printed barcode';
                 const manualEl = document.getElementById('prod-scan-manual');
@@ -20721,7 +20721,7 @@ $seoImage = (!empty($storeSettings['shop_logo']) && strpos($storeSettings['shop_
                 _scanTargetField = null;
                 _ndFocusedRowId = 'nd-item-' + rowId;
                 const titleEl = document.getElementById('prod-scan-title');
-                if (titleEl) titleEl.textContent = '📷 Scan Delivery Product';
+                if (titleEl) titleEl.textContent = 'Scan Delivery Product';
                 const statusEl = document.getElementById('prod-scan-status');
                 if (statusEl) statusEl.textContent = 'Point the camera at the product\'s printed barcode';
                 const manualEl = document.getElementById('prod-scan-manual');
@@ -20781,7 +20781,7 @@ $seoImage = (!empty($storeSettings['shop_logo']) && strpos($storeSettings['shop_
                     }
                     if (placeholder) placeholder.style.display = 'none';
                     if (removeBtn) removeBtn.style.display = '';
-                    toast('📸 Photo captured from scan — retake below if you\'d like a better shot', 'success');
+                    toast('Photo captured from scan — retake below if you\'d like a better shot', 'success');
                 }).catch(() => {}); // silently skip — barcode still gets filled in either way
             }
 
@@ -20877,7 +20877,7 @@ $seoImage = (!empty($storeSettings['shop_logo']) && strpos($storeSettings['shop_
                     supEl.value = p.supplier;
                 }
 
-                toast('✅ Scanned: ' + p.name, 'success');
+                toast('Scanned: ' + p.name, 'success');
 
                 // 6. Focus quantity field for instant typing
                 setTimeout(() => {
@@ -20947,7 +20947,7 @@ $seoImage = (!empty($storeSettings['shop_logo']) && strpos($storeSettings['shop_
                 }
 
                 if (filledAny) {
-                    toast('✅ Filled in Name/Brand/Description/Unit from product database — please double-check before saving', 'success');
+                    toast('Filled in Name/Brand/Description/Unit from product database — please double-check before saving', 'success');
                 }
             }
 
@@ -20974,10 +20974,10 @@ $seoImage = (!empty($storeSettings['shop_logo']) && strpos($storeSettings['shop_
                         barcode
                     });
                     if (r?.success && r.data && String(r.data.id) !== String(editingId)) {
-                        msgEl.innerHTML = '⚠️ Already used by <strong>' + r.data.name + '</strong> — choose a different code';
+                        msgEl.innerHTML = 'Already used by <strong>' + r.data.name + '</strong> — choose a different code';
                         msgEl.style.color = 'var(--danger)';
                     } else {
-                        msgEl.textContent = '✅ This barcode is available';
+                        msgEl.textContent = 'This barcode is available';
                         msgEl.style.color = 'var(--green)';
                     }
                 }, 400);
@@ -21399,7 +21399,7 @@ $seoImage = (!empty($storeSettings['shop_logo']) && strpos($storeSettings['shop_
                     'data-barcode="' + p.barcode + '" data-name="' + (p.name || '').replace(/"/g, '&quot;') + '" ' +
                     'style="width:52px;padding:3px 6px;border:1.5px solid var(--border);border-radius:6px;font-size:.8rem;"/>' +
                     '</div>' +
-                    '<button type="button" class="btn btn-secondary btn-sm" onclick="printWhBarcode(' + jsAttr(p.barcode) + ',' + jsAttr(p.name) + ')" title="Print just this product">🖨️</button>' +
+                    '<button type="button" class="btn btn-secondary btn-sm" onclick="printWhBarcode(' + jsAttr(p.barcode) + ',' + jsAttr(p.name) + ')" title="Print just this product">Print</button>' +
                     '</div>'
                 ).join('');
                 updatePrintAllSelectedCount();
@@ -21573,7 +21573,7 @@ $seoImage = (!empty($storeSettings['shop_logo']) && strpos($storeSettings['shop_
                 );
                 win.document.close();
                 setTimeout(() => { try { if (win && !win.closed) { win.focus(); win.print(); } } catch(e){} }, 450);
-                toast('✅ Sent ' + items.length + ' label' + (items.length > 1 ? 's' : '') + ' to print', 'success');
+                toast('Sent ' + items.length + ' label' + (items.length > 1 ? 's' : '') + ' to print', 'success');
                 closeModal('print-all-modal');
             }
 
@@ -21723,7 +21723,7 @@ $seoImage = (!empty($storeSettings['shop_logo']) && strpos($storeSettings['shop_
                     await track.applyConstraints({
                         advanced: [{ torch: _scannerTorchOn }]
                     });
-                    toast(_scannerTorchOn ? '🔦 Flashlight ON' : 'Flashlight OFF', 'info');
+                    toast(_scannerTorchOn ? 'Flashlight ON' : 'Flashlight OFF', 'info');
                 } catch(e) {
                     toast('Flashlight error: ' + e.message, 'error');
                 }
@@ -21734,9 +21734,9 @@ $seoImage = (!empty($storeSettings['shop_logo']) && strpos($storeSettings['shop_
                 if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
                     const isSecure = window.isSecureContext;
                     if (!isSecure) {
-                        toast('📷 Camera needs a secure (https://) connection — this page loaded over http://. Use manual entry below, or ask your admin to enable HTTPS.', 'error');
+                        toast('Camera needs a secure (https://) connection — this page loaded over http://. Use manual entry below, or ask your admin to enable HTTPS.', 'error');
                     } else {
-                        toast('📷 Camera not supported on this browser — use manual entry below', 'warning');
+                        toast('Camera not supported on this browser — use manual entry below', 'warning');
                     }
                     return;
                 }
@@ -21848,7 +21848,7 @@ $seoImage = (!empty($storeSettings['shop_logo']) && strpos($storeSettings['shop_
 
                 } catch (e) {
                     if (e.name === 'NotAllowedError') {
-                        toast('📷 Camera permission denied — use manual entry below', 'warning');
+                        toast('Camera permission denied — use manual entry below', 'warning');
                     } else if (e.name === 'NotFoundError') {
                         toast('No camera found — use manual entry below', 'warning');
                     } else {
@@ -21899,7 +21899,7 @@ $seoImage = (!empty($storeSettings['shop_logo']) && strpos($storeSettings['shop_
                 hideDashScanNotFoundAction();
                 ensureDashScanCanvas();
                 const statusEl = document.getElementById('dash-scan-status');
-                if (statusEl) statusEl.textContent = '📷 Point at any barcode — Code128, QR, EAN, UPC all supported';
+                if (statusEl) statusEl.textContent = 'Point at any barcode — Code128, QR, EAN, UPC all supported';
                 startScanner('dash-scan-video', 'dash-scan-canvas', code => {
                     let barcode = code.trim();
                     try {
@@ -21916,8 +21916,8 @@ $seoImage = (!empty($storeSettings['shop_logo']) && strpos($storeSettings['shop_
                         barcode
                     }).then(r => {
                         if (isOfflineResult(r)) {
-                            if (statusEl) statusEl.textContent = '📴 Offline — can\'t verify this item against the catalog right now';
-                            toast('📴 Offline — showing/adding items works from what\'s already loaded, but a brand-new barcode can\'t be checked until you\'re back online', 'warning');
+                            if (statusEl) statusEl.textContent = 'Offline — can\'t verify this item against the catalog right now';
+                            toast('Offline — showing/adding items works from what\'s already loaded, but a brand-new barcode can\'t be checked until you\'re back online', 'warning');
                             resumeScanning(2200);
                             return;
                         }
@@ -21932,11 +21932,11 @@ $seoImage = (!empty($storeSettings['shop_logo']) && strpos($storeSettings['shop_
                         const addQty = scanUnitQty(p);
                         addToCart(p.id, addQty);
                         updateScanCartCount();
-                        if (statusEl) statusEl.textContent = '✅ Added: ' + p.name + (addQty > 1 ? ' ×' + addQty : '') + ' — ready for next scan';
-                        toast('✅ Added: ' + p.name + (addQty > 1 ? ' ×' + addQty : ''), 'success');
+                        if (statusEl) statusEl.textContent = 'Added: ' + p.name + (addQty > 1 ? ' ×' + addQty : '') + ' — ready for next scan';
+                        toast('Added: ' + p.name + (addQty > 1 ? ' ×' + addQty : ''), 'success');
                         resumeScanning(1800);
                     }).catch(() => {
-                        if (statusEl) statusEl.textContent = '⚠️ Network error — try again';
+                        if (statusEl) statusEl.textContent = 'Network error — try again';
                         resumeScanning(2000);
                     });
                 });
@@ -21955,7 +21955,7 @@ $seoImage = (!empty($storeSettings['shop_logo']) && strpos($storeSettings['shop_
                 _lastNotFoundBarcode = barcode;
                 const actionsEl = document.getElementById('dash-scan-notfound-actions');
                 if (actionsEl) actionsEl.style.display = '';
-                toast('❌ Not found: ' + barcode, 'error');
+                toast('Not found: ' + barcode, 'error');
                 if (statusEl) statusEl.textContent = '⏳ Checking product database…';
                 let known = null;
                 try {
@@ -21966,8 +21966,8 @@ $seoImage = (!empty($storeSettings['shop_logo']) && strpos($storeSettings['shop_
                 } catch (e) {}
                 if (statusEl) {
                     statusEl.textContent = known ?
-                        '❌ Not in this store yet — recognized as "' + known + '" — tap below to add it' :
-                        '❌ Not found — tap below to add as new, or try next item';
+                        'Not in this store yet — recognized as "' + known + '" — tap below to add it' :
+                        'Not found — tap below to add as new, or try next item';
                 }
                 resumeScanning(2200);
             }
@@ -22435,17 +22435,17 @@ $seoImage = (!empty($storeSettings['shop_logo']) && strpos($storeSettings['shop_
                     const retWrite = parseInt(p.qty_returned_writeoff) || 0;
                     const retStock = parseInt(p.qty_returned_restocked) || 0;
                     const adjChips = [];
-                    if (dmg) adjChips.push('<span class="adj-chip adj-damaged" title="Damaged on delivery">💔 ' + dmg + '</span>');
+                    if (dmg) adjChips.push('<span class="adj-chip adj-damaged" title="Damaged on delivery">Damaged: ' + dmg + '</span>');
                     if (exp2) adjChips.push('<span class="adj-chip adj-expired" title="Pulled out expired">⏰ ' + exp2 + '</span>');
-                    if (retWrite) adjChips.push('<span class="adj-chip adj-writeoff" title="Customer returns written off">↩️✕ ' + retWrite + '</span>');
-                    if (retStock) adjChips.push('<span class="adj-chip adj-restocked" title="Customer returns put back into stock">↩️✓ ' + retStock + '</span>');
+                    if (retWrite) adjChips.push('<span class="adj-chip adj-writeoff" title="Customer returns written off">Returns (Write-off): ' + retWrite + '</span>');
+                    if (retStock) adjChips.push('<span class="adj-chip adj-restocked" title="Customer returns put back into stock">Returns (Restocked): ' + retStock + '</span>');
                     const adjHTML = adjChips.length ? adjChips.join(' ') : '<span style="color:var(--text3);font-size:.75rem;">—</span>';
 
                     const deliveryHTML = (p.delivery_date ?
                             '<span style="font-size:.78rem;">' + p.delivery_date.slice(0, 10) + '</span>' :
                             '<span style="color:var(--text3);font-size:.78rem;">—</span>') +
                         (parseInt(p.batch_count) > 0 ?
-                            '<div><button type="button" onclick="openWhProductDetails(' + p.id + ')" style="background:var(--surface2);border:none;border-radius:6px;padding:1px 6px;font-size:.68rem;cursor:pointer;color:var(--text2);margin-top:2px;" title="View batches, FEFO order">📦 ' + p.batch_count + (p.batch_count == 1 ? ' batch' : ' batches') + '</button></div>' :
+                            '<div><button type="button" onclick="openWhProductDetails(' + p.id + ')" style="background:var(--surface2);border:none;border-radius:6px;padding:1px 6px;font-size:.68rem;cursor:pointer;color:var(--text2);margin-top:2px;" title="View batches, FEFO order">' + p.batch_count + (p.batch_count == 1 ? ' batch' : ' batches') + '</button></div>' :
                             '');
 
                     const restockDateHTML = p.last_restock_date ?
@@ -22473,10 +22473,10 @@ $seoImage = (!empty($storeSettings['shop_logo']) && strpos($storeSettings['shop_
                         '<td>' + expiryHTML + '</td>' +
                         '<td>' + statusHTML + '</td>' +
                         '<td style="display:flex;gap:5px;">' +
-                        '<button type="button" class="btn btn-secondary btn-sm" onclick="openWhProductDetails(' + p.id + ')" title="View Complete Details">👁️</button>' +
-                        '<button type="button" class="btn btn-secondary btn-sm" onclick="openEditModal(' + p.id + ')" title="Edit Product">✏️</button>' +
-                        '<button type="button" class="btn btn-secondary btn-sm" onclick="openQuickRestockModal(' + p.id + ')" title="Quick Restock">➕</button>' +
-                        '<button type="button" class="btn btn-secondary btn-sm" onclick="openMoveModal(' + p.id + ',\'in\',\'warehouse\')" title="Warehouse In">🏭</button>' +
+                        '<button type="button" class="btn btn-secondary btn-sm" onclick="openWhProductDetails(' + p.id + ')" title="View Complete Details">View</button>' +
+                        '<button type="button" class="btn btn-secondary btn-sm" onclick="openEditModal(' + p.id + ')" title="Edit Product">Edit</button>' +
+                        '<button type="button" class="btn btn-secondary btn-sm" onclick="openQuickRestockModal(' + p.id + ')" title="Quick Restock">+ Restock</button>' +
+                        '<button type="button" class="btn btn-secondary btn-sm" onclick="openMoveModal(' + p.id + ',\'in\',\'warehouse\')" title="Warehouse In">Wh-In</button>' +
                         '</td>' +
                         '</tr>';
                 }).join('');
@@ -22575,7 +22575,7 @@ $seoImage = (!empty($storeSettings['shop_logo']) && strpos($storeSettings['shop_
                             '<span style="color:var(--text3);">—</span>';
                         return '<tr>' +
                             '<td style="font-weight:600;">' + (row.product_name || '—') + '</td>' +
-                            '<td>' + (isIn ? '<span class="move-in">📦 Stock In</span>' : '<span class="move-out">📤 Stock Out</span>') + '</td>' +
+                            '<td>' + (isIn ? '<span class="move-in">Stock In</span>' : '<span class="move-out">Stock Out</span>') + '</td>' +
                             '<td style="font-weight:700;">' + (isIn ? '+' + row.qty_in : '-' + row.qty_out) + breakdownHTML + '</td>' +
                             '<td style="font-size:.78rem;color:var(--text3);">' + (isIn ? eventDateHTML : '—') + '</td>' +
                             '<td style="font-size:.78rem;color:var(--text3);">' + (!isIn ? eventDateHTML : '—') + '</td>' +
@@ -22608,7 +22608,7 @@ $seoImage = (!empty($storeSettings['shop_logo']) && strpos($storeSettings['shop_
                         el.innerHTML = '';
                         return;
                     }
-                    const summary = '⚠️ Daily Alert: ' + lowStock.length + ' item(s) hit low stock limits and ' + expiring.length + ' item(s) are expiring today.';
+                    const summary = 'Daily Alert: ' + lowStock.length + ' item(s) hit low stock limits and ' + expiring.length + ' item(s) are expiring today.';
 
                     // Products appearing in BOTH lists only get one row (low-stock takes
                     // priority for which action buttons are the primary ones).
@@ -22621,7 +22621,7 @@ $seoImage = (!empty($storeSettings['shop_logo']) && strpos($storeSettings['shop_
                     el.innerHTML = '<div class="wh-alert-card">' +
                         '<div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;padding:12px 16px;background:rgba(239,68,68,0.08);border-bottom:1px solid rgba(239,68,68,0.2);">' +
                             '<div style="display:flex;align-items:center;gap:8px;font-weight:700;font-size:0.92rem;color:var(--text);">' +
-                                '<span style="font-size:1.2rem;">🚨</span>' +
+                                '' +
                                 '<span>Daily Stock &amp; Expiry Alerts</span>' +
                             '</div>' +
                             '<span style="background:rgba(239,68,68,0.18);color:var(--danger,#ef4444);font-size:0.78rem;font-weight:600;padding:4px 10px;border-radius:6px;white-space:nowrap;">' +
@@ -22651,8 +22651,8 @@ $seoImage = (!empty($storeSettings['shop_logo']) && strpos($storeSettings['shop_
                 return '<div class="alert-banner-row" style="display:flex;align-items:center;justify-content:space-between;gap:10px;padding:9px 0;border-top:1px solid rgba(255,255,255,0.06);">' +
                     '<div class="alert-banner-row-info">' + info + '</div>' +
                     '<div class="alert-banner-row-actions" style="display:flex;gap:6px;flex-shrink:0;">' +
-                    '<button type="button" class="btn btn-primary btn-sm" onclick="openQuickRestockModal(' + p.id + ')">➕ Quick Restock</button>' +
-                    '<button type="button" class="btn btn-secondary btn-sm" onclick="openPulloutModal(' + p.id + ')">⚠️ Pull-Out / Adjust</button>' +
+                    '<button type="button" class="btn btn-primary btn-sm" onclick="openQuickRestockModal(' + p.id + ')">Quick Restock</button>' +
+                    '<button type="button" class="btn btn-secondary btn-sm" onclick="openPulloutModal(' + p.id + ')">Pull-Out / Adjust</button>' +
                     '</div>' +
                     '</div>';
             }
@@ -22714,12 +22714,12 @@ $seoImage = (!empty($storeSettings['shop_logo']) && strpos($storeSettings['shop_
                     img +
                     '<div style="font-family:\'Poppins\',sans-serif;font-size:1.15rem;font-weight:600;text-align:center;margin-bottom:2px;">' + escapeHtml(p.name) + '</div>' +
                     (p.description ? '<div style="font-size:.8rem;color:var(--text3);text-align:center;margin-bottom:12px;">' + escapeHtml(p.description) + '</div>' : '<div style="margin-bottom:12px;"></div>') +
-                    '<div style="font-family:\'Poppins\',sans-serif;font-style:italic;color:var(--text2);margin:10px 0 4px;">💰 Pricing</div>' +
+                    '<div style="font-family:\'Poppins\',sans-serif;font-style:italic;color:var(--text2);margin:10px 0 4px;">Pricing</div>' +
                     row('Selling Price', priceHTML) +
                     row('Bundle Price', p.pack_qty ? CUR + parseFloat(p.pack_price || 0).toFixed(2) + ' (' + p.pack_qty + ' pcs)' : '') +
                     row('Case Price', p.case_qty ? CUR + parseFloat(p.case_price || 0).toFixed(2) + ' (' + p.case_qty + ' pcs)' : '') +
                     row('Cost Price', hasCost ? CUR + costVal.toFixed(2) + ' /pc' : '<span style="color:var(--text3);">not set — edit product to add it</span>') +
-                    '<div style="font-family:\'Poppins\',sans-serif;font-style:italic;color:var(--text2);margin:14px 0 4px;">📊 Stock</div>' +
+                    '<div style="font-family:\'Poppins\',sans-serif;font-style:italic;color:var(--text2);margin:14px 0 4px;">Stock</div>' +
                     row('Store Stock', storeQty + ' pcs <span style="font-weight:400;color:var(--text3);">(' + formatUnitBreakdown(storeQty, p) + ')</span>') +
                     row('Warehouse Stock', whQty + ' pcs <span style="font-weight:400;color:var(--text3);">(' + formatUnitBreakdown(whQty, p) + ')</span>') +
                     row('Total Stock Value', stockValueHTML) +
@@ -22729,16 +22729,16 @@ $seoImage = (!empty($storeSettings['shop_logo']) && strpos($storeSettings['shop_
                     row('Last Pull-out Date', p.last_pullout_date ? p.last_pullout_date.slice(0, 10) : '') +
                     row('Expiry Date', expiryHTML) +
                     row('Status', whStatusText(p)) +
-                    '<div style="font-family:\'Poppins\',sans-serif;font-style:italic;color:var(--text2);margin:14px 0 4px;">🧾 Movement Summary (all-time)</div>' +
+                    '<div style="font-family:\'Poppins\',sans-serif;font-style:italic;color:var(--text2);margin:14px 0 4px;">Movement Summary (all-time)</div>' +
                     row('Total Restocked (in)', (parseInt(p.warehouse_in) || 0) + ' pcs') +
                     row('Total Removed (out)', (parseInt(p.warehouse_out) || 0) + ' pcs') +
                     (hasAnyAdjustment ? (
-                        row('💔 Damaged on Delivery', dmg ? dmg + ' pcs' : '') +
+                        row('Damaged on Delivery', dmg ? dmg + ' pcs' : '') +
                         row('⏰ Pulled Out Expired', exp2 ? exp2 + ' pcs' : '') +
-                        row('↩️✕ Customer Returns (written off)', retWrite ? retWrite + ' pcs' : '') +
-                        row('↩️✓ Customer Returns (restocked)', retStock ? retStock + ' pcs' : '')
+                        row('Customer Returns (written off)', retWrite ? retWrite + ' pcs' : '') +
+                        row('Customer Returns (restocked)', retStock ? retStock + ' pcs' : '')
                     ) : '<div style="font-size:.8rem;color:var(--text3);padding:4px 0 2px;">No damaged, expired, or returned stock recorded for this product.</div>') +
-                    '<div style="font-family:\'Poppins\',sans-serif;font-style:italic;color:var(--text2);margin:14px 0 4px;">🏷️ Identification</div>' +
+                    '<div style="font-family:\'Poppins\',sans-serif;font-style:italic;color:var(--text2);margin:14px 0 4px;">Identification</div>' +
                     row('Barcode', p.barcode ? '<code>' + escapeHtml(p.barcode) + '</code>' : '') +
                     row('Bundle Barcode', p.pack_barcode ? '<code>' + escapeHtml(p.pack_barcode) + '</code>' : '') +
                     row('Case Barcode', p.case_barcode ? '<code>' + escapeHtml(p.case_barcode) + '</code>' : '') +
@@ -22747,12 +22747,12 @@ $seoImage = (!empty($storeSettings['shop_logo']) && strpos($storeSettings['shop_
                     row('Supplier', p.supplier ? escapeHtml(p.supplier) : '') +
                     row('Unit Type', p.unit_type ? escapeHtml(p.unit_type) + (p.unit_size ? ' (' + p.unit_size + ')' : '') : '') +
                     row('Auto-Convert Bundle/Case', p.auto_convert ? 'Enabled' : '') +
-                    '<div style="font-family:\'Poppins\',sans-serif;font-style:italic;color:var(--text2);margin:14px 0 4px;">📦 Batches <span style="font-size:.72rem;font-style:normal;color:var(--text3);">(FEFO — soonest-expiring first)</span></div>' +
+                    '<div style="font-family:\'Poppins\',sans-serif;font-style:italic;color:var(--text2);margin:14px 0 4px;">Batches <span style="font-size:.72rem;font-style:normal;color:var(--text3);">(FEFO — soonest-expiring first)</span></div>' +
                     '<div id="wh-details-batches"><div style="text-align:center;color:var(--text3);font-size:.8rem;padding:6px;">Loading…</div></div>' +
-                    '<div style="font-family:\'Poppins\',sans-serif;font-style:italic;color:var(--text2);margin:14px 0 4px;">📋 Delivery &amp; Movement History <span style="font-size:.72rem;font-style:normal;color:var(--text3);">(newest first)</span></div>' +
+                    '<div style="font-family:\'Poppins\',sans-serif;font-style:italic;color:var(--text2);margin:14px 0 4px;">Delivery &amp; Movement History <span style="font-size:.72rem;font-style:normal;color:var(--text3);">(newest first)</span></div>' +
                     '<div id="wh-details-movement"><div style="text-align:center;color:var(--text3);font-size:.8rem;padding:10px;">Loading…</div></div>' +
                     '<div style="display:flex;gap:8px;margin-top:16px;">' +
-                    '<button type="button" class="btn btn-primary btn-full" onclick="closeModal(\'wh-details-modal\');openEditModal(' + p.id + ')">✏️ Edit Product</button>' +
+                    '<button type="button" class="btn btn-primary btn-full" onclick="closeModal(\'wh-details-modal\');openEditModal(' + p.id + ')">Edit Product</button>' +
                     '<button type="button" class="btn btn-secondary" onclick="closeModal(\'wh-details-modal\')">Close</button>' +
                     '</div>';
 
@@ -22802,7 +22802,7 @@ $seoImage = (!empty($storeSettings['shop_logo']) && strpos($storeSettings['shop_
                             const batchHTML = row.batch_id ? '<span style="font-size:.74rem;color:var(--text3);">#' + row.batch_id + '</span>' : '<span style="color:var(--text3);">—</span>';
                             return '<tr>' +
                                 '<td style="font-size:.75rem;color:var(--text3);">' + fmtDate(row.created_at) + '</td>' +
-                                '<td>' + (isIn ? '<span class="move-in">📦 ' + escapeHtml(row.type) + '</span>' : '<span class="move-out">📤 ' + escapeHtml(row.type) + '</span>') + '</td>' +
+                                '<td>' + (isIn ? '<span class="move-in">' + escapeHtml(row.type) + '</span>' : '<span class="move-out">' + escapeHtml(row.type) + '</span>') + '</td>' +
                                 '<td style="font-weight:700;">' + (isIn ? '+' + row.qty_in : '-' + row.qty_out) + breakdownHTML + '</td>' +
                                 '<td style="font-size:.75rem;color:var(--text3);">' + (evtDate ? evtDate.slice(0, 10) : '—') + '</td>' +
                                 '<td>' + batchHTML + '</td>' +
@@ -23392,7 +23392,7 @@ $seoImage = (!empty($storeSettings['shop_logo']) && strpos($storeSettings['shop_
                     '<div style="display:flex;gap:5px;align-items:center;">' +
                     '<input type="text" class="form-input nd-product-search" placeholder="Type product name, or scan barcode…" autocomplete="off" ' +
                     'oninput="_ndFilterProducts(this)" onfocus="_ndFilterProducts(this)" onblur="_ndHideSuggestSoon(this)" style="flex:1;min-width:0;"/>' +
-                    '<button type="button" class="btn btn-secondary btn-sm nd-scan-camera-btn" onclick="openDeliveryLineBarcodeScan(' + id + ')" title="Scan product barcode with mobile camera" style="padding:0 9px;height:38px;display:inline-flex;align-items:center;justify-content:center;font-size:.95rem;flex-shrink:0;">📷</button>' +
+                    '<button type="button" class="btn btn-secondary btn-sm nd-scan-camera-btn" onclick="openDeliveryLineBarcodeScan(' + id + ')" title="Scan product barcode with mobile camera" style="padding:0 9px;height:38px;display:inline-flex;align-items:center;justify-content:center;font-size:.85rem;flex-shrink:0;">Scan</button>' +
                     '</div>' +
                     '<input type="hidden" class="nd-product-id"/>' +
                     '<div class="nd-suggest" style="display:none;position:absolute;z-index:50;left:0;right:0;top:100%;margin-top:2px;background:var(--surface);border:1px solid var(--border);border-radius:8px;box-shadow:var(--shadow-lg);max-height:220px;overflow-y:auto;"></div>' +
@@ -23400,14 +23400,14 @@ $seoImage = (!empty($storeSettings['shop_logo']) && strpos($storeSettings['shop_
                     '</div>' +
                     '<button type="button" onclick="removeDeliveryLineItem(' + id + ')" style="background:none;border:none;color:#dc2626;font-size:1.15rem;line-height:1;cursor:pointer;padding:8px 4px 2px;" title="Remove this product">✕</button>' +
                     '</div>' +
-                    '<div style="font-size:.72rem;color:var(--text2);font-weight:700;margin:2px 0 4px;">🏪 → Store</div>' +
+                    '<div style="font-size:.72rem;color:var(--text2);font-weight:700;margin:2px 0 4px;">Store</div>' +
                     '<div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:6px;">' +
                     '<div><label class="form-label" style="font-size:.66rem;">Cases</label><input type="number" class="form-input nd-st-cases" min="0" placeholder="0" oninput="_ndUpdateTotals(' + id + ')"/></div>' +
                     '<div><label class="form-label" style="font-size:.66rem;">Bundle</label><input type="number" class="form-input nd-st-bundle" min="0" placeholder="0" oninput="_ndUpdateTotals(' + id + ')"/></div>' +
                     '<div><label class="form-label" style="font-size:.66rem;">Pcs</label><input type="number" class="form-input nd-st-pcs" min="0" placeholder="0" oninput="_ndUpdateTotals(' + id + ')"/></div>' +
                     '<div><label class="form-label" style="font-size:.66rem;">Total</label><input type="text" class="form-input nd-st-total" readonly value="0" style="font-weight:700;background:var(--surface2);"/></div>' +
                     '</div>' +
-                    '<div style="font-size:.72rem;color:var(--text2);font-weight:700;margin:10px 0 4px;">🏭 → Warehouse</div>' +
+                    '<div style="font-size:.72rem;color:var(--text2);font-weight:700;margin:10px 0 4px;">Warehouse</div>' +
                     '<div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:6px;">' +
                     '<div><label class="form-label" style="font-size:.66rem;">Cases</label><input type="number" class="form-input nd-wh-cases" min="0" placeholder="0" oninput="_ndUpdateTotals(' + id + ')"/></div>' +
                     '<div><label class="form-label" style="font-size:.66rem;">Bundle</label><input type="number" class="form-input nd-wh-bundle" min="0" placeholder="0" oninput="_ndUpdateTotals(' + id + ')"/></div>' +
@@ -23420,7 +23420,7 @@ $seoImage = (!empty($storeSettings['shop_logo']) && strpos($storeSettings['shop_
                     '<label class="form-label" style="font-size:.72rem;">Expiry Date <span style="font-weight:400;color:var(--text3);">(optional)</span></label>' +
                     '<div style="display:flex;gap:4px;position:relative;align-items:center;">' +
                     '<input type="text" class="form-input nd-expiry-display" id="nd-expiry-display-' + id + '" placeholder="MM/DD/YYYY" inputmode="numeric" maxlength="10" autocomplete="off" oninput="_ndFormatExpiryInput(this, ' + id + ')" onblur="_ndBlurExpiryInput(this, ' + id + ')" style="flex:1;min-width:0;" />' +
-                    '<button type="button" class="btn btn-secondary btn-sm" onclick="_ndOpenDatePicker(' + id + ')" title="Pick a date" style="padding:0 8px;height:38px;display:inline-flex;align-items:center;justify-content:center;font-size:0.95rem;flex-shrink:0;">📅</button>' +
+                    '<button type="button" class="btn btn-secondary btn-sm" onclick="_ndOpenDatePicker(' + id + ')" title="Pick a date" style="padding:0 8px;height:38px;display:inline-flex;align-items:center;justify-content:center;font-size:0.85rem;flex-shrink:0;">Date</button>' +
                     '<input type="date" class="nd-expiry-native" id="nd-expiry-native-' + id + '" style="position:absolute;opacity:0;pointer-events:none;width:1px;height:1px;right:0;bottom:0;" onchange="_ndSyncExpiryFromNative(this, ' + id + ')" tabindex="-1" />' +
                     '<input type="hidden" class="nd-expiry" id="nd-expiry-' + id + '" />' +
                     '</div>' +
@@ -23791,7 +23791,7 @@ $seoImage = (!empty($storeSettings['shop_logo']) && strpos($storeSettings['shop_
                 const conf = (parseFloat(document.getElementById('mba-conf')?.value) || 30) / 100;
                 const resultEl = document.getElementById('mba-result');
                 const statsEl = document.getElementById('mba-stats');
-                if (resultEl) resultEl.innerHTML = '<div style="text-align:center;padding:30px;color:var(--text3);">🔍 Analyzing transactions…</div>';
+                if (resultEl) resultEl.innerHTML = '<div style="text-align:center;padding:30px;color:var(--text3);">Analyzing transactions…</div>';
                 apiGet('get_basket_analysis', {
                     min_support: support,
                     min_conf: conf,
@@ -23820,7 +23820,7 @@ $seoImage = (!empty($storeSettings['shop_logo']) && strpos($storeSettings['shop_
                     if (!resultEl) return;
 
                     if (message || !rules.length) {
-                        resultEl.innerHTML = '<div class="empty-state"><div class="empty-icon">📊</div><div class="empty-text">' +
+                        resultEl.innerHTML = '<div class="empty-state"><div class="empty-icon"><svg viewBox="0 0 24 24" width="42" height="42" fill="none" stroke="currentColor" stroke-width="1.6"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg></div><div class="empty-text">' +
                             (message || 'No association rules found. Try lowering the minimum support or confidence thresholds.') +
                             '</div></div>';
                         return;
@@ -23830,7 +23830,7 @@ $seoImage = (!empty($storeSettings['shop_logo']) && strpos($storeSettings['shop_
                     const rows = rules.map(rule => {
                         const liftColor = rule.lift >= 2 ? 'rgba(45,122,58,.12)' : rule.lift >= 1 ? 'rgba(244,160,36,.1)' : 'rgba(212,80,10,.08)';
                         const liftBorder = rule.lift >= 2 ? '#2d7a3a' : rule.lift >= 1 ? '#f4a024' : '#d4500a';
-                        const liftLabel = rule.lift >= 2 ? '🔥 Strong' : rule.lift >= 1 ? '✅ Positive' : '⚠️ Weak';
+                        const liftLabel = rule.lift >= 2 ? 'Strong' : rule.lift >= 1 ? 'Positive' : 'Weak';
                         return '<tr style="background:' + liftColor + ';border-left:3px solid ' + liftBorder + ';">' +
                             '<td style="font-weight:700;">' + rule.antecedent + '</td>' +
                             '<td style="text-align:center;font-size:1.1rem;">→</td>' +
@@ -23859,7 +23859,7 @@ $seoImage = (!empty($storeSettings['shop_logo']) && strpos($storeSettings['shop_
                         '<tbody>' + rows + '</tbody>' +
                         '</table></div>' +
                         '<div style="margin-top:14px;padding:14px;background:var(--surface2);border-radius:var(--r-sm);">' +
-                        '<div style="font-weight:600;font-size:.85rem;margin-bottom:6px;">💡 How to use these insights:</div>' +
+                        '<div style="font-weight:600;font-size:.85rem;margin-bottom:6px;">How to use these insights:</div>' +
                         '<div style="font-size:.8rem;color:var(--text2);line-height:1.7;">' +
                         '• <strong>Bundle deals</strong> — pair high-lift products for combo promotions<br>' +
                         '• <strong>Shelf placement</strong> — put strongly associated products near each other<br>' +
@@ -23875,7 +23875,7 @@ $seoImage = (!empty($storeSettings['shop_logo']) && strpos($storeSettings['shop_
             // ════════════════════════════════════════════
             async function loadCombos() {
                 const resultEl = document.getElementById('combo-result');
-                if (resultEl) resultEl.innerHTML = '<div style="text-align:center;padding:30px;color:var(--text3);">🤖 Fetching ML combo recommendations…</div>';
+                if (resultEl) resultEl.innerHTML = '<div style="text-align:center;padding:30px;color:var(--text3);">Fetching ML combo recommendations…</div>';
 
                 const cartRaw = (document.getElementById('combo-cart')?.value || '').trim();
                 const topN = parseInt(document.getElementById('combo-topn')?.value) || 5;
@@ -23888,7 +23888,7 @@ $seoImage = (!empty($storeSettings['shop_logo']) && strpos($storeSettings['shop_
 
                 if (!resultEl) return;
                 if (!r?.success) {
-                    resultEl.innerHTML = '<div class="empty-state"><div class="empty-icon">⚠️</div><div class="empty-text">' +
+                    resultEl.innerHTML = '<div class="empty-state"><div class="empty-icon"><svg viewBox="0 0 24 24" width="42" height="42" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg></div><div class="empty-text">' +
                         (r?.error || 'Could not reach ML API. Make sure pos-ml-api-johv.onrender.com is online.') +
                         '</div></div>';
                     return;
@@ -23902,12 +23902,12 @@ $seoImage = (!empty($storeSettings['shop_logo']) && strpos($storeSettings['shop_
                 const isLocal = data.source === 'local';
 
                 const offlineBanner = isLocal ?
-                    '<div style="background:rgba(244,160,36,.12);border:1.5px solid rgba(244,160,36,.4);border-radius:10px;padding:10px 14px;margin-bottom:12px;font-size:.83rem;color:#7a5500;">📡 <strong>Offline mode:</strong> ' +
+                    '<div style="background:rgba(244,160,36,.12);border:1.5px solid rgba(244,160,36,.4);border-radius:10px;padding:10px 14px;margin-bottom:12px;font-size:.83rem;color:#7a5500;"><strong>Offline mode:</strong> ' +
                     (data.message || 'ML API unreachable — showing combos computed from your own sales history.') + '</div>' :
                     '';
 
                 if (!recs.length) {
-                    resultEl.innerHTML = offlineBanner + '<div class="empty-state"><div class="empty-icon">🤝</div>' +
+                    resultEl.innerHTML = offlineBanner + '<div class="empty-state"><div class="empty-icon"><svg viewBox="0 0 24 24" width="42" height="42" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></div>' +
                         '<div class="empty-text">No combo recommendations found. Make some sales transactions first, or try different cart items.</div></div>';
                     return;
                 }
@@ -23933,7 +23933,7 @@ $seoImage = (!empty($storeSettings['shop_logo']) && strpos($storeSettings['shop_
                             '<div style="font-weight:700;font-size:.95rem;">' + label + '</div>' +
                             '<div style="display:flex;gap:8px;margin-top:4px;flex-wrap:wrap;">' + freqTag + cntTag + '</div>' +
                             '</div>' +
-                            '<div style="font-size:1.4rem;">🛍️</div>' +
+                            '<div style="display:flex;align-items:center;justify-content:center;"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg></div>' +
                             '</div>';
                     }
 
@@ -23951,13 +23951,13 @@ $seoImage = (!empty($storeSettings['shop_logo']) && strpos($storeSettings['shop_
                         '<div style="font-weight:700;font-size:.95rem;">' + name + '</div>' +
                         '<div style="display:flex;gap:8px;margin-top:4px;flex-wrap:wrap;">' + liftTag + confTag + '</div>' +
                         '</div>' +
-                        '<div style="font-size:1.4rem;">🛍️</div>' +
+                        '<div style="display:flex;align-items:center;justify-content:center;"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg></div>' +
                         '</div>';
                 }).join('');
 
                 resultEl.innerHTML = offlineBanner + basedOnHtml + cards +
                     '<div style="margin-top:10px;padding:10px 12px;background:var(--surface);border-radius:8px;border-left:3px solid var(--accent);font-size:.82rem;color:var(--text2);">' +
-                    '💡 <strong>How to use:</strong> Bundle these products together, create combo deals, or suggest them at checkout when the base item is in cart.' +
+                    '<strong>How to use:</strong> Bundle these products together, create combo deals, or suggest them at checkout when the base item is in cart.' +
                     '</div>';
             }
 
@@ -24063,7 +24063,7 @@ $seoImage = (!empty($storeSettings['shop_logo']) && strpos($storeSettings['shop_
                         toast(r?.error || 'Transfer failed', 'error');
                         return;
                     }
-                    toast('✅ Transferred to store shelf!', 'success');
+                    toast('Transferred to store shelf!', 'success');
                     closeModal('transfer-modal');
                     _allProdsForTransfer = [];
                     invalidateProdCache();
@@ -24521,7 +24521,7 @@ $seoImage = (!empty($storeSettings['shop_logo']) && strpos($storeSettings['shop_
                                     if (typeof whProds !== 'undefined' && !whProds.find(x => x.id == p.id)) whProds.push(p);
                                     const itemId = parseInt(targetRowId.replace('nd-item-', ''));
                                     _ndSelectProduct(itemId, p.id);
-                                    toast('✅ Scanned: ' + p.name, 'success');
+                                    toast('Scanned: ' + p.name, 'success');
                                 });
                                 return;
                             }
@@ -24556,7 +24556,7 @@ $seoImage = (!empty($storeSettings['shop_logo']) && strpos($storeSettings['shop_
                                     return;
                                 }
                                 const p = r.data;
-                                toast('✅ Found product: ' + p.name, 'success');
+                                toast('Found product: ' + p.name, 'success');
                                 if (typeof openProductModal === 'function') {
                                     openProductModal(p.id);
                                 }
@@ -24579,7 +24579,7 @@ $seoImage = (!empty($storeSettings['shop_logo']) && strpos($storeSettings['shop_
                                 _ndSelectProduct(1, p.id);
                                 const supplierEl = document.getElementById('nd-supplier');
                                 if (supplierEl && p.supplier) supplierEl.value = p.supplier;
-                                toast('✅ Scanned into New Delivery: ' + p.name, 'success');
+                                toast('Scanned into New Delivery: ' + p.name, 'success');
                             });
                             return;
                         }
@@ -24598,7 +24598,7 @@ $seoImage = (!empty($storeSettings['shop_logo']) && strpos($storeSettings['shop_
                             const addQty = scanUnitQty(p);
                             addToCart(p.id, addQty);
                             updateScanCartCount();
-                            toast('✅ Added: ' + p.name + (addQty > 1 ? ' ×' + addQty : ''), 'success');
+                            toast('Added: ' + p.name + (addQty > 1 ? ' ×' + addQty : ''), 'success');
                             if (wasEmpty) {
                                 const cartModalEl = document.getElementById('cart-modal');
                                 if (cartModalEl && !cartModalEl.classList.contains('open')) openModal('cart-modal');
@@ -24768,7 +24768,7 @@ $seoImage = (!empty($storeSettings['shop_logo']) && strpos($storeSettings['shop_
                             modal.id = 'shortcuts-help-modal';
                             modal.className = 'modal-overlay';
                             modal.innerHTML = '<div class="modal" style="max-width:380px;">' +
-                                '<div class="modal-header"><span class="modal-title">⌨️ Keyboard Shortcuts</span><button class="modal-close" onclick="closeModal(\'shortcuts-help-modal\')">✕</button></div>' +
+                                '<div class="modal-header"><span class="modal-title">Keyboard Shortcuts</span><button class="modal-close" onclick="closeModal(\'shortcuts-help-modal\')">✕</button></div>' +
                                 '<div id="shortcuts-help-body"></div>' +
                                 '</div>';
                             document.body.appendChild(modal);
@@ -24797,7 +24797,7 @@ $seoImage = (!empty($storeSettings['shop_logo']) && strpos($storeSettings['shop_
                         const helpBtn = document.createElement('button');
                         helpBtn.type = 'button';
                         helpBtn.title = 'Keyboard shortcuts (?)';
-                        helpBtn.textContent = '⌨️ ?';
+                        helpBtn.textContent = '?';
                         helpBtn.style.cssText = 'position:fixed;bottom:22px;left:20px;z-index:500;background:var(--surface);color:var(--text2);border:1.5px solid var(--border);font-weight:700;font-size:.82rem;padding:9px 14px;border-radius:99px;box-shadow:var(--shadow-lg);cursor:pointer;';
                         helpBtn.onclick = () => window.showShortcutsHelp();
                         document.body.appendChild(helpBtn);
@@ -24889,7 +24889,7 @@ $seoImage = (!empty($storeSettings['shop_logo']) && strpos($storeSettings['shop_
                 } else {
                     const isIos = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
                     if (isIos) {
-                        alert('To install on your iPhone or iPad:\n1. Tap the Share button (square with arrow up) at the bottom of Safari.\n2. Scroll down and tap "Add to Home Screen" ➕.');
+                        alert('To install on your iPhone or iPad:\n1. Tap the Share button (square with arrow up) at the bottom of Safari.\n2. Scroll down and tap "Add to Home Screen".');
                     } else {
                         alert('To install as an app:\nOpen your browser menu (⋮) and tap "Install app" or "Add to Home screen".');
                     }
