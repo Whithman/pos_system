@@ -20256,7 +20256,7 @@ $seoImage = (!empty($storeSettings['shop_logo']) && strpos($storeSettings['shop_
                                 badge = 'Short ' + fmt(Math.abs(v));
                                 badgeColor = 'var(--danger)';
                             } else if (v > 0.005) {
-                                badge = 'Over ' + fmt(v));
+                                badge = 'Over ' + fmt(v);
                                 badgeColor = 'var(--accent2)';
                             } else {
                                 badge = 'Balanced';
