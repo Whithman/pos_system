@@ -1,4 +1,4 @@
-const SHELL = 'pos-shell-v14';
+const SHELL = 'pos-shell-v15';
 const IMGS = 'pos-img-v2';
 const IMG_LIMIT = 400; // ~a few hundred photos max on the device
 const BASE = new URL('./', self.location).href;

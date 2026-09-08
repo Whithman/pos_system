@@ -13441,7 +13441,7 @@ $seoImage = (!empty($storeSettings['shop_logo']) && strpos($storeSettings['shop_
                             <button class="cat-pill active" onclick="setWhFilter('all',this)">All Products</button>
                             <button class="cat-pill" onclick="setWhFilter('low',this)">Low Stock</button>
                             <button class="cat-pill" onclick="setWhFilter('out',this)">Out of Stock</button>
-                            <button class="cat-pill" onclick="setWhFilter('expiring',this)">⏰ Expiring</button>
+                            <button class="cat-pill" onclick="setWhFilter('expiring',this)">Expiring</button>
                             <button class="cat-pill" onclick="setWhFilter('expired',this)">Expired</button>
                         </div>
                         <button type="button" class="btn btn-secondary btn-sm" onclick="exportWhToExcel()">Export to Excel</button>
@@ -15878,7 +15878,7 @@ $seoImage = (!empty($storeSettings['shop_logo']) && strpos($storeSettings['shop_
                     };
                     document.body.appendChild(badge);
                 }
-                badge.innerHTML = '⏳ ' + list.length + ' sale(s) pending sync — tap to retry';
+                badge.innerHTML = list.length + ' sale(s) pending sync — tap to retry';
             }
 
             // Retry whenever the browser regains connectivity, plus a periodic sweep
@@ -17420,7 +17420,7 @@ $seoImage = (!empty($storeSettings['shop_logo']) && strpos($storeSettings['shop_
                     renderProds();
                 } else if (!invProds || !invProds.length) {
                     if (countEl) countEl.textContent = 'Loading products…';
-                    if (grid) grid.innerHTML = '<div style="grid-column:1/-1;text-align:center;padding:50px;color:var(--text3);"><div style="font-size:2rem;margin-bottom:8px;">⏳</div>Loading product catalog…</div>';
+                    if (grid) grid.innerHTML = '<div style="grid-column:1/-1;text-align:center;padding:50px;color:var(--text3);"><div class="spinner" style="margin:0 auto 12px;width:32px;height:32px;border-width:3px;border-top-color:var(--accent,#2563eb);"></div>Loading product catalog…</div>';
                 }
 
                 apiGetProducts(force, (fresh) => {
@@ -18878,7 +18878,7 @@ $seoImage = (!empty($storeSettings['shop_logo']) && strpos($storeSettings['shop_
                 if (!sel) return;
                 if (btn && forceRefresh) {
                     btn.disabled = true;
-                    btn.textContent = '⏳';
+                    btn.textContent = '...';
                 }
 
                 const params = forceRefresh ? {
@@ -18964,7 +18964,7 @@ $seoImage = (!empty($storeSettings['shop_logo']) && strpos($storeSettings['shop_
                 const storeId = document.getElementById('fc-store-id')?.value.trim() || 'BAR-01';
                 if (btn) {
                     btn.disabled = true;
-                    btn.textContent = '⏳ Forecasting…';
+                    btn.textContent = 'Forecasting…';
                 }
                 if (wrap) wrap.innerHTML = '<div class="fc-loading">Loading forecast… (cached results load instantly; a cold API falls back to your sales history in a few seconds)</div>';
 
@@ -20967,7 +20967,7 @@ $seoImage = (!empty($storeSettings['shop_logo']) && strpos($storeSettings['shop_
                     msgEl.textContent = '';
                     return;
                 }
-                msgEl.textContent = '⏳ Checking…';
+                msgEl.textContent = 'Checking…';
                 msgEl.style.color = 'var(--text3)';
                 _barcodeCheckTimer = setTimeout(async () => {
                     const r = await apiGet('get_product_by_barcode', {
@@ -21911,7 +21911,7 @@ $seoImage = (!empty($storeSettings['shop_logo']) && strpos($storeSettings['shop_
                         resumeScanning(800);
                         return;
                     }
-                    if (statusEl) statusEl.textContent = '⏳ Looking up: ' + barcode;
+                    if (statusEl) statusEl.textContent = 'Looking up: ' + barcode;
                     apiGet('get_product_by_barcode', {
                         barcode
                     }).then(r => {
@@ -21956,7 +21956,7 @@ $seoImage = (!empty($storeSettings['shop_logo']) && strpos($storeSettings['shop_
                 const actionsEl = document.getElementById('dash-scan-notfound-actions');
                 if (actionsEl) actionsEl.style.display = '';
                 toast('Not found: ' + barcode, 'error');
-                if (statusEl) statusEl.textContent = '⏳ Checking product database…';
+                if (statusEl) statusEl.textContent = 'Checking product database…';
                 let known = null;
                 try {
                     const ext = await apiGet('lookup_barcode_external', {
@@ -22436,7 +22436,7 @@ $seoImage = (!empty($storeSettings['shop_logo']) && strpos($storeSettings['shop_
                     const retStock = parseInt(p.qty_returned_restocked) || 0;
                     const adjChips = [];
                     if (dmg) adjChips.push('<span class="adj-chip adj-damaged" title="Damaged on delivery">Damaged: ' + dmg + '</span>');
-                    if (exp2) adjChips.push('<span class="adj-chip adj-expired" title="Pulled out expired">⏰ ' + exp2 + '</span>');
+                    if (exp2) adjChips.push('<span class="adj-chip adj-expired" title="Pulled out expired">Expired: ' + exp2 + '</span>');
                     if (retWrite) adjChips.push('<span class="adj-chip adj-writeoff" title="Customer returns written off">Returns (Write-off): ' + retWrite + '</span>');
                     if (retStock) adjChips.push('<span class="adj-chip adj-restocked" title="Customer returns put back into stock">Returns (Restocked): ' + retStock + '</span>');
                     const adjHTML = adjChips.length ? adjChips.join(' ') : '<span style="color:var(--text3);font-size:.75rem;">—</span>';
@@ -22734,7 +22734,7 @@ $seoImage = (!empty($storeSettings['shop_logo']) && strpos($storeSettings['shop_
                     row('Total Removed (out)', (parseInt(p.warehouse_out) || 0) + ' pcs') +
                     (hasAnyAdjustment ? (
                         row('Damaged on Delivery', dmg ? dmg + ' pcs' : '') +
-                        row('⏰ Pulled Out Expired', exp2 ? exp2 + ' pcs' : '') +
+                        row('Pulled Out Expired', exp2 ? exp2 + ' pcs' : '') +
                         row('Customer Returns (written off)', retWrite ? retWrite + ' pcs' : '') +
                         row('Customer Returns (restocked)', retStock ? retStock + ' pcs' : '')
                     ) : '<div style="font-size:.8rem;color:var(--text3);padding:4px 0 2px;">No damaged, expired, or returned stock recorded for this product.</div>') +
